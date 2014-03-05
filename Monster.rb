@@ -9,10 +9,10 @@ module Napakalaki
             @prize = prize
         end
         
-        attr_reader :name, :level
+        attr_reader :name, :level, :bad, :prize
 
         def to_s
-            "Name: #{name}, Level: #{level}"
+            "Nombre: #{name}, Nivel: #{level}\n\tBuen rollo: #{prize}\n\tMal rollo: #{bad}"
         end
     end
     

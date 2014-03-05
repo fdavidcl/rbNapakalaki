@@ -7,15 +7,18 @@ require_relative "TreasureKind.rb"
 
 module Napakalaki
     class PruebaNapakalaki
-        #def self.main
-            p=Prize.new(gets.to_i, gets.to_i)
-            puts p.to_s
-            m = BadConsequence.new "Muerte", true
-            r = BadConsequence.new "Mal rollaco", 5, 0, 1
-            puts m.to_s
-            puts r.to_s
 
-            # Falta prueba Monster
-        #end
+        if __FILE__ == $0
+            monsters = []
+            vis_treasures = []
+            hid_treasures = []
+
+            vis_treasures.push HELMET
+            monsters.push Monster.new("3 Byakhees de bonanza", 8, 
+                BadConsequence.new("Pierdes tu armadura visible y otra oculta.",
+                    0, vis_treasures, hid_treasures), 
+                Prize.new(2, 1))
+            puts monsters
+        end
     end
 end

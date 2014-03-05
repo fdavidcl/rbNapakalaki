@@ -11,8 +11,8 @@ module Napakalaki
                 @death = second
             else
                 @levels = second
-                @nVisibleTreasures = nVisible
-                @nHiddenTreasures = nHidden
+                @visibleTreasures = nVisible # Pueden ser enteros o arrays de símbolos (TreasureKind)
+                @hiddenTreasures = nHidden
                 @death = false
             end
         end
@@ -20,12 +20,13 @@ module Napakalaki
         def to_s
             result = text + ": "
             result += if death
-                    "Death"
+                    "Muerte"
                 else
-                    "Levels = #{levels.to_s}, Visible treasures = #{nVisibleTreasures.to_s}, Hidden treasures = #{nHiddenTreasures.to_s}"
+                    "Niveles: #{levels}, Tesoros visibles: " + (visibleTreasures.class == [].class ? visibleTreasures * ", " : visibleTreasures) + \
+                        ", Tesoros ocultos: " + (hiddenTreasures.class == [].class ? hiddenTreasures.join(", ") : hiddenTreasures)
                 end
         end
 
-        attr_reader :text, :levels, :nVisibleTreasures, :nHiddenTreasures, :death 
+        attr_reader :text, :levels, :visibleTreasures, :hiddenTreasures, :death 
     end
 end

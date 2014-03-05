@@ -8,9 +8,18 @@ module Napakalaki
         end
 
         def to_s
-            "Levels = #{levels.to_s}, Treasures = #{treasures.to_s}"
+            "Tesoros: #{treasures}, Niveles: #{levels}"
         end
         
         attr_reader :treasures, :levels
+        # Otra forma de implementar consultores:
+        #
+        # def treasures
+        #     @treasures
+        # end
+        #
+        # def levels
+        #     @levels
+        # end
     end
 end
