@@ -4,17 +4,18 @@ require_relative "TreasureKind"
 
 module Napakalaki
     class BadConsequence
-        def initialize(text, second, nVisible = nil, nHidden = nil)
+        def initialize(text, second, nVisible = 0, nHidden = 0)
             @text = text
 
-            if nVisible == nil && nHidden == nil
+            if nVisible == 0 && nHidden == 0
                 @death = second
+                @levels = 0
             else
                 @levels = second
-                @visibleTreasures = nVisible # Pueden ser enteros o arrays de símbolos (TreasureKind)
-                @hiddenTreasures = nHidden
                 @death = false
             end
+            @visibleTreasures = nVisible # Pueden ser enteros o arrays de símbolos (TreasureKind)
+            @hiddenTreasures = nHidden
         end
 
         def to_s

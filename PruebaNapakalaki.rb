@@ -15,20 +15,20 @@ module Napakalaki
         
         #nombre de método modificado para coherencia con java
         def self.strongerThan(monsters, &condition)
-            filtered = []
+            result = []
         
             # Collect se usa generalmente para modificar el array, mejor each
             monsters.each { |e| 
                 if condition.call(e.level)
-                    filtered.push(e)
+                    result.push(e)
                 end
             }
 
-            filtered
+            result
         end
         
         def self.levelTakers(monsters)
-            filtered = []
+            result = []
             
             monsters.each { |e|
                 bad=e.bad
@@ -36,11 +36,41 @@ module Napakalaki
                      (bad.visibleTreasures.length==0 and bad.hiddenTreasures.length==0)
                      : (bad.visibleTreasures==0 and bad.hiddenTreasures==0 and bad.levels>0) )      
                     
-                    filtered.push(e)
+                    result.push(e)
                 end
             }
             
-            filtered
+            result
+        end
+        
+        def self.prizeMinLevels(monsters, &condition)
+            result = []
+            
+            monsters.each { |e|
+                if condition.call(e.prize.levels)
+                    result.push(e)
+                end
+            }
+            
+            result
+        end
+        
+        def self.treasureTakers(monsters)
+            result = []
+            
+            monsters.each{ |e|
+                bad=e.bad;
+                
+                if ( bad.visibleTreasures.class==[].class ? 
+                     (bad.visibleTreasures.length > 0 or bad.hiddenTreasures.length>0)
+                     : (bad.visibleTreasures.class=="".class or bad.hiddenTreasures.class=="".class or
+                        bad.visibleTreasures>0 or bad.hiddenTreasures>0 ))
+                
+                    result.push(e)
+                end
+            }
+            
+            result
         end
         
         if __FILE__ == $0
@@ -119,7 +149,12 @@ module Napakalaki
             displayMonsters(self.strongerThan(monsters) { |lv| lv > 10 },
                 "Monstruos con nivel mayor que")
             displayMonsters(self.levelTakers(monsters),  
-                "Monstruos que solo restan niveles") 
+                "Monstruos que solo restan niveles")
+            levels=10
+            displayMonsters(self.prizeMinLevels(monsters) { |lv| lv >= levels },
+                "Monstruos que dan mínimo #{levels} niveles")
+            displayMonsters(self.treasureTakers(monsters),
+                "Monstruos que quitan algún tesoro")
         end
     end
 end
