@@ -4,10 +4,10 @@ require_relative "TreasureKind"
 
 module Napakalaki
     class BadConsequence
-        def initialize(text, second, nVisible = 0, nHidden = 0)
+        def initialize(text, second, n_visible = 0, n_hidden = 0)
             @text = text
 
-            if nVisible == 0 && nHidden == 0
+            if n_visible == 0 && n_hidden == 0
                 @death = second
                 @levels = 0
             else
@@ -15,8 +15,26 @@ module Napakalaki
                 @death = false
             end
 
-            @visible_treasures = nVisible # Pueden ser enteros o arrays de símbolos (TreasureKind)
-            @hidden_treasures = nHidden
+            @visible_treasures = n_visible # Pueden ser enteros o arrays de símbolos de TreasureKind
+            @hidden_treasures = n_hidden
+        end
+
+        def self.new_deathly(text)
+            obj = allocate
+            obj.send(:initialize, text, true)
+            obj
+        end
+
+        def self.new_count(text, levels, n_visible, n_hidden)
+            obj = allocate
+            obj.send(:initialize, text, levels, n_visible, n_hidden)
+            obj
+        end
+
+        def self.new_kinds(text, levels, n_visible, n_hidden)
+            obj = allocate
+            obj.send(:initialize, text, levels, n_visible, n_hidden)
+            obj
         end
 
         def any_visible?
@@ -32,13 +50,15 @@ module Napakalaki
             result += if death
                     "Muerte"
                 else
+                    # []*", " es un atajo para [].join(", ")
                     visibles = visible_treasures.class == [].class ? visible_treasures * ", " : (visible_treasures > -1 ? visible_treasures.to_s : "Todos")
                     ocultos = hidden_treasures.class == [].class ? hidden_treasures * ", " : (hidden_treasures > -1 ? hidden_treasures.to_s : "Todos")
-                    # []*", " es un atajo para [].join(", ")  ----> Cambiados los dos a la primera forma        
                     "Niveles: #{levels}, Tesoros visibles: #{visibles}, Tesoros ocultos: #{ocultos}"
                 end
         end
 
         attr_reader :text, :levels, :visible_treasures, :hidden_treasures, :death 
     end
+
+    BadConsequence.instance_eval { undef :new }
 end

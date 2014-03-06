@@ -18,7 +18,7 @@ module Napakalaki
         
         def self.level_takers(monsters)
             monsters.select { |m| 
-                m.bad.levels > 0 and not m.bad.any_visible? and not m.bad.any_hidden?
+                m.bad.levels > 0 
             }
         end
         
@@ -39,73 +39,71 @@ module Napakalaki
             
             monsters = []
 
-            monsters.push(Monster.new("Chibithulhu",2, 
-                BadConsequence.new("Embobados con el lindo primigenio te descartas de tu casco visible",0,
+            monsters.push Monster.new("Chibithulhu",2, 
+                BadConsequence.new_kinds("Embobados con el lindo primigenio te descartas de tu casco visible",0,
                 [HELMET],[]), Prize.new(1,1))
-            )
-            
-            monsters.push(Monster.new("El sopor de Dunwich",2, BadConsequence.new(
+                        
+            monsters.push Monster.new("El sopor de Dunwich",2, BadConsequence.new_kinds(
                 "El primordial bostezo contagioso. Pierdes el calzado visible",0,
                 [SHOE],[]), Prize.new(1,1))
-            )
-            monsters.push(Monster.new("Ángeles de la noche ibicenca",14, BadConsequence.new(
+            
+            monsters.push Monster.new("Ángeles de la noche ibicenca",14, BadConsequence.new_kinds(
                 "Te atrapan para llevarte de fiesta y te dejan caer en mitad del vuelo. Descarta 1 mano visible y 1 mano oculta",
                 0, [ONEHAND],[ONEHAND]), Prize.new(4,1))
-            )
+            
             # Nótese que perder totalidad tesoros == -1
-            monsters.push(Monster.new("El gorrón en el umbral",10, BadConsequence.new(
+            monsters.push Monster.new("El gorrón en el umbral",10, BadConsequence.new_count(
                 "Pierdes todos tus tesoros visibles",0,-1,0), Prize.new(3,1))
-            )
-            monsters.push(Monster.new("H.P. Munchcraft",6, BadConsequence.new(
+            
+            monsters.push Monster.new("H.P. Munchcraft",6, BadConsequence.new_kinds(
                 "Pierdes la armadura visible",0,[ARMOR],[]), Prize.new(2,1))
-            )
-            monsters.push(Monster.new("Bichgooth",2, BadConsequence.new(
+            
+            monsters.push Monster.new("Bichgooth",2, BadConsequence.new_kinds(
                 "Sientes bichos bajo la ropa. Descarta la armadura visible",0,[ARMOR],[]),
                     Prize.new(1,1))
-            )
-            monsters.push(Monster.new("El rey de rosa",13, BadConsequence.new(
+            
+            monsters.push Monster.new("El rey de rosa",13, BadConsequence.new_count(
                 "Pierdes 5 niveles y 3 tesoros visibles",5,3,0), Prize.new(4,2))
-            )
-            monsters.push(Monster.new("La que redacta en las sombras",3, BadConsequence.new(
+            
+            monsters.push Monster.new("La que redacta en las sombras",3, BadConsequence.new_count(
                 "Toses los pulmones y pierdes 2 niveles",2,0,0), Prize.new(1,1))
-            )
-            monsters.push(Monster.new("Los hondos verdes",7, BadConsequence.new(
-                "Estos monstruos resultan bastante superficiales y te aburren mortalmente. Estás muerto",
-                true), Prize.new(2,1))
-            )
-            monsters.push(Monster.new("Semillas Cthulhu",4, BadConsequence.new(
+            
+            monsters.push Monster.new("Los hondos verdes",7, BadConsequence.new_deathly(
+                "Estos monstruos resultan bastante superficiales y te aburren mortalmente. Estás muerto"),
+                Prize.new(2,1))
+            
+            monsters.push Monster.new("Semillas Cthulhu",4, BadConsequence.new_count(
                 "Pierdes 2 niveles y 2 tesoros ocultos",2,0,2), Prize.new(2,1))
-            )
-            monsters.push(Monster.new("Dameargo",1, BadConsequence.new(
+            
+            monsters.push Monster.new("Dameargo",1, BadConsequence.new_kinds(
                 "Te intentas escaquear. Pierdes una mano visible",0,[ONEHAND],[]), 
                 Prize.new(2,1))
-            )
-            monsters.push(Monster.new("Pollipólipo volante",3, BadConsequence.new(
+            
+            monsters.push Monster.new("Pollipólipo volante",3, BadConsequence.new_count(
                 "Da mucho asquito. Pierdes 3 niveles",3,0,0), Prize.new(1,1))
-            )
-            monsters.push(Monster.new("Yskhtihyssg-Goth",12, BadConsequence.new(
-                "No le hace gracia que pronuncien mal su nombre. Estás muerto",true),
+            
+            monsters.push Monster.new("Yskhtihyssg-Goth",12, BadConsequence.new_deathly(
+                "No le hace gracia que pronuncien mal su nombre. Estás muerto"),
                 Prize.new(3,1))
-            )
-            monsters.push(Monster.new("Familia Feliz",1, BadConsequence.new(
-                "La familia te atrapa",true), Prize.new(4,1))
-            )
-            monsters.push(Monster.new("Roboggoth",8, BadConsequence.new(
+            
+            monsters.push Monster.new("Familia Feliz",1, BadConsequence.new_deathly(
+                "La familia te atrapa"), Prize.new(4,1))
+            
+            monsters.push Monster.new("Roboggoth",8, BadConsequence.new_kinds(
                 "La quinta directiva primaria te obliga a perder 2 niveles y un tesoro, 2 manos visible",
                 0,[BOTHHANDS],[]), Prize.new(2,1))
-            )
-            monsters.push(Monster.new("El espia ciego",3, BadConsequence.new(
+            
+            monsters.push Monster.new("El espia ciego",3, BadConsequence.new_kinds(
                 "Te asusta en la noche. Pierdes un casco visible",4,[HELMET],[]), 
                 Prize.new(1,1))
-            )
-            monsters.push(Monster.new("El lenguas",20, BadConsequence.new(
+            
+            monsters.push Monster.new("El lenguas",20, BadConsequence.new_count(
                 "Menudo susto te llevas. Pierdes 2 niveles y 5 tesoros visibles",
                 2,5,0), Prize.new(1,1))
-            )
-            monsters.push(Monster.new("Bicéfalo",20, BadConsequence.new(
+            
+            monsters.push Monster.new("Bicéfalo",20, BadConsequence.new_kinds(
                 "Te faltan manos para tanta cabeza. Pierdes 3 niveles y tus tesoros visibles de las manos",
                 3,[BOTHHANDS],[]), Prize.new(1,1))
-            )
                 
             display_monsters(self.stronger_than(10, monsters),
                 "Monstruos con nivel mayor que 10")
