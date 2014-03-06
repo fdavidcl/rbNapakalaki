@@ -22,7 +22,8 @@ module Napakalaki
             result += if death
                     "Muerte"
                 else
-                    "Niveles: #{levels}, Tesoros visibles: " + (visibleTreasures.class == [].class ? visibleTreasures * ", " : visibleTreasures) + \
+                    # []*", " es un atajo para [].join(", ")
+                    "Niveles: #{levels}, Tesoros visibles: " + (visibleTreasures.class == [].class ? visibleTreasures * ", " : visibleTreasures) +
                         ", Tesoros ocultos: " + (hiddenTreasures.class == [].class ? hiddenTreasures.join(", ") : hiddenTreasures)
                 end
         end

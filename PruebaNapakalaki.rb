@@ -8,6 +8,18 @@ require_relative "TreasureKind.rb"
 module Napakalaki
     class PruebaNapakalaki
 
+        def self.filterByLevel(monsters, &condition)
+            filtered = []
+
+            monsters.collect { |e| 
+                if condition.call(e.level)
+                    filtered.push(e)
+                end
+            }
+
+            filtered
+        end
+
         if __FILE__ == $0
             monsters = []
             vis_treasures = []
@@ -18,7 +30,11 @@ module Napakalaki
                 BadConsequence.new("Pierdes tu armadura visible y otra oculta.",
                     0, vis_treasures, hid_treasures), 
                 Prize.new(2, 1))
-            puts monsters
+            monsters.push Monster.new("Test test", 12, 
+                BadConsequence.new("Muertoooo", true), 
+                Prize.new(2, 1))
+            
+            puts self.filterByLevel(monsters) { |lv| lv > 10 }
         end
     end
 end
