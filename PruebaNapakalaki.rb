@@ -112,7 +112,7 @@ module Napakalaki
                 "Monstruos que solo restan niveles")
             display_monsters(self.prize_min_levels(2, monsters),
                 "Monstruos que dan mínimo 2 niveles")
-            display_monsters(self.treasure_kind_takers(:armor, monsters),
+            display_monsters(self.treasure_kind_takers(ARMOR, monsters),
                 "Monstruos que quitan alguna armadura")
         end
     end
