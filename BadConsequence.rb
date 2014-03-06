@@ -16,7 +16,7 @@ module Napakalaki
             end
 
             @visible_treasures = n_visible.nil? ? 0 : n_visible # Pueden ser enteros o arrays de símbolos de TreasureKind
-            @hidden_treasures = n_hidden.nil? ? 0 : n_visible
+            @hidden_treasures = n_hidden.nil? ? 0 : n_hidden
         end
 
         def self.new_deathly(text)
