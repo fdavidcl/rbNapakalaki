@@ -4,10 +4,10 @@ require_relative "TreasureKind"
 
 module Napakalaki
     class BadConsequence
-        def initialize(text, second, n_visible = 0, n_hidden = 0)
+        def initialize(text, second, n_visible = nil, n_hidden = nil)
             @text = text
 
-            if n_visible == 0 && n_hidden == 0
+            if n_visible.nil? && n_hidden.nil?
                 @death = second
                 @levels = 0
             else
@@ -15,8 +15,8 @@ module Napakalaki
                 @death = false
             end
 
-            @visible_treasures = n_visible # Pueden ser enteros o arrays de símbolos de TreasureKind
-            @hidden_treasures = n_hidden
+            @visible_treasures = n_visible.nil? ? 0 : n_visible # Pueden ser enteros o arrays de símbolos de TreasureKind
+            @hidden_treasures = n_hidden.nil? ? 0 : n_visible
         end
 
         def self.new_deathly(text)
@@ -38,11 +38,11 @@ module Napakalaki
         end
 
         def any_visible?
-            visible_treasures.class == [].class ? visible_treasures.length > 0 : visible_treasures != 0
+            (visible_treasures.class == [].class ? visible_treasures.length : visible_treasures) != 0
         end
 
         def any_hidden?
-            hidden_treasures.class == [].class ? hidden_treasures.length > 0 : hidden_treasures != 0
+            (hidden_treasures.class == [].class ? hidden_treasures.length : hidden_treasures) != 0
         end
 
         def to_s
