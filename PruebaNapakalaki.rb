@@ -8,7 +8,7 @@ require_relative "TreasureKind.rb"
 module Napakalaki
     class PruebaNapakalaki
 
-        def self.filterByLevel(monsters, &condition)
+        def self.filter_by_level(monsters, condition)
             filtered = []
 
             monsters.collect { |e| 
@@ -34,7 +34,7 @@ module Napakalaki
                 BadConsequence.new("Muertoooo", true), 
                 Prize.new(2, 1))
             
-            puts self.filterByLevel(monsters) { |lv| lv > 10 }
+            puts self.filter_by_level(monsters, lambda{ |lv| lv > 10 })
         end
     end
 end
