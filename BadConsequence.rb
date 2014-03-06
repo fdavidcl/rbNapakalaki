@@ -22,10 +22,10 @@ module Napakalaki
             result += if death
                     "Muerte"
                 else
-                    # []*", " es un atajo para [].join(", ")
-                    "Niveles: #{levels}, Tesoros visibles: " + (visibleTreasures.class == [].class ? visibleTreasures * ", " : visibleTreasures) +
-                        ", Tesoros ocultos: " + (hiddenTreasures.class == [].class ? hiddenTreasures.join(", ") : hiddenTreasures)
-                end
+                    # []*", " es un atajo para [].join(", ")  ----> Cambiados los dos a la primera forma        
+                    "Niveles: #{levels}, Tesoros visibles: " + (visibleTreasures.class == [].class ? visibleTreasures * ", " : visibleTreasures.to_s) +
+                    ", Tesoros ocultos: " + (hiddenTreasures.class == [].class ? hiddenTreasures * ", " : hiddenTreasures.to_s)
+            end
         end
 
         attr_reader :text, :levels, :visibleTreasures, :hiddenTreasures, :death 

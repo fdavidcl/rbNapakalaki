@@ -2,7 +2,7 @@
 
 module Napakalaki
     # TreasureKind
-    AMOR = :amor
+    ARMOR = :armor
     ONEHAND = :onehand
     BOTHHANDS = :bothhands
     HELMET = :helmet
