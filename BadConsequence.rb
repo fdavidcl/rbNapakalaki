@@ -4,28 +4,27 @@ require_relative "TreasureKind"
 
 module Napakalaki
     class BadConsequence
-        def initialize(text, second, nVisible = nil, nHidden = nil)
+        def initialize(text, second, nVisible = 0, nHidden = 0)
             @text = text
 
-            if nVisible == nil && nHidden == nil
+            if nVisible == 0 && nHidden == 0
                 @death = second
                 @levels = 0
-                @visibleTreasures = 0
-                @hiddenTreasures = 0
             else
                 @levels = second
-                @visibleTreasures = nVisible # Pueden ser enteros o arrays de símbolos (TreasureKind)
-                @hiddenTreasures = nHidden
                 @death = false
             end
+
+            @visible_treasures = nVisible # Pueden ser enteros o arrays de símbolos (TreasureKind)
+            @hidden_treasures = nHidden
         end
 
         def any_visible?
-            visibleTreasures.class == [].class ? visibleTreasures.length > 0 : visibleTreasures > 0
+            visible_treasures.class == [].class ? visible_treasures.length > 0 : visible_treasures != 0
         end
 
         def any_hidden?
-            hiddenTreasures.class == [].class ? hiddenTreasures.length > 0 : hiddenTreasures > 0
+            hidden_treasures.class == [].class ? hidden_treasures.length > 0 : hidden_treasures != 0
         end
 
         def to_s
@@ -33,12 +32,13 @@ module Napakalaki
             result += if death
                     "Muerte"
                 else
-                    # []*", " es un atajo para [].join(", ")
-                    "Niveles: #{levels}, Tesoros visibles: " + (visibleTreasures.class == [].class ? visibleTreasures * ", " : visibleTreasures.to_s) +
-                        ", Tesoros ocultos: " + (hiddenTreasures.class == [].class ? hiddenTreasures.join(", ") : hiddenTreasures.to_s)
+                    visibles = visible_treasures.class == [].class ? visible_treasures * ", " : (visible_treasures > -1 ? visible_treasures.to_s : "Todos")
+                    ocultos = hidden_treasures.class == [].class ? hidden_treasures * ", " : (hidden_treasures > -1 ? hidden_treasures.to_s : "Todos")
+                    # []*", " es un atajo para [].join(", ")  ----> Cambiados los dos a la primera forma        
+                    "Niveles: #{levels}, Tesoros visibles: #{visibles}, Tesoros ocultos: #{ocultos}"
                 end
         end
 
-        attr_reader :text, :levels, :visibleTreasures, :hiddenTreasures, :death 
+        attr_reader :text, :levels, :visible_treasures, :hidden_treasures, :death 
     end
 end
