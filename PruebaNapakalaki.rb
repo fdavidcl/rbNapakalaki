@@ -28,9 +28,10 @@ module Napakalaki
             }
         end
         
-        def self.treasure_takers(monsters)
+        def self.treasure_kind_takers(kind, monsters)
             monsters.select { |m|
-                m.bad.any_visible? or m.bad.any_hidden?
+                m.bad.visible_treasures.class == [].class && m.bad.visible_treasures.member?(kind) ||
+                m.bad.hidden_treasures.class == [].class && m.bad.hidden_treasures.member?(kind)
             }
 
         end
@@ -111,8 +112,8 @@ module Napakalaki
                 "Monstruos que solo restan niveles")
             display_monsters(self.prize_min_levels(2, monsters),
                 "Monstruos que dan mínimo 2 niveles")
-            display_monsters(self.treasure_takers(monsters),
-                "Monstruos que quitan algún tesoro")
+            display_monsters(self.treasure_kind_takers(:armor, monsters),
+                "Monstruos que quitan alguna armadura")
         end
     end
 end
