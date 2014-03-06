@@ -63,7 +63,7 @@ module Napakalaki
                 
                 if ( bad.visibleTreasures.class==[].class ? 
                      (bad.visibleTreasures.length > 0 or bad.hiddenTreasures.length>0)
-                     : (bad.visibleTreasures.class=="".class or bad.hiddenTreasures.class=="".class or
+                     : (bad.visibleTreasures.class=="".class or bad.hiddenTreasures.class=="".class or # Por si se lleva todos los tesoros "all"
                         bad.visibleTreasures>0 or bad.hiddenTreasures>0 ))
                 
                     result.push(e)
