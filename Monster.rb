@@ -15,5 +15,4 @@ module Napakalaki
             "Nombre: #{name}, Nivel: #{level}\n\tBuen rollo: #{prize}\n\tMal rollo: #{bad}"
         end
     end
-    
 end

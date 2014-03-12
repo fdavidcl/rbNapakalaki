@@ -21,19 +21,19 @@ module Napakalaki
 
         def self.new_deathly(text)
             obj = allocate
-            obj.send(:initialize, text, true)
+            obj.initialize(text, true)
             obj
         end
 
         def self.new_count(text, levels, n_visible, n_hidden)
             obj = allocate
-            obj.send(:initialize, text, levels, n_visible, n_hidden)
+            obj.initialize(text, levels, n_visible, n_hidden)
             obj
         end
 
         def self.new_kinds(text, levels, n_visible, n_hidden)
             obj = allocate
-            obj.send(:initialize, text, levels, n_visible, n_hidden)
+            obj.initialize(text, levels, n_visible, n_hidden)
             obj
         end
 
