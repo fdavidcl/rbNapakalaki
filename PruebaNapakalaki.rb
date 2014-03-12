@@ -43,16 +43,16 @@ module Napakalaki
                 "Pierdes tu armadura visible y otra oculta",0,[ARMOR],[ARMOR]), Prize.new(2,1))
             
             monsters << Monster.new("Chibithulhu",2, 
-                BadConsequence.new_kinds("Embobados con el lindo primigenio te descartas de tu casco visible",0,
-                [HELMET],[]), Prize.new(1,1))
+                BadConsequence.new_kinds("Embobados con el lindo primigenio te descartas "\
+                "de tu casco visible", 0, [HELMET], []), Prize.new(1,1))
                         
             monsters << Monster.new("El sopor de Dunwich",2, BadConsequence.new_kinds(
                 "El primordial bostezo contagioso. Pierdes el calzado visible",0,
                 [SHOE],[]), Prize.new(1,1))
             
             monsters << Monster.new("Ángeles de la noche ibicenca",14, BadConsequence.new_kinds(
-                "Te atrapan para llevarte de fiesta y te dejan caer en mitad del vuelo. Descarta 1 mano visible y 1 mano oculta",
-                0, [ONEHAND],[ONEHAND]), Prize.new(4,1))
+                "Te atrapan para llevarte de fiesta y te dejan caer en mitad del vuelo. "\
+                "Descarta 1 mano visible y 1 mano oculta", 0, [ONEHAND],[ONEHAND]), Prize.new(4,1))
             
             # Nótese que perder totalidad tesoros == TODOS
             monsters << Monster.new("El gorrón en el umbral",10, BadConsequence.new_count(
