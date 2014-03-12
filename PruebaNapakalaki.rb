@@ -36,7 +36,7 @@ module Napakalaki
         end
         
         if __FILE__ == $0
-            
+
             monsters = []
 
             monsters << Monster.new("Chibithulhu",2, 
