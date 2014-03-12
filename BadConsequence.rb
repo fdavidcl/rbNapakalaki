@@ -3,61 +3,84 @@
 require_relative "TreasureKind"
 
 module Napakalaki
+    TODOS = :todos
     class BadConsequence
         def initialize(text, second, n_visible = nil, n_hidden = nil)
             @text = text
-
-            if n_visible.nil? && n_hidden.nil?
-                @death = second
-                @levels = 0
-            else
+            
+            if not n_visible.nil? and not n_hidden.nil?
                 @levels = second
                 @death = false
+                if n_visible.is_a?(Array) and n_hidden.is_a?(Array)
+                    @n_visible_treasures = @n_hidden_treasures = 0
+                    @specific_visible_treasures = n_visible
+                    @specific_hidden_treasures = n_hidden
+                else
+                    @n_visible_treasures = n_visible
+                    @n_hidden_treasures = n_hidden
+                    @specific_visible_treasures = []
+                    @specific_hidden_treasures = []
+                end
+            else
+                @levels = 0
+                @death = second
+                @n_visible_treasures = @n_hidden_treasures = 0
+                @specific_visible_treasures = []
+                @specific_hidden_treasures = []
             end
-
-            @visible_treasures = n_visible.nil? ? 0 : n_visible # Pueden ser enteros o arrays de símbolos de TreasureKind
-            @hidden_treasures = n_hidden.nil? ? 0 : n_hidden
+            
         end
 
         def self.new_deathly(text)
             obj = allocate
-            obj.initialize(text, true)
+            obj.send(:initialize, text, true)
             obj
         end
 
         def self.new_count(text, levels, n_visible, n_hidden)
             obj = allocate
-            obj.initialize(text, levels, n_visible, n_hidden)
+            obj.send(:initialize, text, levels, n_visible, n_hidden)
             obj
         end
 
         def self.new_kinds(text, levels, n_visible, n_hidden)
             obj = allocate
-            obj.initialize(text, levels, n_visible, n_hidden)
+            obj.send(:initialize, text, levels, n_visible, n_hidden)
             obj
         end
 
         def any_visible?
-            (visible_treasures.class == [].class ? visible_treasures.length : visible_treasures) != 0
+            n_visible_treasures != 0 or specific_visible_treasures.any?
         end
 
         def any_hidden?
-            (hidden_treasures.class == [].class ? hidden_treasures.length : hidden_treasures) != 0
+            n_hidden_treasures != 0 or specific_hidden_treasures.any?
         end
 
         def to_s
             result = text + ": "
-            result += if death
+            result += 
+                if death
                     "Muerte"
                 else
                     # []*", " es un atajo para [].join(", ")
-                    visibles = visible_treasures.class == [].class ? visible_treasures * ", " : (visible_treasures > -1 ? visible_treasures.to_s : "Todos")
-                    ocultos = hidden_treasures.class == [].class ? hidden_treasures * ", " : (hidden_treasures > -1 ? hidden_treasures.to_s : "Todos")
+                    visibles = 
+                        if specific_visible_treasures.any?
+                            specific_visible_treasures * ", "
+                        else
+                            (n_visible_treasures == TODOS ? "Todos" : n_visible_treasures.to_s)
+                        end
+                    ocultos = 
+                        if specific_hidden_treasures.any?
+                            specific_hidden_treasures * ", "
+                        else
+                            (n_hidden_treasures == TODOS ? "Todos" : n_hidden_treasures.to_s)
+                        end
                     "Niveles: #{levels}, Tesoros visibles: #{visibles}, Tesoros ocultos: #{ocultos}"
                 end
         end
 
-        attr_reader :text, :levels, :visible_treasures, :hidden_treasures, :death 
+        attr_reader :text, :levels, :n_visible_treasures, :n_hidden_treasures, :specific_visible_treasures, :specific_hidden_treasures, :death 
     end
 
     BadConsequence.instance_eval { undef :new }

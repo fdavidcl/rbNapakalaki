@@ -30,15 +30,18 @@ module Napakalaki
         
         def self.treasure_kind_takers(kind, monsters)
             monsters.select { |m|
-                m.bad.visible_treasures.class == [].class && m.bad.visible_treasures.member?(kind) ||
-                m.bad.hidden_treasures.class == [].class && m.bad.hidden_treasures.member?(kind)
+                m.bad.specific_visible_treasures.member?(kind) ||
+                m.bad.specific_hidden_treasures.member?(kind)
             }
         end
         
         if __FILE__ == $0
 
             monsters = []
-
+            
+            monsters << Monster.new("3 Byakhees de bonanza",8, BadConsequence.new_kinds(
+                "Pierdes tu armadura visible y otra oculta",0,[ARMOR],[ARMOR]), Prize.new(2,1))
+            
             monsters << Monster.new("Chibithulhu",2, 
                 BadConsequence.new_kinds("Embobados con el lindo primigenio te descartas de tu casco visible",0,
                 [HELMET],[]), Prize.new(1,1))
@@ -51,9 +54,9 @@ module Napakalaki
                 "Te atrapan para llevarte de fiesta y te dejan caer en mitad del vuelo. Descarta 1 mano visible y 1 mano oculta",
                 0, [ONEHAND],[ONEHAND]), Prize.new(4,1))
             
-            # Nótese que perder totalidad tesoros == -1
+            # Nótese que perder totalidad tesoros == TODOS
             monsters << Monster.new("El gorrón en el umbral",10, BadConsequence.new_count(
-                "Pierdes todos tus tesoros visibles",0,-1,0), Prize.new(3,1))
+                "Pierdes todos tus tesoros visibles",0,TODOS,0), Prize.new(3,1))
             
             monsters << Monster.new("H.P. Munchcraft",6, BadConsequence.new_kinds(
                 "Pierdes la armadura visible",0,[ARMOR],[]), Prize.new(2,1))
