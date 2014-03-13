@@ -13,6 +13,7 @@ module Napakalaki
         end
         
         attr_reader :treasures, :levels
+        
         # Otra forma de implementar consultores:
         #
         # def treasures

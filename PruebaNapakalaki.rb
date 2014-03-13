@@ -24,14 +24,12 @@ module Napakalaki
         end
         
         def self.prize_min_levels(min, monsters)
-            monsters.select { |m|
-                m.prize.levels >= min
-            }
+            monsters.select { |m| m.prize.levels >= min }
         end
         
         def self.treasure_kind_takers(kind, monsters)
             monsters.select { |m|
-                m.bad.specific_visible_treasures.member?(kind) ||
+                m.bad.specific_visible_treasures.member?(kind) or
                 m.bad.specific_hidden_treasures.member?(kind)
             }
         end
@@ -106,8 +104,8 @@ module Napakalaki
                 2,5,0), Prize.new(1,1))
             
             monsters << Monster.new("Bicéfalo",20, BadConsequence.new_kinds(
-                "Te faltan manos para tanta cabeza. Pierdes 3 niveles y tus tesoros visibles de las manos",
-                3,[BOTHHANDS],[]), Prize.new(1,1))
+                "Te faltan manos para tanta cabeza. Pierdes 3 niveles y tus tesoros "\
+                "visibles de las manos", 3,[BOTHHANDS],[]), Prize.new(1,1))
                 
             display_monsters(self.stronger_than(10, monsters),
                 "Monstruos con nivel mayor que 10")

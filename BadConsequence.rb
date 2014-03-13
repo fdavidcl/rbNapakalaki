@@ -6,47 +6,31 @@ require_relative "TreasureKind"
 module Napakalaki
     TODOS = :todos
     class BadConsequence
-        def initialize(text, second, n_visible = nil, n_hidden = nil)
+        def initialize(text, death, levels, n_visible, n_hidden, s_visible, s_hidden)
             @text = text
-            
-            if not n_visible.nil? and not n_hidden.nil?
-                @levels = second
-                @death = false
-                if n_visible.is_a?(Array) and n_hidden.is_a?(Array)
-                    @n_visible_treasures = @n_hidden_treasures = 0
-                    @specific_visible_treasures = n_visible
-                    @specific_hidden_treasures = n_hidden
-                else
-                    @n_visible_treasures = n_visible
-                    @n_hidden_treasures = n_hidden
-                    @specific_visible_treasures = []
-                    @specific_hidden_treasures = []
-                end
-            else
-                @levels = 0
-                @death = second
-                @n_visible_treasures = @n_hidden_treasures = 0
-                @specific_visible_treasures = []
-                @specific_hidden_treasures = []
-            end
-            
+            @death = death
+            @levels = levels
+            @n_visible_treasures = n_visible
+            @n_hidden_treasures = n_hidden
+            @specific_visible_treasures = s_visible.clone
+            @specific_hidden_treasures = s_hidden.clone
         end
 
         def self.new_deathly(text)
             obj = allocate
-            obj.send(:initialize, text, true)
+            obj.send(:initialize, text, true, 0, 0, 0, [], [])
             obj
         end
 
         def self.new_count(text, levels, n_visible, n_hidden)
             obj = allocate
-            obj.send(:initialize, text, levels, n_visible, n_hidden)
+            obj.send(:initialize, text, false, levels, n_visible, n_hidden, [], [])
             obj
         end
 
-        def self.new_kinds(text, levels, n_visible, n_hidden)
+        def self.new_kinds(text, levels, s_visible, s_hidden)
             obj = allocate
-            obj.send(:initialize, text, levels, n_visible, n_hidden)
+            obj.send(:initialize, text, false, levels, 0, 0, s_visible, s_hidden)
             obj
         end
 
@@ -64,19 +48,19 @@ module Napakalaki
                 if death
                     "Muerte"
                 else
-                    # []*", " es un atajo para [].join(", ")
                     visibles = 
                         if specific_visible_treasures.any?
-                            specific_visible_treasures * ", "
+                            specific_visible_treasures * ", "  # []*", " es un atajo para [].join(", ")
                         else
-                            (n_visible_treasures == TODOS ? "Todos" : n_visible_treasures.to_s)
+                            n_visible_treasures == TODOS ? "Todos" : n_visible_treasures.to_s
                         end
                     ocultos = 
                         if specific_hidden_treasures.any?
                             specific_hidden_treasures * ", "
                         else
-                            (n_hidden_treasures == TODOS ? "Todos" : n_hidden_treasures.to_s)
+                            n_hidden_treasures == TODOS ? "Todos" : n_hidden_treasures.to_s
                         end
+
                     "Niveles: #{levels}, Tesoros visibles: #{visibles}, Tesoros ocultos: #{ocultos}"
                 end
         end
