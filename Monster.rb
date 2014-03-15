@@ -12,6 +12,7 @@ module Napakalaki
         
         attr_reader :name, :level, :bad, :prize
 
+        # Da una cadena con la información del monstruo
         def to_s
             "Nombre: #{name}, Nivel: #{level}\n\tBuen rollo: #{prize}\n\tMal rollo: #{bad}"
         end

@@ -7,26 +7,32 @@ require_relative "Monster.rb"
 require_relative "TreasureKind.rb"
 
 module Napakalaki
-    class PruebaNapakalaki        
+    # Clase para el programa principal
+    class PruebaNapakalaki
+        # Muestra los monstruos de una lista por pantalla
         def self.display_monsters(monsters, msg)
             puts "\n*** #{msg} ***\n"
             puts monsters
         end
 
+        # Devuelve los monstruos con nivel mayor que el especificado
         def self.stronger_than(level, monsters)
             monsters.select { |m| m.level > level }
         end
         
+        # Devuelve los monstruos que solo restan niveles
         def self.level_takers(monsters)
             monsters.select { |m| 
                 m.bad.levels > 0 and not m.bad.any_visible? and not m.bad.any_hidden?
             }
         end
         
+        # Halla los monstruos que aportan un mínimo de niveles
         def self.prize_min_levels(min, monsters)
             monsters.select { |m| m.prize.levels >= min }
         end
         
+        # Devuelve los monstruos que restan tesoros del tipo especificado
         def self.treasure_kind_takers(kind, monsters)
             monsters.select { |m|
                 m.bad.specific_visible_treasures.member?(kind) or
@@ -53,9 +59,9 @@ module Napakalaki
                 "Te atrapan para llevarte de fiesta y te dejan caer en mitad del vuelo. "\
                 "Descarta 1 mano visible y 1 mano oculta", 0, [ONEHAND],[ONEHAND]), Prize.new(4,1))
             
-            # Nótese que perder totalidad tesoros == TODOS
+            # TODOS es una constante que identifica el caso de perder todos los niveles
             monsters << Monster.new("El gorrón en el umbral",10, BadConsequence.new_count(
-                "Pierdes todos tus tesoros visibles",0,TODOS,0), Prize.new(3,1))
+                "Pierdes todos tus tesoros visibles",0,BadConsequence::ALL_LEVELS,0), Prize.new(3,1))
             
             monsters << Monster.new("H.P. Munchcraft",6, BadConsequence.new_kinds(
                 "Pierdes la armadura visible",0,[ARMOR],[]), Prize.new(2,1))
