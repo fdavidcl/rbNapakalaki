@@ -6,7 +6,7 @@ require_relative "TreasureKind"
 module Napakalaki
     # Clase que representa el mal rollo de un monstruo
     class BadConsequence
-        ALL_LEVELS = :all_levels
+        ALL_TREASURES = :all_treasures
 
         def initialize(text, death, levels, n_visible, n_hidden, s_visible, s_hidden)
             @text = text
@@ -51,7 +51,7 @@ module Napakalaki
 
         # Convierte el mal rollo en una cadena
         def to_s
-            result = text + ": "
+            result = text + "; "
             result += 
                 if death
                     "Muerte"
@@ -60,13 +60,13 @@ module Napakalaki
                         if specific_visible_treasures.any?
                             specific_visible_treasures * ", "  # []*", " es un atajo para [].join(", ")
                         else
-                            n_visible_treasures == ALL_LEVELS ? "Todos" : n_visible_treasures.to_s
+                            n_visible_treasures == ALL_TREASURES ? "Todos" : n_visible_treasures.to_s
                         end
                     ocultos = 
                         if specific_hidden_treasures.any?
                             specific_hidden_treasures * ", "
                         else
-                            n_hidden_treasures == ALL_LEVELS ? "Todos" : n_hidden_treasures.to_s
+                            n_hidden_treasures == ALL_TREASURES ? "Todos" : n_hidden_treasures.to_s
                         end
 
                     "Niveles: #{levels}, Tesoros visibles: #{visibles}, Tesoros ocultos: #{ocultos}"

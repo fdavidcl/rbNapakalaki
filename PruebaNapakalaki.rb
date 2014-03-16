@@ -59,16 +59,16 @@ module Napakalaki
                 "Te atrapan para llevarte de fiesta y te dejan caer en mitad del vuelo. "\
                 "Descarta 1 mano visible y 1 mano oculta", 0, [ONEHAND],[ONEHAND]), Prize.new(4,1))
             
-            # TODOS es una constante que identifica el caso de perder todos los niveles
+            # ALL_TREASURES es una constante que identifica el caso de perder todos los niveles
             monsters << Monster.new("El gorrón en el umbral",10, BadConsequence.new_count(
-                "Pierdes todos tus tesoros visibles",0,BadConsequence::ALL_LEVELS,0), Prize.new(3,1))
+                "Pierdes todos tus tesoros visibles",0,BadConsequence::ALL_TREASURES,0), Prize.new(3,1))
             
             monsters << Monster.new("H.P. Munchcraft",6, BadConsequence.new_kinds(
                 "Pierdes la armadura visible",0,[ARMOR],[]), Prize.new(2,1))
             
             monsters << Monster.new("Bichgooth",2, BadConsequence.new_kinds(
                 "Sientes bichos bajo la ropa. Descarta la armadura visible",0,[ARMOR],[]),
-                    Prize.new(1,1))
+                Prize.new(1,1))
             
             monsters << Monster.new("El rey de rosa",13, BadConsequence.new_count(
                 "Pierdes 5 niveles y 3 tesoros visibles",5,3,0), Prize.new(4,2))
@@ -95,23 +95,23 @@ module Napakalaki
                 Prize.new(3,1))
             
             monsters << Monster.new("Familia Feliz",1, BadConsequence.new_deathly(
-                "La familia te atrapa"), Prize.new(4,1))
+                "La familia te atrapa. Estás muerto"), Prize.new(4,1))
             
             monsters << Monster.new("Roboggoth",8, BadConsequence.new_kinds(
                 "La quinta directiva primaria te obliga a perder 2 niveles y un tesoro, 2 manos visible",
                 0,[BOTHHANDS],[]), Prize.new(2,1))
             
-            monsters << Monster.new("El espia ciego",3, BadConsequence.new_kinds(
-                "Te asusta en la noche. Pierdes un casco visible",4,[HELMET],[]), 
+            monsters << Monster.new("El espia ciego",4, BadConsequence.new_kinds(
+                "Te asusta en la noche. Pierdes un casco visible",0,[HELMET],[]), 
                 Prize.new(1,1))
             
             monsters << Monster.new("El lenguas",20, BadConsequence.new_count(
                 "Menudo susto te llevas. Pierdes 2 niveles y 5 tesoros visibles",
                 2,5,0), Prize.new(1,1))
             
-            monsters << Monster.new("Bicéfalo",20, BadConsequence.new_kinds(
+            monsters << Monster.new("Bicéfalo",20, BadConsequence.new_count(
                 "Te faltan manos para tanta cabeza. Pierdes 3 niveles y tus tesoros "\
-                "visibles de las manos", 3,[BOTHHANDS],[]), Prize.new(1,1))
+                "visibles de las manos",3,BadConsequence::ALL_TREASURES,0), Prize.new(1,1))
                 
             display_monsters(self.stronger_than(10, monsters),
                 "Monstruos con nivel mayor que 10")
