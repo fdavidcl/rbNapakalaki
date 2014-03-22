@@ -3,7 +3,7 @@
 
 require "singleton"
 
-module Napakalaki
+module Game
 	# Clase 'singleton' que representa el dado
 	class Dice
 		include Singleton

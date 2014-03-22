@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 #encoding: utf-8
 
-module Napakalaki
+module Game
     # Clase que representa el buen rollo de un monstruo
     class Prize
         def initialize(treasures,levels)

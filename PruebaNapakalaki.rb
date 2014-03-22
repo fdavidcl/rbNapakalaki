@@ -6,7 +6,7 @@ require_relative "BadConsequence.rb"
 require_relative "Monster.rb"
 require_relative "TreasureKind.rb"
 
-module Napakalaki
+module Game
     # Clase para el programa principal
     class PruebaNapakalaki
         # Muestra los monstruos de una lista por pantalla

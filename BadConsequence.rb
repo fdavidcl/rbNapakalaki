@@ -3,7 +3,7 @@
 
 require_relative "TreasureKind"
 
-module Napakalaki
+module Gams
     # Clase que representa el mal rollo de un monstruo
     class BadConsequence
         ALL_TREASURES = :all_treasures
