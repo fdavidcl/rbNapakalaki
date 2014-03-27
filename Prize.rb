@@ -15,15 +15,5 @@ module Game
         end
         
         attr_reader :treasures, :levels
-        
-        # Otra forma de implementar consultores:
-        #
-        # def treasures
-        #     @treasures
-        # end
-        #
-        # def levels
-        #     @levels
-        # end
     end
 end
