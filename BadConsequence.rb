@@ -1,52 +1,55 @@
 #!/usr/bin/env ruby
 #encoding: utf-8
 
-require_relative "TreasureKind"
+requireRelative "TreasureKind"
 
-module Gams
+module Game
     # Clase que representa el mal rollo de un monstruo
     class BadConsequence
-        ALL_TREASURES = :all_treasures
-
-        def initialize(text, death, levels, n_visible, n_hidden, s_visible, s_hidden)
+        def initialize(text, death, levels, nVisible, nHidden, sVisible, sHidden)
             @text = text
             @death = death
             @levels = levels
-            @n_visible_treasures = n_visible
-            @n_hidden_treasures = n_hidden
-            @specific_visible_treasures = s_visible.clone
-            @specific_hidden_treasures = s_hidden.clone
+            @nVisibleTreasures = nVisible
+            @nHiddenTreasures = nHidden
+            @specificVisibleTreasures = sVisible.clone
+            @specificHiddenTreasures = sHidden.clone
         end
 
         # Constructor de malos rollos mortales
-        def self.new_deathly(text)
+        def self.newDeathly(text)
             obj = allocate
             obj.send(:initialize, text, true, 0, 0, 0, [], [])
             obj
         end
 
         # Constructor de malos rollos con número de tesoros
-        def self.new_count(text, levels, n_visible, n_hidden)
+        def self.newCount(text, levels, nVisible, nHidden)
             obj = allocate
-            obj.send(:initialize, text, false, levels, n_visible, n_hidden, [], [])
+            obj.send(:initialize, text, false, levels, nVisible, nHidden, [], [])
             obj
         end
 
         # Constructor de malos rollos con lista de tesoros
-        def self.new_kinds(text, levels, s_visible, s_hidden)
+        def self.newKinds(text, levels, sVisible, sHidden)
             obj = allocate
-            obj.send(:initialize, text, false, levels, 0, 0, s_visible, s_hidden)
+            obj.send(:initialize, text, false, levels, 0, 0, sVisible, sHidden)
             obj
         end
 
         # Informa de si se pierde algún tesoro visible
-        def any_visible?
-            n_visible_treasures != 0 or specific_visible_treasures.any?
+        def isEmpty
+            nVisibleTreasures == 0 && nHiddenTreasures == 0 &&
+            specificVisibleTreasures.empty? && specificHiddenTreasures.empty?
         end
 
-        # Informa de si se pierde algún tesoro oculto
-        def any_hidden?
-            n_hidden_treasures != 0 or specific_hidden_treasures.any?
+        def substractVisibleTreasure(t)
+        end
+
+        def substractHiddenTreasure(t)
+        end
+
+        def adjustToFitTreasureLists(v, h)
         end
 
         # Convierte el mal rollo en una cadena
@@ -57,24 +60,23 @@ module Gams
                     "Muerte"
                 else
                     visibles = 
-                        if specific_visible_treasures.any?
-                            specific_visible_treasures * ", "  # []*", " es un atajo para [].join(", ")
+                        if specificVisibleTreasures.any?
+                            specificVisibleTreasures * ", "  # []*", " es un atajo para [].join(", ")
                         else
-                            n_visible_treasures == ALL_TREASURES ? "Todos" : n_visible_treasures.to_s
+                            nVisibleTreasures == ALL_TREASURES ? "Todos" : nVisibleTreasures.toS
                         end
                     ocultos = 
-                        if specific_hidden_treasures.any?
-                            specific_hidden_treasures * ", "
+                        if specificHiddenTreasures.any?
+                            specificHiddenTreasures * ", "
                         else
-                            n_hidden_treasures == ALL_TREASURES ? "Todos" : n_hidden_treasures.to_s
+                            nHiddenTreasures == ALL_TREASURES ? "Todos" : nHiddenTreasures.toS
                         end
 
                     "Niveles: #{levels}, Tesoros visibles: #{visibles}, Tesoros ocultos: #{ocultos}"
                 end
         end
 
-        attr_reader :text, :levels, :n_visible_treasures, :n_hidden_treasures, :specific_visible_treasures, :specific_hidden_treasures, :death
-        
+        attr_reader :text, :levels, :nVisibleTreasures, :nHiddenTreasures, :specificVisibleTreasures, :specificHiddenTreasures, :death
     end
 
     BadConsequence.instance_eval { undef :new }

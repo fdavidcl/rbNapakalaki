@@ -2,6 +2,7 @@
 #encoding: utf-8
 
 require "singleton"
+requireRelative "Monster", "Player", "CombatResult", "CardDealer"
 
 module Game
     # Clase 'singleton' que contiene el mecanismo del juego
@@ -9,55 +10,55 @@ module Game
         include Singleton
 
         def initialize
-            @current_monster = nil
-            @current_player = nil
+            @currentMonster = nil
+            @currentPlayer = nil
             @players = []
         end
 
         private
-        def init_players(names)
+        def initPlayers(names)
         end
 
-        def next_player
+        def nextPlayer
         end
 
         public
         def combat
         end
 
-        def discard_visible_treasure(t)
+        def discardVisibleTreasure(t)
         end
 
-        def discard_hidden_treasure(t)
+        def discardHiddenTreasure(t)
         end
 
-        def make_treasure_visible(t)
+        def makeTreasureVisible(t)
         end
 
-        def buy_levels(visible, hidden)
+        def buyLevels(visible, hidden)
         end
 
-        def init_game(players)
+        def initGame(players)
         end
 
-        attr_reader :current_player, :current_monster
+        attr_reader :currentPlayer, :currentMonster
 
-        def can_make_treasure_visible(t)
+        def canMakeTreasureVisible?(t)
         end
 
-        def visible_treasures
+        def visibleTreasures
         end
 
-        def hidden_treasures
+        def hiddenTreasures
         end
 
-        def next_turn
+        def nextTurn
         end
 
-        def next_turn_allowed
+        def nextTurnAllowed
         end
 
-        def end_of_game(result)
+        def endOfGame(result)
         end
     end
 end

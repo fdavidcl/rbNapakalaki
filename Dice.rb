@@ -8,7 +8,7 @@ module Game
     class Dice
         include Singleton
 
-        def next_number
+        def nextNumber
             1 + Random.rand(6)
         end
     end

@@ -6,12 +6,12 @@ module Game
     class Treasure
         def initialize(name, gold, min, max, type)
             @name = name
-            @gold_coins = gold
-            @min_bonus = @min_bonus
-            @max_bonus = @max_bonus
+            @goldCoins = gold
+            @minBonus = @minBonus
+            @maxBonus = @maxBonus
             @type = type
         end
 
-        attr_reader :name, :gold_coins, :min_bonus, :max_bonus, :type 
+        attr_reader :name, :goldCoins, :minBonus, :maxBonus, :type 
     end
 end

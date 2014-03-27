@@ -6,14 +6,14 @@ module Game
         def initialize(name, level, bad, prize)
             @name = name
             @level = level
-            @bad = bad
+            @badConsequence = bad
             @prize = prize
         end
         
-        attr_reader :name, :level, :bad, :prize
+        attr_reader :name, :level, :badConsequence, :prize
 
         # Da una cadena con la información del monstruo
-        def to_s
+        def toS
             "Nombre: #{name}, Nivel: #{level}\n\tBuen rollo: #{prize}\n\tMal rollo: #{bad}"
         end
     end

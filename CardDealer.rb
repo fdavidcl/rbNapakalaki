@@ -8,39 +8,39 @@ module Game
         include Singleton
 
         def initialize
-            @unused_monsters = []
-            @used_monsters = []
-            @unused_treasures = []
-            @used_treasures = []
+            @unusedMonsters = []
+            @usedMonsters = []
+            @unusedTreasures = []
+            @usedTreasures = []
         end
 
         private
-        def init_treasure_card_deck
+        def initTreasureCardDeck
         end
 
-        def init_monster_card_deck
+        def initMonsterCardDeck
         end
 
-        def shuffle_treasures
+        def shuffleTreasures
         end
 
-        def shuffle_monsters
+        def shuffleMonsters
         end
 
         public
-        def next_treasure
+        def nextTreasure
         end
 
-        def next_monster
+        def nextMonster
         end
 
-        def give_treasure_back(t)
+        def giveTreasureBack(t)
         end
 
-        def give_monster_back(m)
+        def giveMonsterBack(m)
         end
 
-        def init_cards
+        def initCards
         end
     end
 end
