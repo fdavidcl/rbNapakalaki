@@ -4,12 +4,12 @@
 require "singleton"
 
 module Game
-	# Clase 'singleton' que representa el dado
-	class Dice
-		include Singleton
+    # Clase 'singleton' que representa el dado
+    class Dice
+        include Singleton
 
-		def next_number
-			1 + Random.rand(6)
-		end
-	end
+        def next_number
+            1 + Random.rand(6)
+        end
+    end
 end
