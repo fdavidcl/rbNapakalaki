@@ -8,6 +8,10 @@ module Game
     	include Singleton
 
     	def initialize
+    		@unused_monsters = []
+    		@used_monsters = []
+    		@unused_treasures = []
+    		@used_treasures = []
     	end
 
     	private
