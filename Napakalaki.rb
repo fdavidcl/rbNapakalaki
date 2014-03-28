@@ -60,9 +60,7 @@ module Game
 
         def endOfGame(result)
         end
-    end
-    # Clase para el programa principal
-    class PruebaNapakalaki
+
         # Muestra los monstruos de una lista por pantalla
         def self.display_monsters(monsters, msg)
             puts "\n*** #{msg} ***\n"
