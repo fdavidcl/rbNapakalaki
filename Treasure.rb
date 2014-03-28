@@ -2,7 +2,7 @@
 #encoding: utf-8
 
 module Game
-    # 
+
     class Treasure
         def initialize(name, gold, min, max, type)
             @name = name
@@ -12,6 +12,24 @@ module Game
             @type = type
         end
 
-        attr_reader :name, :goldCoins, :minBonus, :maxBonus, :type 
+        def getName
+            @name
+        end
+        
+        def getGoldCoins
+            @goldCoins
+        end
+        
+        def getMinBonus
+            @minBonus
+        end
+        
+        def getMaxBonus
+            @maxBonus
+        end
+        
+        def getType
+            @type
+        end
     end
 end

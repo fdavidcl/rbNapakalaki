@@ -1,6 +1,8 @@
 #!/usr/bin/env ruby
 #encoding: utf-8
 
+require_relative "Prize"
+
 module Game
     class Monster
         def initialize(name, level, bad, prize)
@@ -10,11 +12,25 @@ module Game
             @prize = prize
         end
         
-        attr_reader :name, :level, :badConsequence, :prize
+        def getName
+            @name
+        end
+        
+        def getLevel
+            @level
+        end
+        
+        def getBadConsequence
+            @badConsequence
+        end
+        
+        def getPrize
+            @prize
+        end
 
         # Da una cadena con la información del monstruo
-        def toS
-            "Nombre: #{name}, Nivel: #{level}\n\tBuen rollo: #{prize}\n\tMal rollo: #{bad}"
+        def to_s
+            "Nombre: #{getName}, Nivel: #{getLevel}\n\tBuen rollo: #{getPrize}\n\tMal rollo: #{getBadConsequence}"
         end
     end
 end

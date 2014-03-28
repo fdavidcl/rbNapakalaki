@@ -8,12 +8,19 @@ module Game
             @treasures = treasures
             @levels = levels
         end
-
-        # Pasa el buen rollo a una cadena de caracteres
-        def to_s
-            "Tesoros: #{treasures}, Niveles: #{levels}"
+                
+        def getTreasures
+            @treasures
         end
         
-        attr_reader :treasures, :levels
+        def getLevels
+            @levels
+        end
+        
+        # Pasa el buen rollo a una cadena de caracteres
+        def to_s
+            "Tesoros: #{getTreasures}, Niveles: #{getLevels}"
+        end
+        
     end
 end

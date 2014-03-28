@@ -1,11 +1,12 @@
 #!/usr/bin/env ruby
 #encoding: utf-8
 
-requireRelative "TreasureKind"
+require_relative "TreasureKind"
 
 module Game
     # Clase que representa el mal rollo de un monstruo
     class BadConsequence
+        ALL_TREASURES = :todos
         def initialize(text, death, levels, nVisible, nHidden, sVisible, sHidden)
             @text = text
             @death = death
@@ -43,6 +44,35 @@ module Game
             specificVisibleTreasures.empty? && specificHiddenTreasures.empty?
         end
 
+        def kills
+            @death
+        end
+        
+        # Este método se pone??????
+        def getText
+            @text
+        end
+        
+        def getLevels
+            @levels
+        end
+        
+        def getNVisibleTreasures
+            @nVisibleTreasures
+        end
+        
+        def getNHiddenTreasures
+            @nHiddenTreasures
+        end
+        
+        def getSpecificHiddenTreasures
+            @specificHiddenTreasures
+        end
+        
+        def getSpecificVisibleTreasures
+            @specificVisibleTreasures
+        end
+        
         def substractVisibleTreasure(t)
         end
 
@@ -54,29 +84,27 @@ module Game
 
         # Convierte el mal rollo en una cadena
         def to_s
-            result = text + "; "
+            result = getText + "; "
             result += 
-                if death
+                if kills
                     "Muerte"
                 else
                     visibles = 
-                        if specificVisibleTreasures.any?
-                            specificVisibleTreasures * ", "  # []*", " es un atajo para [].join(", ")
+                        if getSpecificVisibleTreasures.any?
+                            getSpecificVisibleTreasures * ", "  # []*", " es un atajo para [].join(", ")
                         else
-                            nVisibleTreasures == ALL_TREASURES ? "Todos" : nVisibleTreasures.toS
+                            getNVisibleTreasures == ALL_TREASURES ? "Todos" : getNVisibleTreasures.to_s
                         end
                     ocultos = 
-                        if specificHiddenTreasures.any?
-                            specificHiddenTreasures * ", "
+                        if getSpecificHiddenTreasures.any?
+                            getSpecificHiddenTreasures * ", "
                         else
-                            nHiddenTreasures == ALL_TREASURES ? "Todos" : nHiddenTreasures.toS
+                            getNHiddenTreasures == ALL_TREASURES ? "Todos" : getNHiddenTreasures.to_s
                         end
 
-                    "Niveles: #{levels}, Tesoros visibles: #{visibles}, Tesoros ocultos: #{ocultos}"
+                    "Niveles: #{getLevels}, Tesoros visibles: #{visibles}, Tesoros ocultos: #{ocultos}"
                 end
         end
-
-        attr_reader :text, :levels, :nVisibleTreasures, :nHiddenTreasures, :specificVisibleTreasures, :specificHiddenTreasures, :death
     end
 
     BadConsequence.instance_eval { undef :new }

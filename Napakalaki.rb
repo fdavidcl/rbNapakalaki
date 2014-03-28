@@ -2,7 +2,10 @@
 #encoding: utf-8
 
 require "singleton"
-requireRelative "Monster", "Player", "CombatResult", "CardDealer"
+require_relative "Monster"
+require_relative "Player"
+require_relative "CombatResult"
+require_relative "CardDealer"
 
 module Game
     # Clase 'singleton' que contiene el mecanismo del juego
@@ -41,8 +44,14 @@ module Game
         def initGame(players)
         end
 
-        attr_reader :currentPlayer, :currentMonster
-
+        def getCurrentPlayer
+            @currentPlayer
+        end
+        
+        def getCurrentMonster
+            @currentMonster
+        end
+        
         def canMakeTreasureVisible?(t)
         end
 
@@ -68,27 +77,29 @@ module Game
         end
 
         # Devuelve los monstruos con nivel mayor que el especificado
-        def self.stronger_than(level, monsters)
-            monsters.select { |m| m.level > level }
+        def self.strongerThan(level, monsters)
+            monsters.select { |m| m.getLevel > level }
         end
         
         # Devuelve los monstruos que solo restan niveles
-        def self.level_takers(monsters)
+        def self.levelTakers(monsters)
             monsters.select { |m| 
-                m.bad.levels > 0 and not m.bad.any_visible? and not m.bad.any_hidden?
+                m.getBadConsequence.getLevels > 0 and not
+                ((m.getBadConsequence.getNVisibleTreasures.is_a?(Fixnum) ? m.getBadConsequence.getNVisibleTreasures > 0 : true) or m.getBadConsequence.getSpecificVisibleTreasures.any?) and not
+                ((m.getBadConsequence.getNHiddenTreasures.is_a?(Fixnum) ? m.getBadConsequence.getNHiddenTreasures > 0 : true) or m.getBadConsequence.getSpecificHiddenTreasures.any?)
             }
         end
         
         # Halla los monstruos que aportan un mínimo de niveles
         def self.prize_min_levels(min, monsters)
-            monsters.select { |m| m.prize.levels >= min }
+            monsters.select { |m| m.getPrize.getLevels >= min }
         end
         
         # Devuelve los monstruos que restan tesoros del tipo especificado
-        def self.treasure_kind_takers(kind, monsters)
+        def self.treasureKindTakers(kind, monsters)
             monsters.select { |m|
-                m.bad.specific_visible_treasures.member?(kind) or
-                m.bad.specific_hidden_treasures.member?(kind)
+                m.getBadConsequence.getSpecificVisibleTreasures.member?(kind) or
+                m.getBadConsequence.getSpecificHiddenTreasures.member?(kind)
             }
         end
         
@@ -97,72 +108,72 @@ module Game
             monsters = []
             treasures = []
             
-            monsters << Monster.new("3 Byakhees de bonanza",8, BadConsequence.new_kinds(
+            monsters << Monster.new("3 Byakhees de bonanza",8, BadConsequence.newKinds(
                 "Pierdes tu armadura visible y otra oculta",0,[ARMOR],[ARMOR]), Prize.new(2,1))
             
             monsters << Monster.new("Chibithulhu",2, 
-                BadConsequence.new_kinds("Embobados con el lindo primigenio te descartas "\
+                BadConsequence.newKinds("Embobados con el lindo primigenio te descartas "\
                 "de tu casco visible", 0, [HELMET], []), Prize.new(1,1))
                         
-            monsters << Monster.new("El sopor de Dunwich",2, BadConsequence.new_kinds(
+            monsters << Monster.new("El sopor de Dunwich",2, BadConsequence.newKinds(
                 "El primordial bostezo contagioso. Pierdes el calzado visible",0,
                 [SHOE],[]), Prize.new(1,1))
             
-            monsters << Monster.new("Ángeles de la noche ibicenca",14, BadConsequence.new_kinds(
+            monsters << Monster.new("Ángeles de la noche ibicenca",14, BadConsequence.newKinds(
                 "Te atrapan para llevarte de fiesta y te dejan caer en mitad del vuelo. "\
                 "Descarta 1 mano visible y 1 mano oculta", 0, [ONEHAND],[ONEHAND]), Prize.new(4,1))
             
             # ALL_TREASURES es una constante que identifica el caso de perder todos los niveles
-            monsters << Monster.new("El gorrón en el umbral",10, BadConsequence.new_count(
+            monsters << Monster.new("El gorrón en el umbral",10, BadConsequence.newCount(
                 "Pierdes todos tus tesoros visibles",0,BadConsequence::ALL_TREASURES,0), Prize.new(3,1))
             
-            monsters << Monster.new("H.P. Munchcraft",6, BadConsequence.new_kinds(
+            monsters << Monster.new("H.P. Munchcraft",6, BadConsequence.newKinds(
                 "Pierdes la armadura visible",0,[ARMOR],[]), Prize.new(2,1))
             
-            monsters << Monster.new("Bichgooth",2, BadConsequence.new_kinds(
+            monsters << Monster.new("Bichgooth",2, BadConsequence.newKinds(
                 "Sientes bichos bajo la ropa. Descarta la armadura visible",0,[ARMOR],[]),
                 Prize.new(1,1))
             
-            monsters << Monster.new("El rey de rosa",13, BadConsequence.new_count(
+            monsters << Monster.new("El rey de rosa",13, BadConsequence.newCount(
                 "Pierdes 5 niveles y 3 tesoros visibles",5,3,0), Prize.new(4,2))
             
-            monsters << Monster.new("La que redacta en las sombras",3, BadConsequence.new_count(
+            monsters << Monster.new("La que redacta en las sombras",3, BadConsequence.newCount(
                 "Toses los pulmones y pierdes 2 niveles",2,0,0), Prize.new(1,1))
             
-            monsters << Monster.new("Los hondos verdes",7, BadConsequence.new_deathly(
+            monsters << Monster.new("Los hondos verdes",7, BadConsequence.newDeathly(
                 "Estos monstruos resultan bastante superficiales y te aburren mortalmente. Estás muerto"),
                 Prize.new(2,1))
             
-            monsters << Monster.new("Semillas Cthulhu",4, BadConsequence.new_count(
+            monsters << Monster.new("Semillas Cthulhu",4, BadConsequence.newCount(
                 "Pierdes 2 niveles y 2 tesoros ocultos",2,0,2), Prize.new(2,1))
             
-            monsters << Monster.new("Dameargo",1, BadConsequence.new_kinds(
+            monsters << Monster.new("Dameargo",1, BadConsequence.newKinds(
                 "Te intentas escaquear. Pierdes una mano visible",0,[ONEHAND],[]), 
                 Prize.new(2,1))
             
-            monsters << Monster.new("Pollipólipo volante",3, BadConsequence.new_count(
+            monsters << Monster.new("Pollipólipo volante",3, BadConsequence.newCount(
                 "Da mucho asquito. Pierdes 3 niveles",3,0,0), Prize.new(1,1))
             
-            monsters << Monster.new("Yskhtihyssg-Goth",12, BadConsequence.new_deathly(
+            monsters << Monster.new("Yskhtihyssg-Goth",12, BadConsequence.newDeathly(
                 "No le hace gracia que pronuncien mal su nombre. Estás muerto"),
                 Prize.new(3,1))
             
-            monsters << Monster.new("Familia Feliz",1, BadConsequence.new_deathly(
+            monsters << Monster.new("Familia Feliz",1, BadConsequence.newDeathly(
                 "La familia te atrapa. Estás muerto"), Prize.new(4,1))
             
-            monsters << Monster.new("Roboggoth",8, BadConsequence.new_kinds(
+            monsters << Monster.new("Roboggoth",8, BadConsequence.newKinds(
                 "La quinta directiva primaria te obliga a perder 2 niveles y un tesoro, 2 manos visible",
                 0,[BOTHHANDS],[]), Prize.new(2,1))
             
-            monsters << Monster.new("El espia ciego",4, BadConsequence.new_kinds(
+            monsters << Monster.new("El espia ciego",4, BadConsequence.newKinds(
                 "Te asusta en la noche. Pierdes un casco visible",0,[HELMET],[]), 
                 Prize.new(1,1))
             
-            monsters << Monster.new("El lenguas",20, BadConsequence.new_count(
+            monsters << Monster.new("El lenguas",20, BadConsequence.newCount(
                 "Menudo susto te llevas. Pierdes 2 niveles y 5 tesoros visibles",
                 2,5,0), Prize.new(1,1))
             
-            monsters << Monster.new("Bicéfalo",20, BadConsequence.new_count(
+            monsters << Monster.new("Bicéfalo",20, BadConsequence.newCount(
                 "Te faltan manos para tanta cabeza. Pierdes 3 niveles y tus tesoros "\
                 "visibles de las manos",3,BadConsequence::ALL_TREASURES,0), Prize.new(1,1))
             
@@ -199,13 +210,13 @@ module Game
             treasures << Treasure.new("Shogulador", 600, 1, 1, BOTHHANDS)
             treasures << Treasure.new("Varita de atizamiento", 400, 3, 4, ONEHAND)
             
-            display_monsters(self.stronger_than(10, monsters),
+            display_monsters(self.strongerThan(10, monsters),
                 "Monstruos con nivel mayor que 10")
-            display_monsters(self.level_takers(monsters),  
+            display_monsters(self.levelTakers(monsters),  
                 "Monstruos que solo restan niveles")
             display_monsters(self.prize_min_levels(2, monsters),
                 "Monstruos que dan mínimo 2 niveles")
-            display_monsters(self.treasure_kind_takers(ARMOR, monsters),
+            display_monsters(self.treasureKindTakers(ARMOR, monsters),
                 "Monstruos que quitan alguna armadura")
         end
     end
