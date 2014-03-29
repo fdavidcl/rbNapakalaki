@@ -69,39 +69,6 @@ module Game
 
         def endOfGame(result)
         end
-
-        # Muestra los monstruos de una lista por pantalla
-        def self.display_monsters(monsters, msg)
-            puts "\n*** #{msg} ***\n"
-            puts monsters
-        end
-
-        # Devuelve los monstruos con nivel mayor que el especificado
-        def self.strongerThan(level, monsters)
-            monsters.select { |m| m.getLevel > level }
-        end
-        
-        # Devuelve los monstruos que solo restan niveles
-        def self.levelTakers(monsters)
-            monsters.select { |m| 
-                m.getBadConsequence.getLevels > 0 and not
-                ((m.getBadConsequence.getNVisibleTreasures.is_a?(Fixnum) ? m.getBadConsequence.getNVisibleTreasures > 0 : true) or m.getBadConsequence.getSpecificVisibleTreasures.any?) and not
-                ((m.getBadConsequence.getNHiddenTreasures.is_a?(Fixnum) ? m.getBadConsequence.getNHiddenTreasures > 0 : true) or m.getBadConsequence.getSpecificHiddenTreasures.any?)
-            }
-        end
-        
-        # Halla los monstruos que aportan un mínimo de niveles
-        def self.prize_min_levels(min, monsters)
-            monsters.select { |m| m.getPrize.getLevels >= min }
-        end
-        
-        # Devuelve los monstruos que restan tesoros del tipo especificado
-        def self.treasureKindTakers(kind, monsters)
-            monsters.select { |m|
-                m.getBadConsequence.getSpecificVisibleTreasures.member?(kind) or
-                m.getBadConsequence.getSpecificHiddenTreasures.member?(kind)
-            }
-        end
         
         if __FILE__ == $0
 
@@ -123,9 +90,8 @@ module Game
                 "Te atrapan para llevarte de fiesta y te dejan caer en mitad del vuelo. "\
                 "Descarta 1 mano visible y 1 mano oculta", 0, [ONEHAND],[ONEHAND]), Prize.new(4,1))
             
-            # ALL_TREASURES es una constante que identifica el caso de perder todos los niveles
             monsters << Monster.new("El gorrón en el umbral",10, BadConsequence.newCount(
-                "Pierdes todos tus tesoros visibles",0,BadConsequence::ALL_TREASURES,0), Prize.new(3,1))
+                "Pierdes todos tus tesoros visibles",0, -1,0), Prize.new(3,1))
             
             monsters << Monster.new("H.P. Munchcraft",6, BadConsequence.newKinds(
                 "Pierdes la armadura visible",0,[ARMOR],[]), Prize.new(2,1))
@@ -175,7 +141,7 @@ module Game
             
             monsters << Monster.new("Bicéfalo",20, BadConsequence.newCount(
                 "Te faltan manos para tanta cabeza. Pierdes 3 niveles y tus tesoros "\
-                "visibles de las manos",3,BadConsequence::ALL_TREASURES,0), Prize.new(1,1))
+                "visibles de las manos",3, -1,0), Prize.new(1,1))
             
             treasures << Treasure.new("¡Sí mi amo!",0,4,7,HELMET)
             treasures << Treasure.new("Botas de investigación",600,3,4,SHOE)
@@ -194,7 +160,8 @@ module Game
             treasures << Treasure.new("Insecticida", 300, 2, 3, ONEHAND)
             treasures << Treasure.new("Escopeta de 3 cañones", 700, 4, 6, BOTHHANDS)
             treasures << Treasure.new("Garabato místico", 300, 2, 2, ONEHAND)
-            #treasures << Treasure.new("La fuerza de Mr.T", 1000, integer.MAX_VALUE, integer.MAX_VALUE, NECKLACE)
+            # Usamos -1 para indicar "Máximo" o "Todos"
+            treasures << Treasure.new("La fuerza de Mr.T", 1000, -1, -1, NECKLACE)
             treasures << Treasure.new("La rebeca metálica", 400, 2, 3, ARMOR)
             treasures << Treasure.new("Mazo de los antiguos", 200, 3, 4, ONEHAND)
             treasures << Treasure.new("Necro-playboycón", 300, 3, 5, ONEHAND)
@@ -209,15 +176,6 @@ module Game
             treasures << Treasure.new("Zapatilla deja-amigos", 500, 0, 1, SHOE)
             treasures << Treasure.new("Shogulador", 600, 1, 1, BOTHHANDS)
             treasures << Treasure.new("Varita de atizamiento", 400, 3, 4, ONEHAND)
-            
-            display_monsters(self.strongerThan(10, monsters),
-                "Monstruos con nivel mayor que 10")
-            display_monsters(self.levelTakers(monsters),  
-                "Monstruos que solo restan niveles")
-            display_monsters(self.prize_min_levels(2, monsters),
-                "Monstruos que dan mínimo 2 niveles")
-            display_monsters(self.treasureKindTakers(ARMOR, monsters),
-                "Monstruos que quitan alguna armadura")
         end
     end
 end

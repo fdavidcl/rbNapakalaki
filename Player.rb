@@ -45,7 +45,7 @@ module Game
         def applyPrize(p)
         end
         
-        def combat (m)
+        def combat(m)
         end
         
         def applyBadConsequence(bad)
@@ -82,7 +82,7 @@ module Game
             @dead
         end
         
-        def hasVisibleTreasures()
+        def hasVisibleTreasures
         end
         
         def initialize(name)
@@ -94,11 +94,11 @@ module Game
             @pendingBadConsequence = nil
         end
         
-        def getVisibleTreasures()
+        def getVisibleTreasures
             @visibleTreasures.clone
         end
         
-        def getHiddenTreasures()
+        def getHiddenTreasures
             @hiddenTreasures.clone
         end
     end

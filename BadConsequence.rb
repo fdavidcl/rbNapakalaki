@@ -6,7 +6,6 @@ require_relative "TreasureKind"
 module Game
     # Clase que representa el mal rollo de un monstruo
     class BadConsequence
-        ALL_TREASURES = :todos
         def initialize(text, death, levels, nVisible, nHidden, sVisible, sHidden)
             @text = text
             @death = death
@@ -47,12 +46,7 @@ module Game
         def kills
             @death
         end
-        
-        # Este método se pone??????
-        def getText
-            @text
-        end
-        
+
         def getLevels
             @levels
         end
@@ -84,25 +78,25 @@ module Game
 
         # Convierte el mal rollo en una cadena
         def to_s
-            result = getText + "; "
+            result = @text + "; "
             result += 
                 if kills
                     "Muerte"
                 else
                     visibles = 
-                        if getSpecificVisibleTreasures.any?
-                            getSpecificVisibleTreasures * ", "  # []*", " es un atajo para [].join(", ")
+                        if @specificVisibleTreasures.any?
+                            @specificVisibleTreasures * ", "  # []*", " es un atajo para [].join(", ")
                         else
-                            getNVisibleTreasures == ALL_TREASURES ? "Todos" : getNVisibleTreasures.to_s
+                            @nVisibleTreasures < 0 ? "Todos" : @nVisibleTreasures.to_s
                         end
                     ocultos = 
-                        if getSpecificHiddenTreasures.any?
-                            getSpecificHiddenTreasures * ", "
+                        if @specificHiddenTreasures.any?
+                            @specificHiddenTreasures * ", "
                         else
-                            getNHiddenTreasures == ALL_TREASURES ? "Todos" : getNHiddenTreasures.to_s
+                            @nHiddenTreasures < 0 ? "Todos" : @nHiddenTreasures.to_s
                         end
 
-                    "Niveles: #{getLevels}, Tesoros visibles: #{visibles}, Tesoros ocultos: #{ocultos}"
+                    "Niveles: #{@levels}, Tesoros visibles: #{visibles}, Tesoros ocultos: #{ocultos}"
                 end
         end
     end

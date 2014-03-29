@@ -30,7 +30,7 @@ module Game
 
         # Da una cadena con la información del monstruo
         def to_s
-            "Nombre: #{getName}, Nivel: #{getLevel}\n\tBuen rollo: #{getPrize}\n\tMal rollo: #{getBadConsequence}"
+            "Nombre: #{@name}, Nivel: #{@level}\n\tBuen rollo: #{@prize}\n\tMal rollo: #{@badConsequence}"
         end
     end
 end
