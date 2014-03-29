@@ -52,7 +52,7 @@ module Game
             @currentMonster
         end
         
-        def canMakeTreasureVisible?(t)
+        def canMakeTreasureVisible(t)
         end
 
         def visibleTreasures
@@ -160,8 +160,8 @@ module Game
             treasures << Treasure.new("Insecticida", 300, 2, 3, ONEHAND)
             treasures << Treasure.new("Escopeta de 3 cañones", 700, 4, 6, BOTHHANDS)
             treasures << Treasure.new("Garabato místico", 300, 2, 2, ONEHAND)
-            # Usamos -1 para indicar "Máximo" o "Todos"
-            treasures << Treasure.new("La fuerza de Mr.T", 1000, -1, -1, NECKLACE)
+            # Tesoro collar: No aporta niveles pero supone tomar el maxBonus de los demás
+            treasures << Treasure.new("La fuerza de Mr.T", 1000, 0, 0, NECKLACE)
             treasures << Treasure.new("La rebeca metálica", 400, 2, 3, ARMOR)
             treasures << Treasure.new("Mazo de los antiguos", 200, 3, 4, ONEHAND)
             treasures << Treasure.new("Necro-playboycón", 300, 3, 5, ONEHAND)

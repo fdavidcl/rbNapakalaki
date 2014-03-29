@@ -10,15 +10,24 @@ require_relative "CombatResult"
 module Game
     
     class Player
+        def initialize(name)
+            @dead = true
+            @name = name
+            @level = 0
+            @hiddenTreasures = []
+            @visibleTreasures = []
+            @pendingBadConsequence = nil
+        end
+
         def bringToLife
             @dead = false
         end
         
-        def incrementaLevels(l)
+        def incrementLevels(l)
             @level += l
         end
         
-        def decrementaLevels(l)
+        def decrementLevels(l)
             @level -= l
         end
         
@@ -58,11 +67,11 @@ module Game
         end
         
         def discardVisibleTreasure(t)
-            visibleTreasures.slice! visibleTreasures.index(t)
+            visibleTreasures.delete_at visibleTreasures.index(t)
         end
         
         def discardHiddenTreasure(t)
-            hiddenTreasures.slice! hiddenTreasures.index(t)
+            hiddenTreasures.delete_at hiddenTreasures.index(t)
         end
         
         def buyLevels(visible,hidden)
@@ -93,6 +102,7 @@ module Game
             @visibleTreasures = []
             @pendingBadConsequence = nil
         end
+
         
         def getVisibleTreasures
             @visibleTreasures.clone
