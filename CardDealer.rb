@@ -2,7 +2,7 @@
 #encoding: utf-8
 
 require "singleton"
-require_relative "Treasurex"
+require_relative "Treasure"
 
 module Game
     class CardDealer
