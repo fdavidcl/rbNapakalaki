@@ -39,8 +39,8 @@ module Game
 
         # Informa de si se pierde algún tesoro visible
         def isEmpty
-            nVisibleTreasures == 0 && nHiddenTreasures == 0 &&
-            specificVisibleTreasures.empty? && specificHiddenTreasures.empty?
+            @nVisibleTreasures == 0 && @nHiddenTreasures == 0 &&
+            @specificVisibleTreasures.empty? && @specificHiddenTreasures.empty?
         end
 
         def kills
