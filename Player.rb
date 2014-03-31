@@ -19,6 +19,7 @@ module Game
             @pendingBadConsequence = nil
         end
 
+        private
         def bringToLife
             @dead = false
         end
@@ -36,6 +37,7 @@ module Game
         end
         
         def die
+            @dead = true
         end
         
         def discardNecklaceVisible
@@ -50,7 +52,7 @@ module Game
         def canIBuyLevels(l)
         end
         
-        private
+        public
         def applyPrize(p)
         end
         
@@ -93,16 +95,6 @@ module Game
         
         def hasVisibleTreasures
         end
-        
-        def initialize(name)
-            @dead = true
-            @name = name
-            @level = 0
-            @hiddenTreasures = []
-            @visibleTreasures = []
-            @pendingBadConsequence = nil
-        end
-
         
         def getVisibleTreasures
             @visibleTreasures.clone
