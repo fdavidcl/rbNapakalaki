@@ -29,7 +29,7 @@ module Game
         end
         
         def decrementLevels(l)
-            @level -= l
+            @level = [level-l, 1].max
         end
         
         def setPendingBadConsequence(b)
@@ -41,15 +41,19 @@ module Game
         end
         
         def discardNecklaceVisible
+            @visibleTreasures.delete(NECKLACE)
         end
         
         def dieIfNoTreasures
+            @dead = true if visibleTreasures.empty? and hiddenTreasures.empty?
         end
         
-        def computeGoldCoinsValue
+        def computeGoldCoinsValue(t)
+            t.inject{|sum,x} sum += x.getGoldCoins} / 1000
         end
         
         def canIBuyLevels(l)
+            @level + l >= 10
         end
         
         public
@@ -66,24 +70,30 @@ module Game
         end
         
         def canMakeTreasureVisible(t)
+            if !@visibleTreasures.include?(t) @visibleTreasures << t
         end
         
         def discardVisibleTreasure(t)
-            visibleTreasures.delete_at visibleTreasures.index(t)
+            @visibleTreasures.delete_at @visibleTreasures.index(t)
         end
         
         def discardHiddenTreasure(t)
-            hiddenTreasures.delete_at hiddenTreasures.index(t)
+            @hiddenTreasures.delete_at @hiddenTreasures.index(t)
         end
         
         def buyLevels(visible,hidden)
         end
         
         def getCombatLevel
-            @level
+            if @visibleTreasures.include?(NECKLACE)
+                @visibleTreasures.inject(@level){ |sum,x| sum+= x.getMaxBonus }
+            else
+                @visibleTreasures.inject(@level){ |sum,x| sum+= x.getMinBonus }
+            end
         end
         
         def validState
+            @pendingBadConsequence.nil?
         end
         
         def initTreasures
@@ -94,6 +104,7 @@ module Game
         end
         
         def hasVisibleTreasures
+            @visibleTreasures.any?
         end
         
         def getVisibleTreasures
