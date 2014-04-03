@@ -123,22 +123,31 @@ module Game
         end
 
         def shuffleTreasures
+            unusedTreasures.shuffle
         end
 
         def shuffleMonsters
+            unusedMonsters.shuffle
         end
 
         public
         def nextTreasure
+            unusedTreasures.shift
+            unusedTreasures = usedTreasures.clone
+            unusedTreasures = usedTreasures.slice!(0..usedTreasures.size-1) and shuffleTreasures if unusedTreasures.empty?
         end
 
         def nextMonster
+            unusedMonsters.shift
+            unusedMonsters = usedMonsters.slice!(0..usedMonsters.size-1) and shuffleMonsters if unusedMonsters.empty?
         end
 
         def giveTreasureBack(t)
+            usedTreasures << t
         end
 
         def giveMonsterBack(m)
+            usedMonsters << m
         end
 
         def initCards
