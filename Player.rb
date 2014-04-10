@@ -49,7 +49,7 @@ module Game
         end
         
         def computeGoldCoinsValue(t)
-            t.inject{|sum,x} sum += x.getGoldCoins} / 1000
+            t.inject{|sum,x| sum += x.getGoldCoins} / 1000
         end
         
         def canIBuyLevels(l)
