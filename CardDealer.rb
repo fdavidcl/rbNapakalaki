@@ -151,6 +151,8 @@ module Game
         end
 
         def initCards
+            initMonsterCardDeck
+            initTreasureCardDeck
         end
     end
 end
