@@ -58,12 +58,20 @@ module Game
         
         public
         def applyPrize(p)
+            incrementLevels (p.getLevels)
+            
+            for i in 1..[p.getLevels,4-hiddenTreasures.size].min
+                hiddenTreasures << cardDealer.instance.nextTreasure
+            end                
         end
         
         def combat(m)
         end
         
         def applyBadConsequence(bad)
+            decrementLevels (bad.getLevels)
+            pendingBad = bad.adjustToFitTreasureLists (visibleTreasures,hiddenTreasures)
+            setPendingBadConsequence (pendingBadConsequence)
         end
         
         def makeTreasureVisible(t)
