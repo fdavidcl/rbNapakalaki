@@ -81,6 +81,12 @@ module Game
         
         def discardVisibleTreasure(t)
             @visibleTreasures.delete_at @visibleTreasures.index(t)
+
+            pendingBadConsequence.substractVisibleTreasure(t) if !validState
+
+            CardDealer.instance.giveTreasureBack(t)
+
+            dieIfNoTreasures
         end
         
         def discardHiddenTreasure(t)
