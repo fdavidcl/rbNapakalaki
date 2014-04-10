@@ -33,7 +33,7 @@ module Game
         end
         
         def setPendingBadConsequence(b)
-            @pendingBadConsequence = b
+            @pendingBadConsequence = b.clone
         end
         
         def die
@@ -41,11 +41,11 @@ module Game
         end
         
         def discardNecklaceVisible
-            @visibleTreasures.delete(NECKLACE)
+            CardDealer.instance.giveTreasureBack @visibleTreasures.delete(NECKLACE)
         end
         
         def dieIfNoTreasures
-            @dead = true if visibleTreasures.empty? and hiddenTreasures.empty?
+            die if visibleTreasures.empty? && hiddenTreasures.empty?
         end
         
         def computeGoldCoinsValue(t)
@@ -53,7 +53,7 @@ module Game
         end
         
         def canIBuyLevels(l)
-            @level + l >= 10
+            @level + l < 10
         end
         
         public
@@ -78,11 +78,23 @@ module Game
         end
         
         def canMakeTreasureVisible(t)
-            if !@visibleTreasures.include?(t) @visibleTreasures << t
+            if t == ONEHAND
+                !@visibleTreasures.include?(BOTHHANDS) && @visibleTreasures.count(t) < 2
+            elsif t == BOTHHANDS
+                !@visibleTreasures.include?(ONEHAND) && !@visibleTreasures.include?(t)
+            else
+                !@visibleTreasures.include?(t)
+            end
         end
         
         def discardVisibleTreasure(t)
             @visibleTreasures.delete_at @visibleTreasures.index(t)
+
+            pendingBadConsequence.substractVisibleTreasure(t) if !validState
+
+            CardDealer.instance.giveTreasureBack(t)
+
+            dieIfNoTreasures
         end
         
         def discardHiddenTreasure(t)
@@ -94,14 +106,14 @@ module Game
         
         def getCombatLevel
             if @visibleTreasures.include?(NECKLACE)
-                @visibleTreasures.inject(@level){ |sum,x| sum+= x.getMaxBonus }
+                @visibleTreasures.inject(@level){ |sum,x| sum += x.getMaxBonus }
             else
-                @visibleTreasures.inject(@level){ |sum,x| sum+= x.getMinBonus }
+                @visibleTreasures.inject(@level){ |sum,x| sum += x.getMinBonus }
             end
         end
         
         def validState
-            @pendingBadConsequence.nil?
+            @pendingBadConsequence.nil? || @pendingBadConsequence.isEmpty
         end
         
         def initTreasures
