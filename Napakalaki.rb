@@ -21,13 +21,16 @@ module Game
 
         private
         def initPlayers(names)
+            #players debe ser no vacío, comprobar
             players = names.map { |n|
                 Player.new(n)
             }
         end
 
         def nextPlayer
+            # players debe ser no vacío
             currentPlayerIndex += 1
+            currentPlayer %= players.size
             currentPlayer = players[currentPlayerIndex]
         end
 
