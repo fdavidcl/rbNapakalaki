@@ -71,9 +71,11 @@ module Game
         end
 
         def nextTurnAllowed
+            @currentMonster.validState
         end
 
         def endOfGame(result)
+            result == WINANDWINGAME
         end
     end
 end
