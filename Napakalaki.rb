@@ -15,14 +15,20 @@ module Game
         def initialize
             @currentMonster = nil
             @currentPlayer = nil
+            @currentPlayerIndex = nil
             @players = []
         end
 
         private
         def initPlayers(names)
+            players = names.map { |n|
+                Player.new(n)
+            }
         end
 
         def nextPlayer
+            currentPlayerIndex += 1
+            currentPlayer = players[currentPlayerIndex]
         end
 
         public

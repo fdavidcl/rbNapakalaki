@@ -37,9 +37,9 @@ module Game
             obj
         end
 
-        # Informa de si se pierde algún tesoro visible
+        # Informa de si el mal rollo está vacío
         def isEmpty
-            @nVisibleTreasures == 0 && @nHiddenTreasures == 0 &&
+            @levels == 0 && !@death && @nVisibleTreasures == 0 && @nHiddenTreasures == 0 &&
             @specificVisibleTreasures.empty? && @specificHiddenTreasures.empty?
         end
 
@@ -68,12 +68,28 @@ module Game
         end
         
         def substractVisibleTreasure(t)
+            specificVisibleTreasures.delete(t) ||
+            (nVisibleTreasures -= 1 if !nVisibleTreasures.zero?)
         end
 
         def substractHiddenTreasure(t)
+            specificHiddenTreasures.delete(t) || 
+            (nHiddenTreasures -= 1 if !nHiddenTreasures.zero?)
         end
 
-        def adjustToFitTreasureLists(v, h)
+        def adjustToFitTreasureLists(vis, hid)
+            lostvis = []
+            losthid = []
+
+            if specificVisibleTreasures.empty? && specificHiddenTreasures.empty?
+                lostvis = vis[0 .. nVisibleTreasures - 1]
+                losthid = hid[0 .. nHiddenTreasures - 1]
+            else
+                lostvis = vis.select { |e| specificVisibleTreasures.member? e }
+                losthid = hid.select { |e| specificHiddenTreasures.member? e }
+            end
+
+            BadConsequence.newKinds(text, levels, lostvis, losthid)
         end
 
         # Convierte el mal rollo en una cadena

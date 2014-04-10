@@ -9,7 +9,7 @@ module Game
         include Singleton
 
         def nextNumber
-            1 + Random.rand(6)
+            Random.rand 1..6
         end
     end
 end
