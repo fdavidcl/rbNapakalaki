@@ -36,6 +36,8 @@ module Game
 
         public
         def combat
+            @currentPlayer.combat(@currentMonster)
+            Dealer.instance.giveMonsterBack(@currentMonster)
         end
 
         def discardVisibleTreasure(t)
@@ -48,6 +50,7 @@ module Game
         end
 
         def buyLevels(visible, hidden)
+            @currentPlayer.buyLevels(visible,hidden)
         end
 
         def initGame(players)

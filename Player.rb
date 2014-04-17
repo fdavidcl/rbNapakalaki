@@ -58,20 +58,35 @@ module Game
         
         public
         def applyPrize(p)
-            incrementLevels (p.getLevels)
+            incrementLevels(p.getLevels)
             
             for i in 1..[p.getLevels,4-hiddenTreasures.size].min
-                hiddenTreasures << cardDealer.instance.nextTreasure
+                hiddenTreasures << CardDealer.instance.nextTreasure
             end                
         end
         
         def combat(m)
+            myLevel = getCombatLevel
+            levelMonster = m.getLevel
+            if myLevel > levelMonster
+                prize = m.getPrize
+                applyPrize(prize)
+            else
+                escape = Dice.instance.nextNumber
+                if escape < 5
+                    bad = m.getBadConsequence
+                    amIDead = bad.kills()
+                    die if amIDead else applyBadConsequence(bad)
+                end
+            end
+            discardNecklaceVisible
+            #return combatResult
         end
         
         def applyBadConsequence(bad)
-            decrementLevels (bad.getLevels)
-            pendingBad = bad.adjustToFitTreasureLists (visibleTreasures,hiddenTreasures)
-            setPendingBadConsequence (pendingBadConsequence)
+            decrementLevels(bad.getLevels)
+            pendingBad = bad.adjustToFitTreasureLists(visibleTreasures,hiddenTreasures)
+            setPendingBadConsequence(pendingBadConsequence)
         end
         
         def makeTreasureVisible(t)
@@ -102,6 +117,13 @@ module Game
         end
         
         def buyLevels(visible,hidden)
+            levels = computeGoldCoinsValue(visibleTreasures) + computeGoldCoinsValue(hiddenTreasures)
+            if canIBuyLevels(levels)
+                incrementLevels(levels)
+                
+                visible.each{|t| discardVisibleTreasure(t)}
+                hidden.each{|t| discardHiddenTreasure(t)}
+            end
         end
         
         def getCombatLevel
