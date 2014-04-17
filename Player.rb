@@ -37,7 +37,10 @@ module Game
         end
         
         def die
-            @dead = true
+            visibleTreasures.map{|t| CardDealer.instance.giveTreasureBack t}
+            hiddenTreasures.map{|t| CardDealer.instance.giveTreasureBack t}
+            visibleTreasures.clear
+            hiddenTreasures.clear
         end
         
         def discardNecklaceVisible
@@ -139,6 +142,7 @@ module Game
         end
         
         def initTreasures
+            
         end
         
         def isDead
