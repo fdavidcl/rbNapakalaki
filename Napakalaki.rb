@@ -36,8 +36,9 @@ module Game
 
         public
         def combat
-            @currentPlayer.combat(@currentMonster)
+            result = @currentPlayer.combat(@currentMonster)
             Dealer.instance.giveMonsterBack(@currentMonster)
+            result
         end
 
         def discardVisibleTreasure(t)
@@ -49,7 +50,7 @@ module Game
         end
 
         def makeTreasureVisible(t)
-            # Falta completar
+            @currentPlayer.makeTreasureVisible t
         end
 
         def buyLevels(visible, hidden)
@@ -82,10 +83,8 @@ module Game
             @currentPlayer.getHiddenTreasures
         end
 
-        def nextTurn
-            stateOK = nextTurnAllowed
-            
-            if stateOK
+        def nextTurn  
+            if nextTurnAllowed
                 @currentMonster = CardDealer.instance.nextMonster
                 @currentPlayer = nextPlayer
                 @currentPlayer.initTreasures if @currentPlayer.isDead

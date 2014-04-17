@@ -87,7 +87,7 @@ module Game
             end
             discardNecklaceVisible
             
-            return result
+            result
         end
         
         def applyBadConsequence(bad)
@@ -97,10 +97,12 @@ module Game
         end
         
         def makeTreasureVisible(t)
-            #¿Cómo debería hacerse? ¿Debería eliminar alguno de los visibles?
+            @visibleTreasures << t if canMakeTreasureVisible
         end
         
         def canMakeTreasureVisible(t)
+            # Número mágico, debería haber una cte para cambiar el máximo de tesoros equipados
+            @visibleTreasures.size < 4 &&
             if t == ONEHAND
                 !@visibleTreasures.include?(BOTHHANDS) && @visibleTreasures.count(t) < 2
             elsif t == BOTHHANDS
@@ -112,11 +114,8 @@ module Game
         
         def discardVisibleTreasure(t)
             @visibleTreasures.delete_at @visibleTreasures.index(t)
-
             pendingBadConsequence.substractVisibleTreasure(t) if !validState
-
             CardDealer.instance.giveTreasureBack(t)
-
             dieIfNoTreasures
         end
         
