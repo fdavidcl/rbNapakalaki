@@ -13,7 +13,7 @@ module Game
         def initialize(name)
             @dead = true
             @name = name
-            @level = 0
+            @level = 1
             @hiddenTreasures = []
             @visibleTreasures = []
             @pendingBadConsequence = nil
@@ -38,8 +38,8 @@ module Game
         
         def die
             visibleTreasures.map{|t| CardDealer.instance.giveTreasureBack t}
-            hiddenTreasures.map{|t| CardDealer.instance.giveTreasureBack t}
             visibleTreasures.clear
+            hiddenTreasures.map{|t| CardDealer.instance.giveTreasureBack t}
             hiddenTreasures.clear
         end
         
@@ -63,36 +63,41 @@ module Game
         def applyPrize(p)
             incrementLevels(p.getLevels)
             
-            for i in 1..[p.getLevels,4-hiddenTreasures.size].min
+            (1..[p.getTreasures,4-hiddenTreasures.size].min).each do
                 hiddenTreasures << CardDealer.instance.nextTreasure
             end                
         end
         
         def combat(m)
-            myLevel = getCombatLevel
-            levelMonster = m.getLevel
-            if myLevel > levelMonster
+            if getCombatLevel > m.getLevel
                 prize = m.getPrize
                 applyPrize(prize)
-            else
-                escape = Dice.instance.nextNumber
-                if escape < 5
-                    bad = m.getBadConsequence
-                    amIDead = bad.kills()
-                    die if amIDead else applyBadConsequence(bad)
+                result = levels < 10 : WIN ? WINANDWINGAME
+            elsif Dice.instance.nextNumber < 5
+                bad = m.getBadConsequence
+                if bad.kills 
+                    die
+                    result = LOSEANDDIE
+                else 
+                    applyBadConsequence(bad)
+                    result = LOSE
                 end
+            else
+                result = LOSEANDESCAPE
             end
             discardNecklaceVisible
-            #return combatResult
+            
+            return result
         end
         
         def applyBadConsequence(bad)
-            decrementLevels(bad.getLevels)
+            decrementLevels bad.getLevels
             pendingBad = bad.adjustToFitTreasureLists(visibleTreasures,hiddenTreasures)
-            setPendingBadConsequence(pendingBadConsequence)
+            setPendingBadConsequence pendingBadConsequence
         end
         
         def makeTreasureVisible(t)
+            #¿Cómo debería hacerse? ¿Debería eliminar alguno de los visibles?
         end
         
         def canMakeTreasureVisible(t)
@@ -119,13 +124,16 @@ module Game
             @hiddenTreasures.delete_at @hiddenTreasures.index(t)
         end
         
-        def buyLevels(visible,hidden)
-            levels = computeGoldCoinsValue(visibleTreasures) + computeGoldCoinsValue(hiddenTreasures)
+        def buyLevels(v,h)
+            visible = v.clone
+            hidden = h.clone
+            
+            levels = computeGoldCoinsValue(visible) + computeGoldCoinsValue(hidden)
             if canIBuyLevels(levels)
                 incrementLevels(levels)
                 
-                visible.each{|t| discardVisibleTreasure(t)}
-                hidden.each{|t| discardHiddenTreasure(t)}
+                visible.map{|t| discardVisibleTreasure(t)}
+                hidden.map{|t| discardHiddenTreasure(t)}
             end
         end
         
@@ -145,13 +153,13 @@ module Game
             bringToLife
             number = Dice.instance.nextNumber
             
-            if number==1
+            if number == 1
                 hiddenTreasures << CardDealer.instance.nextTreasure
             # Esto podría hacerse sin repetir código, preguntarle...
-            elsif number<6
-                2.times hiddenTreasures << CardDealer.instance.nextTreasure
-            elsif number==6
-                3.times hiddenTreasures << CardDealer.instance.nextTreasure
+            elsif number < 6
+                2.times {hiddenTreasures << CardDealer.instance.nextTreasure}
+            else
+                3.times {hiddenTreasures << CardDealer.instance.nextTreasure}
         end
         
         def isDead

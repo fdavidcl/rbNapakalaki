@@ -30,7 +30,7 @@ module Game
         def nextPlayer
             # players debe ser no vacío
             currentPlayerIndex += 1
-            currentPlayer %= players.size
+            currentPlayerIndex %= players.size
             currentPlayer = players[currentPlayerIndex]
         end
 
@@ -49,6 +49,7 @@ module Game
         end
 
         def makeTreasureVisible(t)
+            # Falta completar
         end
 
         def buyLevels(visible, hidden)
@@ -70,25 +71,29 @@ module Game
         end
         
         def canMakeTreasureVisible(t)
+            @currentPlayer.canMakeTreasureVisible
         end
 
-        def visibleTreasures
+        def getVisibleTreasures
+            @currentPlayer.getVisibleTreasures
         end
 
-        def hiddenTreasures
+        def getHiddenTreasures
+            @currentPlayer.getHiddenTreasures
         end
 
         def nextTurn
             stateOK = nextTurnAllowed
+            
             if stateOK
                 @currentMonster = CardDealer.instance.nextMonster
                 @currentPlayer = nextPlayer
-                initTreasures if @currentPlayer.isDead
+                @currentPlayer.initTreasures if @currentPlayer.isDead
             end
         end
 
         def nextTurnAllowed
-            @currentMonster.validState
+            @currentPlayer.validState
         end
 
         def endOfGame(result)
@@ -96,3 +101,7 @@ module Game
         end
     end
 end
+
+game=Napakalaki.instance
+game.initGame(["David","Nacho","Pelele","Germán"])
+
