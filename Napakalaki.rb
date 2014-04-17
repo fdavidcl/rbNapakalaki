@@ -56,6 +56,9 @@ module Game
         end
 
         def initGame(players)
+            CardDealer.instance.initCards
+            initPlayers players
+            nextTurn
         end
 
         def getCurrentPlayer
@@ -76,6 +79,12 @@ module Game
         end
 
         def nextTurn
+            stateOK = nextTurnAllowed
+            if stateOK
+                @currentMonster = CardDealer.instance.nextMonster
+                @currentPlayer = nextPlayer
+                initTreasures if @currentPlayer.isDead
+            end
         end
 
         def nextTurnAllowed
