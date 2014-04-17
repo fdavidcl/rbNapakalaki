@@ -41,9 +41,11 @@ module Game
         end
 
         def discardVisibleTreasure(t)
+            @currentPlayer.discardVisibleTreasure t
         end
 
         def discardHiddenTreasure(t)
+            @currentPlayer.discardHiddenTreasure t
         end
 
         def makeTreasureVisible(t)

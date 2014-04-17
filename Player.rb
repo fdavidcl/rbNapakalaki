@@ -142,7 +142,16 @@ module Game
         end
         
         def initTreasures
+            bringToLife
+            number = Dice.instance.nextNumber
             
+            if number==1
+                hiddenTreasures << CardDealer.instance.nextTreasure
+            # Esto podría hacerse sin repetir código, preguntarle...
+            elsif number<6
+                2.times hiddenTreasures << CardDealer.instance.nextTreasure
+            elsif number==6
+                3.times hiddenTreasures << CardDealer.instance.nextTreasure
         end
         
         def isDead
