@@ -82,11 +82,25 @@ module Game
             losthid = []
 
             if specificVisibleTreasures.empty? && specificHiddenTreasures.empty?
-                lostvis = vis[0 .. nVisibleTreasures - 1]
-                losthid = hid[0 .. nHiddenTreasures - 1]
+                lostvis = vis[0 .. nVisibleTreasures - 1].collect{|e| e.getType}
+                losthid = hid[0 .. nHiddenTreasures - 1].collect{|e| e.getType}
             else
-                lostvis = vis.select { |e| specificVisibleTreasures.member? e }
-                losthid = hid.select { |e| specificHiddenTreasures.member? e }
+                vt = vis.collect{|e| e.getType}
+                ht = hid.collect{|e| e.getType}
+                
+                specificVisibleTreasures.each{|e| 
+                    if vt.member? e
+                        lostvis << e
+                        vt.delete_at vt.index(e)
+                    end
+                }
+                
+                specificHiddenTreasures.each{|e| 
+                    if ht.member? e
+                        losthid << e
+                        ht.delete_at ht.index(e)
+                    end
+                }
             end
 
             BadConsequence.newKinds(text, levels, lostvis, losthid)

@@ -31,13 +31,13 @@ module Game
             # players debe ser no vacío
             currentPlayerIndex += 1
             currentPlayerIndex %= players.size
-            currentPlayer = players[currentPlayerIndex]
+            players[currentPlayerIndex]
         end
 
         public
         def combat
             result = @currentPlayer.combat(@currentMonster)
-            Dealer.instance.giveMonsterBack(@currentMonster)
+            CardDealer.instance.giveMonsterBack(@currentMonster)
             result
         end
 
@@ -83,12 +83,16 @@ module Game
             @currentPlayer.getHiddenTreasures
         end
 
-        def nextTurn  
-            if nextTurnAllowed
+        def nextTurn
+            stateOK = nextTurnAllowed
+            
+            if stateOK
                 @currentMonster = CardDealer.instance.nextMonster
                 @currentPlayer = nextPlayer
                 @currentPlayer.initTreasures if @currentPlayer.isDead
             end
+            
+            stateOK
         end
 
         def nextTurnAllowed
