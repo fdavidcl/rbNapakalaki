@@ -25,7 +25,7 @@ module Game
         end
         
         def incrementLevels(l)
-            @level += l
+            @level = [level+l,10].min
         end
         
         def decrementLevels(l)
@@ -33,7 +33,8 @@ module Game
         end
         
         def setPendingBadConsequence(b)
-            @pendingBadConsequence = b.clone
+            # ¿Necesario clone?
+            @pendingBadConsequence = b
         end
         
         def die
@@ -44,7 +45,12 @@ module Game
         end
         
         def discardNecklaceVisible
-            CardDealer.instance.giveTreasureBack @visibleTreasures.delete(NECKLACE)
+            visibleTreasures.each{|e| 
+                if e.getType == NECKLACE
+                    CardDealer.instance.giveTreasureBack e
+                    visibleTreasures.delete(e)
+                end
+            }
         end
         
         def dieIfNoTreasures

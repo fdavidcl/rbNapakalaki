@@ -142,11 +142,11 @@ module Game
         end
 
         def giveTreasureBack(t)
-            t.nil? or usedTreasures << t
+            usedTreasures << t
         end
 
         def giveMonsterBack(m)
-            m.nil? or usedMonsters << m
+            usedMonsters << m
         end
 
         def initCards
