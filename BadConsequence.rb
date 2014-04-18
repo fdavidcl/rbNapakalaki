@@ -67,14 +67,15 @@ module Game
             @specificVisibleTreasures
         end
         
+        # Se supone que los substract se llaman sobre un badConsequence sobre el que se ha hecho fit...
         def substractVisibleTreasure(t)
-            specificVisibleTreasures.delete(t) ||
-            (nVisibleTreasures -= 1 if !nVisibleTreasures.zero?)
+            specificVisibleTreasures.delete_at specificVisibleTreasures.index(t.getType)
+            # || (nVisibleTreasures -= 1 if !nVisibleTreasures.zero?)
         end
 
         def substractHiddenTreasure(t)
-            specificHiddenTreasures.delete(t) || 
-            (nHiddenTreasures -= 1 if !nHiddenTreasures.zero?)
+            specificHiddenTreasures.delete_at specificHiddenTreasures.index(t.getType)
+            # || (nHiddenTreasures -= 1 if !nHiddenTreasures.zero?)
         end
 
         def adjustToFitTreasureLists(vis, hid)
