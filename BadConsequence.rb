@@ -83,8 +83,14 @@ module Game
             losthid = []
 
             if specificVisibleTreasures.empty? && specificHiddenTreasures.empty?
-                lostvis = vis[0 .. nVisibleTreasures - 1].collect{|e| e.getType}
-                losthid = hid[0 .. nHiddenTreasures - 1].collect{|e| e.getType}
+                # Comprobamos que si el mal rollo quita todos los tesoros
+                nVisibleTreasures = specificVisibleTreasures.size if nVisibleTreasures == -1
+                nHiddenTreasures = specificHiddenTreasures.size if nHiddenTreasures == -1
+                
+                lostvis = (0 .. [nVisibleTreasures - 1, specificVisibleTreasures.size-1].min).collect{|e| 
+                    specificVisibleTreasures[e].getType}
+                losthid = (0 .. [nHiddenTreasures - 1, specificHiddenTreasures.size-1].min).collect{|e| 
+                    specificHiddenTreasures[e].getType}
             else
                 vt = vis.collect{|e| e.getType}
                 ht = hid.collect{|e| e.getType}
