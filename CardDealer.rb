@@ -132,13 +132,15 @@ module Game
 
         public
         def nextTreasure
-            unusedTreasures.shift
+            result = unusedTreasures.shift
             unusedTreasures = usedTreasures.slice!(0..usedTreasures.size-1) and shuffleTreasures if unusedTreasures.empty?
+            result
         end
 
         def nextMonster
-            unusedMonsters.shift
+            result = unusedMonsters.shift
             unusedMonsters = usedMonsters.slice!(0..usedMonsters.size-1) and shuffleMonsters if unusedMonsters.empty?
+            result
         end
 
         def giveTreasureBack(t)
