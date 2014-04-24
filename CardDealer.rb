@@ -133,7 +133,8 @@ module Game
         public
         def nextTreasure
             result = unusedTreasures.shift
-            unusedTreasures = usedTreasures.slice!(0..usedTreasures.size-1) and shuffleTreasures if unusedTreasures.empty?
+            unusedTreasures, usedTreasures = usedTreasures, unusedTreasures if unusedTreasures.empty?
+            # unusedTreasures = usedTreasures.slice!(0..usedTreasures.size-1) and shuffleTreasures if unusedTreasures.empty?
             result
         end
 

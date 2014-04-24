@@ -84,30 +84,30 @@ module Game
 
             if specificVisibleTreasures.empty? && specificHiddenTreasures.empty?
                 # Comprobamos que si el mal rollo quita todos los tesoros
-                nVisibleTreasures = specificVisibleTreasures.size if nVisibleTreasures == -1
-                nHiddenTreasures = specificHiddenTreasures.size if nHiddenTreasures == -1
+                nVisibleTreasures = vis.size if nVisibleTreasures == -1
+                nHiddenTreasures = hid.size if nHiddenTreasures == -1
                 
-                lostvis = (0 .. [nVisibleTreasures - 1, specificVisibleTreasures.size-1].min).collect{|e| 
-                    specificVisibleTreasures[e].getType}
-                losthid = (0 .. [nHiddenTreasures - 1, specificHiddenTreasures.size-1].min).collect{|e| 
-                    specificHiddenTreasures[e].getType}
+                lostvis = vis[0 .. [nVisibleTreasures, vis.size].min - 1].map(&:getType) if nVisibleTreasures.nonzero?
+                losthid = vis[0 .. [nHiddenTreasures, hid.size].min - 1].map(&:getType) if nHiddenTreasures.nonzero?
             else
-                vt = vis.collect{|e| e.getType}
-                ht = hid.collect{|e| e.getType}
+                vt = specificVisibleTreasures.map(&:getType)
+                ht = specificHiddenTreasures.map(&:getType)
+                lostvis = vt.select { |e| lostvis.count(e) < vis.count(e) }
+                lostvis = ht.select { |e| losthid.count(e) < hid.count(e) }
+
+                # specificVisibleTreasures.each{|e| 
+                #     if vt.member? e
+                #         lostvis << e
+                #         vt.delete_at vt.index(e)
+                #     end
+                # }
                 
-                specificVisibleTreasures.each{|e| 
-                    if vt.member? e
-                        lostvis << e
-                        vt.delete_at vt.index(e)
-                    end
-                }
-                
-                specificHiddenTreasures.each{|e| 
-                    if ht.member? e
-                        losthid << e
-                        ht.delete_at ht.index(e)
-                    end
-                }
+                # specificHiddenTreasures.each{|e| 
+                #     if ht.member? e
+                #         losthid << e
+                #         ht.delete_at ht.index(e)
+                #     end
+                # }
             end
 
             BadConsequence.newKinds(text, levels, lostvis, losthid)
