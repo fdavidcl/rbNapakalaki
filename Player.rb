@@ -78,7 +78,7 @@ module Game
             if getCombatLevel > m.getLevel
                 prize = m.getPrize
                 applyPrize(prize)
-                result = levels < 10 : WIN ? WINANDWINGAME
+                result = level < 10 ? WIN : WINANDWINGAME
             elsif Dice.instance.nextNumber < 5
                 bad = m.getBadConsequence
                 if bad.kills 
@@ -103,18 +103,21 @@ module Game
         end
         
         def makeTreasureVisible(t)
-            @visibleTreasures << t if canMakeTreasureVisible
+            can = canMakeTreasureVisible t 
+            @visibleTreasures << t if can
+            can
         end
         
         def canMakeTreasureVisible(t)
             # Número mágico, debería haber una cte para cambiar el máximo de tesoros equipados
-            @visibleTreasures.size < 4 &&
-            if t == ONEHAND
-                !@visibleTreasures.include?(BOTHHANDS) && @visibleTreasures.count(t) < 2
-            elsif t == BOTHHANDS
-                !@visibleTreasures.include?(ONEHAND) && !@visibleTreasures.include?(t)
+            vt = @visibleTreasures.collect{|e| e.getType}
+            vt.size < 4 &&
+            if t.getType == ONEHAND
+                !vt.include?(BOTHHANDS) && vt.count(t.getType) < 2
+            elsif t.getType == BOTHHANDS
+                !vt.include?(ONEHAND) && !vt.include?(t.getType)
             else
-                !@visibleTreasures.include?(t)
+                vt.include?(t.getType)
             end
         end
         
@@ -134,7 +137,9 @@ module Game
             hidden = h.clone
             
             levels = computeGoldCoinsValue(visible) + computeGoldCoinsValue(hidden)
-            if canIBuyLevels(levels)
+            canI = canIBuyLevels(levels)
+            
+            if canI
                 incrementLevels(levels)
                 
                 visible.map{|t| discardVisibleTreasure(t)}
@@ -160,11 +165,10 @@ module Game
             
             if number == 1
                 hiddenTreasures << CardDealer.instance.nextTreasure
-            # Esto podría hacerse sin repetir código, preguntarle...
-            elsif number < 6
-                2.times {hiddenTreasures << CardDealer.instance.nextTreasure}
             else
-                3.times {hiddenTreasures << CardDealer.instance.nextTreasure}
+                limit = (number < 6 ? 2 : 3)
+            
+                limit.times {hiddenTreasures << CardDealer.instance.nextTreasure}
         end
         
         def isDead

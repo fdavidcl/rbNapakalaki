@@ -60,7 +60,8 @@ module Game
         def initGame(players)
             CardDealer.instance.initCards
             initPlayers players
-            nextTurn
+            currentPlayerIndex = Rand.rand players.size
+            nextTurn            
         end
 
         def getCurrentPlayer
