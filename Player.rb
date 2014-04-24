@@ -167,8 +167,10 @@ module Game
                 hiddenTreasures << CardDealer.instance.nextTreasure
             else
                 limit = (number < 6 ? 2 : 3)
-            
                 limit.times {hiddenTreasures << CardDealer.instance.nextTreasure}
+            
+            # Provisional
+            true
         end
         
         def isDead
