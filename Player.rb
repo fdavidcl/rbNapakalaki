@@ -8,7 +8,6 @@ require_relative "CardDealer"
 require_relative "CombatResult"
 
 module Game
-    
     class Player
         def initialize(name)
             @dead = true
@@ -168,7 +167,7 @@ module Game
             else
                 limit = (number < 6 ? 2 : 3)
                 limit.times {hiddenTreasures << CardDealer.instance.nextTreasure}
-            
+            end
             # Provisional
             true
         end

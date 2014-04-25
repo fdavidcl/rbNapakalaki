@@ -106,6 +106,3 @@ module Game
     end
 end
 
-game=Napakalaki.instance
-game.initGame(["David","Nacho","Pelele","Germán"])
-
