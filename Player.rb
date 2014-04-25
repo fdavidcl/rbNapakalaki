@@ -163,10 +163,10 @@ module Game
             number = Dice.instance.nextNumber
             
             if number == 1
-                hiddenTreasures << CardDealer.instance.nextTreasure
+                @hiddenTreasures << CardDealer.instance.nextTreasure
             else
                 limit = (number < 6 ? 2 : 3)
-                limit.times {hiddenTreasures << CardDealer.instance.nextTreasure}
+                limit.times {@hiddenTreasures << CardDealer.instance.nextTreasure}
             end
             # Provisional
             true

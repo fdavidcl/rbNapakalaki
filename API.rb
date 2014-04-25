@@ -10,16 +10,26 @@ module Game
         if __FILE__ == $0
             game = Napakalaki.instance
             
-            # Descomentar
+# Descomentar
             #puts "Dame nombres de jugadores"
             #players = gets.chomp.split(" ")
             players = ["David","Nacho"]
-            # Como mucho se permiten 3 jugadores (Guión Práctica 2)
+            
+            # Como mucho se permiten 3 jugadores
             if players.empty? || players.size > 3
                 raise "Necesito más de un jugador y menos de 4 para jugar"
             end
             
+            
             game.initGame(players)
+            
+            begin
+                puts "Jugador actual: #{game.getCurrentPlayer.instance_variable_get game.getCurrentPlayer.instance_variables[1]}"
+
+# Inicializar
+                result = nil
+            end while !game.endOfGame(result)
+            
             
         end
     end

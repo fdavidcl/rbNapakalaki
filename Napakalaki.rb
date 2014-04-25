@@ -30,7 +30,7 @@ module Game
         def nextPlayer
             # players debe ser no vacío
             @currentPlayerIndex += 1
-            @currentPlayerIndex %= players.size
+            @currentPlayerIndex %= @players.size
             @players[@currentPlayerIndex]
         end
 
