@@ -90,10 +90,10 @@ module Game
                 lostvis = vis[0 .. [nVisibleTreasures, vis.size].min - 1].map(&:getType) if nVisibleTreasures.nonzero?
                 losthid = vis[0 .. [nHiddenTreasures, hid.size].min - 1].map(&:getType) if nHiddenTreasures.nonzero?
             else
-                vt = specificVisibleTreasures.map(&:getType)
-                ht = specificHiddenTreasures.map(&:getType)
-                lostvis = vt.select { |e| lostvis.count(e) < vis.count(e) }
-                lostvis = ht.select { |e| losthid.count(e) < hid.count(e) }
+                vt = vis.map(&:getType)
+                ht = hid.map(&:getType)
+                lostvis = specificVisibleTreasures.select { |e| lostvis.count(e) < vt.count(e) }
+                lostvis = specificHiddenTreasures.select { |e| losthid.count(e) < ht.count(e) }
 
                 # specificVisibleTreasures.each{|e| 
                 #     if vt.member? e
