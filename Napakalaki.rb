@@ -22,16 +22,16 @@ module Game
         private
         def initPlayers(names)
             #players debe ser no vacío, comprobar
-            players = names.map { |n|
+            @players = names.collect { |n|
                 Player.new(n)
             }
         end
 
         def nextPlayer
             # players debe ser no vacío
-            currentPlayerIndex += 1
-            currentPlayerIndex %= players.size
-            players[currentPlayerIndex]
+            @currentPlayerIndex += 1
+            @currentPlayerIndex %= players.size
+            @players[@currentPlayerIndex]
         end
 
         public
@@ -60,7 +60,9 @@ module Game
         def initGame(players)
             CardDealer.instance.initCards
             initPlayers players
-            currentPlayerIndex = Rand.rand players.size
+            # Inicializamos el jugador
+            @currentPlayerIndex = Random.rand players.size
+            @currentPlayer = @players[@currentPlayerIndex]
             nextTurn            
         end
 
