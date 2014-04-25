@@ -26,7 +26,6 @@ module Game
             begin
                 puts "Jugador actual: #{game.getCurrentPlayer.instance_variable_get game.getCurrentPlayer.instance_variables[1]}"
 
-# Inicializar
                 result = nil
             end while !game.endOfGame(result)
             

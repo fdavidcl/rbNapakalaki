@@ -69,12 +69,12 @@ module Game
         
         # Se supone que los substract se llaman sobre un badConsequence sobre el que se ha hecho fit...
         def substractVisibleTreasure(t)
-            specificVisibleTreasures.delete_at specificVisibleTreasures.index(t.getType)
+            @specificVisibleTreasures.delete_at @specificVisibleTreasures.index(t.getType)
             # || (nVisibleTreasures -= 1 if !nVisibleTreasures.zero?)
         end
 
         def substractHiddenTreasure(t)
-            specificHiddenTreasures.delete_at specificHiddenTreasures.index(t.getType)
+            @specificHiddenTreasures.delete_at @specificHiddenTreasures.index(t.getType)
             # || (nHiddenTreasures -= 1 if !nHiddenTreasures.zero?)
         end
 
@@ -82,18 +82,14 @@ module Game
             lostvis = []
             losthid = []
 
-            if specificVisibleTreasures.empty? && specificHiddenTreasures.empty?
-                # Comprobamos que si el mal rollo quita todos los tesoros
-                nVisibleTreasures = vis.size if nVisibleTreasures == -1
-                nHiddenTreasures = hid.size if nHiddenTreasures == -1
-                
-                lostvis = vis[0 .. [nVisibleTreasures, vis.size].min - 1].map(&:getType) if nVisibleTreasures.nonzero?
-                losthid = vis[0 .. [nHiddenTreasures, hid.size].min - 1].map(&:getType) if nHiddenTreasures.nonzero?
+            if @specificVisibleTreasures.empty? && specificHiddenTreasures.empty?               
+                lostvis = vis[0 .. [@nVisibleTreasures == -1 ? vis.size : @nVisibleTreasures, vis.size].min - 1].map(&:getType) if nVisibleTreasures.nonzero?
+                losthid = vis[0 .. [@nHiddenTreasures == -1 ? vis.size : @nHiddenTreasures, hid.size].min - 1].map(&:getType) if nHiddenTreasures.nonzero?
             else
                 vt = vis.map(&:getType)
                 ht = hid.map(&:getType)
-                lostvis = specificVisibleTreasures.select { |e| lostvis.count(e) < vt.count(e) }
-                lostvis = specificHiddenTreasures.select { |e| losthid.count(e) < ht.count(e) }
+                lostvis = @specificVisibleTreasures.select { |e| lostvis.count(e) < vt.count(e) }
+                lostvis = @specificHiddenTreasures.select { |e| losthid.count(e) < ht.count(e) }
 
                 # specificVisibleTreasures.each{|e| 
                 #     if vt.member? e

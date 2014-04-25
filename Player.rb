@@ -37,23 +37,23 @@ module Game
         end
         
         def die
-            visibleTreasures.map{|t| CardDealer.instance.giveTreasureBack t}
-            visibleTreasures.clear
-            hiddenTreasures.map{|t| CardDealer.instance.giveTreasureBack t}
-            hiddenTreasures.clear
+            @visibleTreasures.map{|t| CardDealer.instance.giveTreasureBack t}
+            @visibleTreasures.clear
+            @hiddenTreasures.map{|t| CardDealer.instance.giveTreasureBack t}
+            @hiddenTreasures.clear
         end
         
         def discardNecklaceVisible
-            visibleTreasures.each{|e| 
+            @visibleTreasures.each{|e| 
                 if e.getType == NECKLACE
                     CardDealer.instance.giveTreasureBack e
-                    visibleTreasures.delete(e)
+                    @visibleTreasures.delete(e)
                 end
             }
         end
         
         def dieIfNoTreasures
-            die if visibleTreasures.empty? && hiddenTreasures.empty?
+            die if @visibleTreasures.empty? && @hiddenTreasures.empty?
         end
         
         def computeGoldCoinsValue(t)
@@ -68,8 +68,8 @@ module Game
         def applyPrize(p)
             incrementLevels(p.getLevels)
             
-            (1..[p.getTreasures,4-hiddenTreasures.size].min).each do
-                hiddenTreasures << CardDealer.instance.nextTreasure
+            (1..[p.getTreasures,4-@hiddenTreasures.size].min).each do
+                @hiddenTreasures << CardDealer.instance.nextTreasure
             end                
         end
         
@@ -97,7 +97,7 @@ module Game
         
         def applyBadConsequence(bad)
             decrementLevels bad.getLevels
-            pendingBad = bad.adjustToFitTreasureLists(visibleTreasures,hiddenTreasures)
+            pendingBad = bad.adjustToFitTreasureLists(@visibleTreasures,@hiddenTreasures)
             setPendingBadConsequence pendingBadConsequence
         end
         
