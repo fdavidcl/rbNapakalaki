@@ -175,6 +175,10 @@ module Game
         def isDead
             @dead
         end
+
+        def getName
+            @name
+        end
         
         def hasVisibleTreasures
             @visibleTreasures.any?

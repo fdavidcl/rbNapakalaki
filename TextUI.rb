@@ -5,7 +5,36 @@ require_relative "Napakalaki"
 
 module GameUI
     class TextUI
-        def self.play
+    	include Singleton
+    	
+    	private
+    	def display
+    		game = Game::Napakalaki.instance
+    		puts "---- Napakalaki ----"
+    		puts "Jugando: #{game.getCurrentPlayer.getName} (nivel #{game.getCurrentPlayer.getCombatLevel})"
+    		puts "Luchando contra " + (game.getCurrentMonster ? 
+    			"#{game.getCurrentMonster.getName} (nivel #{game.getCurrentMonster.getLevel})" : "Nadie")
+    		
+    		vis = game.getCurrentPlayer.getVisibleTreasures
+    		if vis.empty?
+    			puts "¡No tienes tesoros equipados!"
+    		else
+    			puts "Tienes estos tesoros equipados: #{vis}"
+    		end
+
+    		hid = game.getCurrentPlayer.getHiddenTreasures
+    		if hid.empty?
+    			puts "¡No tienes tesoros ocultos!"
+    		else
+    			puts "Tienes estos tesoros ocultos: #{game.getCurrentPlayer.getHiddenTreasures}"
+    		end
+
+    		puts "Si vences obtendrás: [#{game.getCurrentMonster.getPrize}]"
+    		puts "Si pierdes: [#{game.getCurrentMonster.getBadConsequence}]"
+    	end
+
+    	public
+        def play
             game = Game::Napakalaki.instance
             
 # Descomentar
@@ -20,15 +49,21 @@ module GameUI
             
             
             game.initGame(players)
-            
-            begin
-                puts "Jugador actual: #{game.getCurrentPlayer.instance_variable_get game.getCurrentPlayer.instance_variables[1]}"
+            puts "---- Napakalaki ----\nLanzando los dados...\n\n"
+            sleep 1
 
+            begin
+                display
+
+	    		puts "¿Qué quieres hacer?"
+	    		#options
+
+                gets
                 result = nil
             end while !game.endOfGame(result)
         end
     end
 
     
-    TextUI.play if __FILE__ == $0
+    TextUI.instance.play if __FILE__ == $0
 end
