@@ -99,6 +99,8 @@ module GameUI
             
             
             begin
+            	player = game.getCurrentPlayer
+            	
                 display
                 
                 while true
