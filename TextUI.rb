@@ -31,6 +31,19 @@ module GameUI
                 end
             }
         end
+        
+        def self.discardTreasure(treasureList,method)
+            begin
+                puts "Índice del tesoro a descartar"
+                i = gets.to_i
+                
+                raise "¡Índice de tesoro inválido!" if i < 0 || i >= treasureList.size
+                method.call treasureList[i]
+                
+            rescue Exception => e
+                    puts e.message
+            end
+        end
 
         def self.play
             game = Game::Napakalaki.instance
@@ -88,15 +101,9 @@ module GameUI
                     when "b"
                         inspectTreasures player.getHiddenTreasures
                     when "c"
-                        puts "Índice del tesoro a descartar"
-                        i = gets.to_i
-                        # Falta comprobación del índice
-                        player.discardVisibleTreasure player.getVisibleTreasures[i]
+                        discardTreasure(player.getVisibleTreasures, player.method(:discardVisibleTreasure))
                     when "d"
-                        puts "Índice del tesoro a descartar"
-                        i = gets.to_i
-                        # Falta comprobación del índice
-                        player.discardHiddenTreasure player.getHiddenTreasures[i]
+                        discardTreasure(player.getHiddenTreasures, player.method(:discardHiddenTreasure))
                     else
                         break
                     end
