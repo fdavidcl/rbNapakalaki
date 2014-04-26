@@ -157,7 +157,9 @@ module Game
 
         def initCards
             initMonsterCardDeck
+            shuffleMonsters
             initTreasureCardDeck
+            shuffleTreasures
         end
     end
 end

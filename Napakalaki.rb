@@ -63,7 +63,7 @@ module Game
             # Inicializamos el jugador
             @currentPlayerIndex = Random.rand players.size
             @currentPlayer = @players[@currentPlayerIndex]
-            nextTurn            
+            nextTurn
         end
 
         def getCurrentPlayer

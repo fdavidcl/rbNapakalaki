@@ -30,5 +30,9 @@ module Game
         def getType
             @type
         end
+
+        def to_s
+            "#{@type.upcase} \"#{@name}\" (= #{@goldCoins} oro)"
+        end
     end
 end
