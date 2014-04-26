@@ -60,7 +60,7 @@ module GameUI
             }
         end
         
-        def self.discardTreasure(treasureList,method)
+        def discardTreasure(treasureList,method)
             begin
                 puts "Índice del tesoro a descartar"
                 i = gets.to_i
@@ -110,13 +110,14 @@ module GameUI
  mientras jugador actual no haya ganado la partida
 =end
             
-            
-            begin
+            game_over = false
+            while !game_over
             	player = game.getCurrentPlayer
             	
                 display
                 
-                while true
+                opcion_correcta = true
+                while opcion_correcta
                     puts "¿Qué quieres hacer? \n" + 
                         "a) Ver tesoros visibles \n" + 
                         "b) Ver tesoros invisibles \n" +
@@ -136,7 +137,7 @@ module GameUI
                     when "d"
                         discardTreasure(player.getHiddenTreasures, player.method(:discardHiddenTreasure))
                     else
-                        break
+                        opcion_correcta = false
                     end
                 end
                 
@@ -146,11 +147,10 @@ module GameUI
                     game.nextTurn
                 else
                     puts "Ganador: #{name}"
-                    break
+                    game_over = true
                 end
                 
-            end while true
-            
+            end
         end
     end
     
