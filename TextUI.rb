@@ -8,37 +8,27 @@ module GameUI
     	include Singleton
     	
     	private
-    	def display
+    	def display(fight)
     		game = Game::Napakalaki.instance
     		puts "---- Napakalaki ----"
     		puts "Jugando: #{game.getCurrentPlayer.getName} (nivel #{game.getCurrentPlayer.getCombatLevel})"
-    		puts "Luchando contra " + (game.getCurrentMonster ? 
-    			"#{game.getCurrentMonster.getName} (nivel #{game.getCurrentMonster.getLevel})" : "Nadie")
     		
-    		vis = game.getCurrentPlayer.getVisibleTreasures
-    		if vis.empty?
-    			puts "¡No tienes tesoros equipados!"
-    		else
-    			puts "Tienes estos tesoros equipados: #{vis}"
-    		end
+    		if fight
+	    		puts "Luchando contra " + (game.getCurrentMonster ? 
+	    			"#{game.getCurrentMonster.getName} (nivel #{game.getCurrentMonster.getLevel})" : "Nadie")
 
-    		hid = game.getCurrentPlayer.getHiddenTreasures
-    		if hid.empty?
-    			puts "¡No tienes tesoros ocultos!"
-    		else
-    			puts "Tienes estos tesoros ocultos: #{game.getCurrentPlayer.getHiddenTreasures}"
-    		end
-
-    		puts "Si vences obtendrás: [#{game.getCurrentMonster.getPrize}]"
-    		puts "Si pierdes: [#{game.getCurrentMonster.getBadConsequence}]"
+	    		puts "Si vences obtendrás: [#{game.getCurrentMonster.getPrize}]"
+	    		puts "Si pierdes: [#{game.getCurrentMonster.getBadConsequence}]"
+	    	end
     	end
 
-        def inspectTreasures(treasures)
+        def inspectTreasures
+=begin
             treasures.each_with_index{ |t,i|
-                puts " ¿Qué quieres saber del tesoro #{i}-ésimo: #{t.getName}? \n" +
-                    " a) Monedas \n" +
-                    " b) Bonus máximo\n" + 
-                    " c) Bonus mínimo \n" +
+                puts " ¿Qué quieres saber del tesoro #{i}-ésimo: #{t.getName}? \n"\
+                    " a) Monedas \n"\
+                    " b) Bonus máximo\n"\
+                    " c) Bonus mínimo \n"\
                     " d) Tipo \n"
                 
                 while (what = gets)
@@ -58,6 +48,22 @@ module GameUI
                     end
                 end
             }
+=end
+
+    		player = Game::Napakalaki.instance.getCurrentPlayer
+    		vis = player.getVisibleTreasures
+    		if vis.empty?
+    			puts "¡No tienes tesoros equipados!"
+    		else
+    			puts "Tienes estos tesoros equipados: #{vis}"
+    		end
+
+    		hid = player.getHiddenTreasures
+    		if hid.empty?
+    			puts "¡No tienes tesoros ocultos!"
+    		else
+    			puts "Tienes estos tesoros ocultos: #{hid}"
+    		end
         end
         
         def discardTreasure(treasureList,method)
@@ -114,33 +120,40 @@ module GameUI
             while !game_over
             	player = game.getCurrentPlayer
             	
-                display
+                display(false)
                 
-                opcion_correcta = true
-                while opcion_correcta
-                    puts "¿Qué quieres hacer? \n" + 
-                        "a) Ver tesoros visibles \n" + 
-                        "b) Ver tesoros invisibles \n" +
-                        "c) Descartar tesoro visible \n" +
-                        "d) Descartar tesoro invisible \n" +
-                        "Opción:"
+                seguir = false
+                while !seguir
+                    puts "¿Qué quieres hacer? \n"\
+                        " a) Ver inventario \n"\
+                        " b) Descartar tesoro visible \n"\
+                        " c) Descartar tesoro invisible \n"\
+						" z) Seguir jugando\n"
+                    print "Opción > "
                     option = gets
                     option.nil? || option = option.chomp
                     
                     case option
                     when "a"
-                        inspectTreasures player.getVisibleTreasures
+                        inspectTreasures
                     when "b"
-                        inspectTreasures player.getHiddenTreasures
+                        discardTreasure(player.getVisibleTreasures, game.method(:discardVisibleTreasure))
                     when "c"
-                        discardTreasure(player.getVisibleTreasures, player.method(:discardVisibleTreasure))
-                    when "d"
-                        discardTreasure(player.getHiddenTreasures, player.method(:discardHiddenTreasure))
+                        discardTreasure(player.getHiddenTreasures, game.method(:discardHiddenTreasure))
+                    when "z"
+                    	seguir = true
                     else
-                        opcion_correcta = false
+                        puts "Opción #{option} inválida. Utiliza [z] para continuar jugando."
                     end
                 end
-                
+
+                # Comprar niveles
+                # ...
+
+                # Comenzar lucha
+                display(true)
+                # ...
+
                 result = nil
                 
                 if !game.endOfGame(result)
