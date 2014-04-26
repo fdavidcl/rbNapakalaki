@@ -2,6 +2,8 @@
 *.rbc
 .bundle
 .config
+.directory
+.*kate-swp
 coverage
 InstalledFiles
 lib/bundler/man
