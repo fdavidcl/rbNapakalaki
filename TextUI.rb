@@ -112,7 +112,7 @@ module GameUI
         Descartar tesoro visible
         Descartar tesoro invisible
         Comprar niveles
-        Ver si puedes comprar niveles
+        Hacer tesoro visible
     Lucha con monstruo
     Siguiente turno
  
@@ -132,6 +132,7 @@ module GameUI
                         " b) Descartar tesoro visible \n"\
                         " c) Descartar tesoro invisible \n"\
                         " d) Comprar niveles\n"\
+                        " f) Hacer tesoro visible\n"\
                         " z) Seguir jugando\n"
                     print "Opción > "
                     option = gets
@@ -148,6 +149,10 @@ module GameUI
                     when "d"
                         game.buyLevels(treasureSelect(player.getVisibleTreasures,"visibles"), 
                                        treasureSelect(player.getHiddenTreasures,"invisibles"))
+                    when "e"
+                        print "¿Qué tesoro no visible quieres hacer visible?"
+                        # canMake it?
+                        # ...
                     when "z"
                     	seguir = true
                     else
@@ -160,7 +165,7 @@ module GameUI
 
                 #Comenzar lucha
                 display(true)
-                #...
+                game.combat
 
                 result = nil
                 
