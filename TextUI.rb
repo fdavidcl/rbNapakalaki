@@ -5,90 +5,93 @@ require_relative "Napakalaki"
 
 module GameUI
     class TextUI
-    	include Singleton
-    	
-    	private
-    	def display(fight)
-    		game = Game::Napakalaki.instance
-    		puts "---- Napakalaki ----"
-    		puts "Jugando: #{game.getCurrentPlayer.getName} (nivel #{game.getCurrentPlayer.getCombatLevel})"
-    		
-    		if fight
-	    		puts "Luchando contra " + (game.getCurrentMonster ? 
-	    			"#{game.getCurrentMonster.getName} (nivel #{game.getCurrentMonster.getLevel})" : "Nadie")
-
-	    		puts "Si vences obtendrás: [#{game.getCurrentMonster.getPrize}]"
-	    		puts "Si pierdes: [#{game.getCurrentMonster.getBadConsequence}]"
-	    	end
-    	end
-
-        def inspectTreasures
-=begin
-            treasures.each_with_index{ |t,i|
-                puts " ¿Qué quieres saber del tesoro #{i}-ésimo: #{t.getName}? \n"\
-                    " a) Monedas \n"\
-                    " b) Bonus máximo\n"\
-                    " c) Bonus mínimo \n"\
-                    " d) Tipo \n"
+        include Singleton
+        
+        private
+        def display(fight)
+            game = Game::Napakalaki.instance
+            puts "---- Napakalaki ----"
+            puts "Jugando: #{game.getCurrentPlayer.getName} (nivel #{game.getCurrentPlayer.getCombatLevel})"
+            
+            if fight
+                puts "Luchando contra " + (game.getCurrentMonster ? 
+                                           "#{game.getCurrentMonster.getName} (nivel #{game.getCurrentMonster.getLevel})" : "Nadie")
                 
-                while (what = gets)
-                    what = what.chomp
-                    
-                    case what
-                    when "a"
-                        puts "Monedas: #{t.getGoldCoins}"
-                    when "b"
-                        puts "Bonus máximo: #{t.getMaxBonus}"
-                    when "c"
-                        puts "Bonus mínimo: #{t.getMinBonus}"
-                    when "d"
-                        puts "Tipo: #{t.getType}"
-                    else
-                        puts "Opción inválida"
-                    end
-                end
-            }
-=end
+                puts "Si vences obtendrás: [#{game.getCurrentMonster.getPrize}]"
+                puts "Si pierdes: [#{game.getCurrentMonster.getBadConsequence}]"
+            end
+        end
+        
+        def inspectTreasures
+            player = Game::Napakalaki.instance.getCurrentPlayer
+            vis = player.getVisibleTreasures
 
-    		player = Game::Napakalaki.instance.getCurrentPlayer
-    		vis = player.getVisibleTreasures
-    		if vis.empty?
-    			puts "¡No tienes tesoros equipados!"
-    		else
-    			puts "Tienes estos tesoros equipados: #{vis}"
-    		end
-
-    		hid = player.getHiddenTreasures
-    		if hid.empty?
-    			puts "¡No tienes tesoros ocultos!"
-    		else
-    			puts "Tienes estos tesoros ocultos: #{hid}"
-    		end
+            if vis.empty?
+                puts "\t No tienes tesoros equipados!"
+            else
+                puts "\t Tienes estos tesoros equipados: #{vis}"
+            end
+            
+            hid = player.getHiddenTreasures
+            if hid.empty?
+                puts "\t ¡No tienes tesoros ocultos!"
+            else
+                puts "\t Tienes estos tesoros ocultos: #{hid}"
+            end
         end
         
         def discardTreasure(treasureList,method)
             begin
-                puts "Índice del tesoro a descartar"
+                print "\t Índice del tesoro a descartar: "
                 i = gets.to_i
                 
-                raise "¡Índice de tesoro inválido!" if i < 0 || i >= treasureList.size
+                raise "\t ¡Índice de tesoro inválido!" if i < 0 || i >= treasureList.size
                 method.call treasureList[i]
                 
             rescue Exception => e
-                    puts e.message
+                puts e.message
             end
         end
-
+        
+        def treasureSelect(treasures,type)
+            result = []
+            
+            if !treasures.empty? 
+                add_more = true
+                
+                while add_more
+                    puts "\t ¿Qué tesoros #{type} quieres emplear? #{treasures}"
+                    pattern = gets
+                    
+                    if !pattern.nil?
+                        pattern.split(" ").each{|pattern|
+                            result += treasures.select{|t| /#{pattern}/ =~ t.getName}
+                            treasures -= result
+                        }
+                    end
+                    
+                    add_more = if treasures.empty?
+                            false
+                        else
+                            print "\t Seleccionados hasta el momento: #{result}\n"\
+                                  "\t ¿Quieres añadir más? (S/N): " 
+                            /^S$/ === gets
+                        end
+                end    
+            end
+            
+            result
+        end
+        
     	public
         def play
             game = Game::Napakalaki.instance
             
-# Descomentar
-            #puts "Dame nombres de jugadores"
-            #players = gets.chomp.split(" ")
+            puts "Dame nombres de jugadores"
+            players = gets.chomp.split(" ")
             players = ["David","Nacho"]
             
-            # Como mucho se permiten 3 jugadores
+            #Como mucho se permiten 3 jugadores
             if players.empty? || players.size > 3
                 raise "Necesito más de un jugador y menos de 4 para jugar"
             end
@@ -118,8 +121,8 @@ module GameUI
             
             game_over = false
             while !game_over
-            	player = game.getCurrentPlayer
-            	
+                player = game.getCurrentPlayer
+                
                 display(false)
                 
                 seguir = false
@@ -128,10 +131,12 @@ module GameUI
                         " a) Ver inventario \n"\
                         " b) Descartar tesoro visible \n"\
                         " c) Descartar tesoro invisible \n"\
-						" z) Seguir jugando\n"
+                        " d) Comprar niveles\n"\
+                        " z) Seguir jugando\n"
                     print "Opción > "
                     option = gets
-                    option.nil? || option = option.chomp
+                    
+                    option.nil? || option.chomp!
                     
                     case option
                     when "a"
@@ -140,6 +145,9 @@ module GameUI
                         discardTreasure(player.getVisibleTreasures, game.method(:discardVisibleTreasure))
                     when "c"
                         discardTreasure(player.getHiddenTreasures, game.method(:discardHiddenTreasure))
+                    when "d"
+                        game.buyLevels(treasureSelect(player.getVisibleTreasures,"visibles"), 
+                                       treasureSelect(player.getHiddenTreasures,"invisibles"))
                     when "z"
                     	seguir = true
                     else
@@ -147,12 +155,12 @@ module GameUI
                     end
                 end
 
-                # Comprar niveles
-                # ...
+                
+                #game.buyLevels()
 
-                # Comenzar lucha
+                #Comenzar lucha
                 display(true)
-                # ...
+                #...
 
                 result = nil
                 

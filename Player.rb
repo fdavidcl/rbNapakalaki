@@ -24,11 +24,11 @@ module Game
         end
         
         def incrementLevels(l)
-            @level = [level+l,10].min
+            @level = [@level+l,10].min
         end
         
         def decrementLevels(l)
-            @level = [level-l, 1].max
+            @level = [@level-l, 1].max
         end
         
         def setPendingBadConsequence(b)
@@ -57,7 +57,7 @@ module Game
         end
         
         def computeGoldCoinsValue(t)
-            t.inject{|sum,x| sum += x.getGoldCoins} / 1000
+            t.inject(0){|sum,x| sum += x.getGoldCoins} / 1000
         end
         
         def canIBuyLevels(l)
@@ -132,6 +132,9 @@ module Game
         end
         
         def buyLevels(v,h)
+            # Los clone se podrían quitar por como funciona el 
+            # juego -> preguntar si podemos/debemos hacerlo
+            
             visible = v.clone
             hidden = h.clone
             
