@@ -18,6 +18,7 @@ module GameUI
                 print "(#{min}-#{max}) > "
                 input = gets.to_i
             end while input >= min && input <= max
+            input
         end
 
         def getChar(allowed)
