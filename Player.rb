@@ -70,7 +70,7 @@ module Game
             
             (1..[p.getTreasures,4-@hiddenTreasures.size].min).each do
                 @hiddenTreasures << CardDealer.instance.nextTreasure
-            end                
+            end
         end
         
         def combat(m)
