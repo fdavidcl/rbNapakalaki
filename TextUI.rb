@@ -17,7 +17,7 @@ module GameUI
             begin
                 print "(#{min}-#{max}) > "
                 input = gets.to_i
-            end while input >= min && input <= max
+            end while input < min || input > max
             input
         end
 
