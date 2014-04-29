@@ -17,7 +17,7 @@ module GameUI
             begin
                 print "(#{min}-#{max}) > "
                 input = gets.to_i
-            end while input < min || input > max
+            end until input >= min && input <= max
             input
         end
 
@@ -26,7 +26,7 @@ module GameUI
             begin
                 print "(#{allowed*'/'}) > "
                 input = gets.upcase[0]
-            end while !allowed.member?(input)
+            end until allowed.member?(input)
             input
         end
 
@@ -63,16 +63,10 @@ module GameUI
         end
         
         def discardTreasure(treasureList,method)
-            begin
-                print "\t Índice del tesoro a descartar: "
-                i = gets.to_i
-                
-                raise "\t ¡Índice de tesoro inválido!" if i < 0 || i >= treasureList.size
-                method.call treasureList[i]
-                
-            rescue Exception => e
-                puts e.message
-            end
+            print "\t Índice del tesoro a descartar: "
+            i = getInt(1, treasureList.length) - 1
+            
+            method.call treasureList[i]
         end
         
         def treasureSelect(treasures,type)
@@ -82,7 +76,7 @@ module GameUI
             
             while add_more
                 puts "\t ¿Qué tesoros #{type} quieres emplear?"
-                treasures.each_index { |i| puts "\t [#{i}] #{treasures[i]}"}
+                treasures.each_index { |i| puts "\t [#{i+1}] #{treasures[i]}"}
                     
 
 =begin
@@ -97,8 +91,8 @@ module GameUI
                 end
 =end                  
 
-                index = getInt(0, treasures.length - 1)
-                result << treasures.at(index)
+                index = getInt(1, treasures.length) - 1
+                result << treasures.delete_at(index)
 
                 add_more =
                     if treasures.empty?
@@ -118,7 +112,7 @@ module GameUI
             game = Game::Napakalaki.instance
             
             puts "Dame nombres de jugadores"
-            players = gets.chomp.split(" ")
+            players = getString.chomp.split(" ")
             players = ["David","Nacho"]
             
             #Como mucho se permiten 3 jugadores
@@ -163,12 +157,7 @@ module GameUI
                         " 4) Comprar niveles\n"\
                         " 5) Equipar un tesoro\n"\
                         " 0) Seguir jugando\n"
-                    print "Opción > "
-                    option = gets.to_i
-                    
-                    #option.nil? || option.chomp!
-                    
-
+                    option = getInt(0,5)
 
                     case option
                     when 1
@@ -189,7 +178,6 @@ module GameUI
                     else
                         puts "Opción #{option} inválida. Utiliza [z] para continuar jugando."
                     end
-                    print "Pulsa [Intro] para continuar" and gets
                 end
 
                 
