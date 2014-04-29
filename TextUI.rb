@@ -8,6 +8,27 @@ module GameUI
         include Singleton
         
         private
+        def getString
+            print " > "
+            gets
+        end
+
+        def getInt(min, max)
+            begin
+                print "(#{min}-#{max}) > "
+                input = gets.to_i
+            end while input >= min && input <= max
+        end
+
+        def getChar(allowed)
+            allowed.map!(&:upcase)
+            begin
+                print "(#{allowed*'/'}) > "
+                input = gets.upcase[0]
+            end while !allowed.member?(input)
+            input
+        end
+
         def display(fight)
             game = Game::Napakalaki.instance
             puts "---- Napakalaki ----"
@@ -56,28 +77,36 @@ module GameUI
         def treasureSelect(treasures,type)
             result = []
             
-            if !treasures.empty? 
-                add_more = true
+            add_more = !treasures.empty?
+            
+            while add_more
+                puts "\t ¿Qué tesoros #{type} quieres emplear?"
+                treasures.each_index { |i| puts "\t [#{i}] #{treasures[i]}"}
+                    
+
+=begin
+                pattern = gets
                 
-                while add_more
-                    puts "\t ¿Qué tesoros #{type} quieres emplear? #{treasures}"
-                    pattern = gets
-                    
-                    if !pattern.nil?
-                        pattern.split(" ").each{|pattern|
-                            result += treasures.select{|t| /#{pattern}/ =~ t.getName}
-                            treasures -= result
-                        }
+                if !pattern.nil?
+                    pattern.split(" ").each{|pattern|
+# Esta técnica no es segura!! Estamos evaluando el patrón como regexp, esto puede dar fallos!
+                        result += treasures.select{|t| /#{pattern}/ =~ t.getName}
+                        treasures -= result
+                    }
+                end
+=end                  
+
+                index = getInt(0, treasures.length - 1)
+                result << treasures.at(index)
+
+                add_more =
+                    if treasures.empty?
+                        false
+                    else
+                        puts "\t Seleccionados hasta el momento: #{result}\n"\
+                              "\t ¿Quieres añadir más?" 
+                        getChar(%w[s n]) == "S"
                     end
-                    
-                    add_more = if treasures.empty?
-                            false
-                        else
-                            print "\t Seleccionados hasta el momento: #{result}\n"\
-                                  "\t ¿Quieres añadir más? (S/N): " 
-                            /^S$/ === gets
-                        end
-                end    
             end
             
             result
@@ -97,8 +126,8 @@ module GameUI
             end
             
             game.initGame(players)
-            puts "---- Napakalaki ----\nLanzando los dados...\n\n"
-            sleep 1
+            #puts "---- Napakalaki ----\nLanzando los dados...\n\n"
+            #sleep 1
             
 =begin
  Esquema de menú:
@@ -123,41 +152,43 @@ module GameUI
             while !game_over
                 player = game.getCurrentPlayer
                 
-                display(false)
-                
                 seguir = false
                 while !seguir
+                    display(false)
                     puts "¿Qué quieres hacer? \n"\
-                        " a) Ver inventario \n"\
-                        " b) Descartar tesoro visible \n"\
-                        " c) Descartar tesoro invisible \n"\
-                        " d) Comprar niveles\n"\
-                        " f) Hacer tesoro visible\n"\
-                        " z) Seguir jugando\n"
+                        " 1) Ver inventario \n"\
+                        " 2) Descartar tesoro equipado \n"\
+                        " 3) Descartar tesoro oculto \n"\
+                        " 4) Comprar niveles\n"\
+                        " 5) Equipar un tesoro\n"\
+                        " 0) Seguir jugando\n"
                     print "Opción > "
-                    option = gets
+                    option = gets.to_i
                     
-                    option.nil? || option.chomp!
+                    #option.nil? || option.chomp!
                     
+
+
                     case option
-                    when "a"
+                    when 1
                         inspectTreasures
-                    when "b"
+                    when 2
                         discardTreasure(player.getVisibleTreasures, game.method(:discardVisibleTreasure))
-                    when "c"
+                    when 3
                         discardTreasure(player.getHiddenTreasures, game.method(:discardHiddenTreasure))
-                    when "d"
-                        game.buyLevels(treasureSelect(player.getVisibleTreasures,"visibles"), 
-                                       treasureSelect(player.getHiddenTreasures,"invisibles"))
-                    when "e"
-                        print "¿Qué tesoro no visible quieres hacer visible?"
+                    when 4
+                        game.buyLevels(treasureSelect(player.getVisibleTreasures,:equipados), 
+                                       treasureSelect(player.getHiddenTreasures,:ocultos))
+                    when 5
+                        print "¿Qué tesoro oculto quieres equipar?"
                         # canMake it?
                         # ...
-                    when "z"
+                    when 0
                     	seguir = true
                     else
                         puts "Opción #{option} inválida. Utiliza [z] para continuar jugando."
                     end
+                    print "Pulsa [Intro] para continuar" and gets
                 end
 
                 
