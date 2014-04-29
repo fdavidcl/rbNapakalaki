@@ -32,6 +32,8 @@ module GameUI
 
         def display(fight)
             game = Game::Napakalaki.instance
+
+            system("clear") || system("cls") # Borramos la pantalla
             puts "---- Napakalaki ----"
             puts "Jugando: #{game.getCurrentPlayer.getName} (nivel #{game.getCurrentPlayer.getCombatLevel})"
             
@@ -49,16 +51,16 @@ module GameUI
             vis = player.getVisibleTreasures
 
             if vis.empty?
-                puts "\t No tienes tesoros equipados!"
+                puts " ¡No tienes tesoros equipados!"
             else
-                puts "\t Tienes estos tesoros equipados: #{vis}"
+                puts " Tienes estos tesoros equipados:\n\t" + vis*"\n\t"
             end
             
             hid = player.getHiddenTreasures
             if hid.empty?
-                puts "\t ¡No tienes tesoros ocultos!"
+                puts " ¡No tienes tesoros ocultos!"
             else
-                puts "\t Tienes estos tesoros ocultos: #{hid}"
+                puts " Tienes estos tesoros ocultos:\n\t" + hid*"\n\t"
             end
         end
         
@@ -111,14 +113,12 @@ module GameUI
         def play
             game = Game::Napakalaki.instance
             
-            puts "Dame nombres de jugadores"
+            puts "Introduce los nombres de los jugadores (separados por espacios)"
             players = getString.chomp.split(" ")
             players = ["David","Nacho"]
             
             #Como mucho se permiten 3 jugadores
-            if players.empty? || players.size > 3
-                raise "Necesito más de un jugador y menos de 4 para jugar"
-            end
+            raise "El número de jugadores debe estar entre 1 y 3." if players.empty? || players.size > 3
             
             game.initGame(players)
             #puts "---- Napakalaki ----\nLanzando los dados...\n\n"
@@ -151,19 +151,23 @@ module GameUI
                 while !seguir
                     display(false)
                     puts "¿Qué quieres hacer? \n"\
-                        " 1) Ver inventario \n"\
-                        " 2) Descartar tesoro equipado \n"\
-                        " 3) Descartar tesoro oculto \n"\
-                        " 4) Comprar niveles\n"\
-                        " 5) Equipar un tesoro\n"\
-                        " 0) Seguir jugando\n"
+                        " [1] Ver inventario \n"\
+                        " [2] Descartar tesoro equipado \n"\
+                        " [3] Descartar tesoro oculto \n"\
+                        " [4] Comprar niveles\n"\
+                        " [5] Equipar un tesoro\n"\
+                        "*[0] Seguir jugando\n"
                     option = getInt(0,5)
 
                     case option
                     when 1
                         inspectTreasures
                     when 2
-                        discardTreasure(player.getVisibleTreasures, game.method(:discardVisibleTreasure))
+                        if player.getVisibleTreasures.any?
+                            discardTreasure(player.getVisibleTreasures, game.method(:discardVisibleTreasure))
+                        else
+                            puts "¡No tienes tesoros equipados!"
+                        end
                     when 3
                         discardTreasure(player.getHiddenTreasures, game.method(:discardHiddenTreasure))
                     when 4
@@ -176,7 +180,12 @@ module GameUI
                     when 0
                     	seguir = true
                     else
-                        puts "Opción #{option} inválida. Utiliza [z] para continuar jugando."
+                        puts "Opción #{option} inválida. Utiliza [0] para continuar jugando."
+                    end
+
+                    if !seguir
+                        print "(Intro para continuar) > "
+                        gets
                     end
                 end
 
@@ -185,6 +194,8 @@ module GameUI
 
                 #Comenzar lucha
                 display(true)
+                    print " > "
+                    gets
                 game.combat
 
                 result = nil
