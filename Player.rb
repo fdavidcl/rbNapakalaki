@@ -114,20 +114,13 @@ module Game
             # Número mágico, debería haber una cte para cambiar el máximo de tesoros equipados
             vt = @visibleTreasures.map(&:getType)
             
-            # Comprueba si t es miembro de hiddenTreasures, para que el método sea robusto
-            begin
-                raise "No dispones de #{t} en ocultos" if !@hiddenTreasures.member? t
-                    
-                vt.size < 4 &&
-                if t.getType == ONEHAND
-                    !vt.include?(BOTHHANDS) && vt.count(t.getType) < 2
-                elsif t.getType == BOTHHANDS
-                    !vt.include?(ONEHAND) && !vt.include?(t.getType)
-                else
-                    !vt.include?(t.getType)
-                end
-            rescue Exception => e
-                puts e.message
+            @hiddenTreasures.member? t && vt.size < 4 &&
+            if t.getType == ONEHAND
+                !vt.include?(BOTHHANDS) && vt.count(t.getType) < 2
+            elsif t.getType == BOTHHANDS
+                !vt.include?(ONEHAND) && !vt.include?(t.getType)
+            else
+                !vt.include?(t.getType)
             end
         end
         
