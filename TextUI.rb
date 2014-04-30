@@ -10,7 +10,7 @@ module GameUI
         private
         def getString
             print " > "
-            gets
+            gets || ""
         end
 
         def getInt(min, max)
@@ -64,11 +64,17 @@ module GameUI
             end
         end
         
-        def discardTreasure(treasureList,method)
-            print "\t Índice del tesoro a descartar: "
-            i = getInt(1, treasureList.length) - 1
+        def discardTreasure(treasures,method,type)
+            if treasures.empty?
+                puts "¡No tienes tesoros #{type}!"
+            else
+                puts "\t Tesoros #{type}:"
+                list treasures
+                print "\t Índice del tesoro a descartar: "
+                i = getInt(1, treasures.length) - 1
             
-            method.call treasureList[i]
+                method.call treasures[i]
+            end
         end
         
         def treasureSelect(treasures,type)
@@ -78,20 +84,7 @@ module GameUI
             
             while add_more
                 puts "\t ¿Qué tesoros #{type} quieres emplear?"
-                treasures.each_index { |i| puts "\t [#{i+1}] #{treasures[i]}"}
-                    
-
-=begin
-                pattern = gets
-                
-                if !pattern.nil?
-                    pattern.split(" ").each{|pattern|
-# Esta técnica no es segura!! Estamos evaluando el patrón como regexp, esto puede dar fallos!
-                        result += treasures.select{|t| /#{pattern}/ =~ t.getName}
-                        treasures -= result
-                    }
-                end
-=end                  
+                list treasures
 
                 index = getInt(1, treasures.length) - 1
                 result << treasures.delete_at(index)
@@ -109,47 +102,62 @@ module GameUI
             result
         end
         
+        def makeVisible(treasures)
+            game = Game::Napakalaki.instance
+            
+            if treasures.empty?
+                puts "\t ¡No dispones de tesoros para equipar!"
+            else
+                list treasures
+                print "\t Tesoro a equipar: "
+                i = getInt(1,treasures.size) - 1
+                
+                # ¿Para qué sirve canMakeTreasureVisible, si makeTreasureVisible ya devuelve true o false?
+                game.makeTreasureVisible treasures[i] or puts "\t No puedes hacer visible este tesoro"
+            end
+        end
+        
+        def list(treasures)
+            treasures.each_with_index { |t,i| puts "\t [#{i+1}] #{t}"}
+        end
+        
+        def printCombatResult(result)
+            case result
+            when Game::WINANDWINGAME
+                puts "\t ---> Has ganado el juego"
+            when Game::WIN
+                puts "\t ---> Has ganado tu combate"
+            when Game::LOSE
+                puts "\t ---> Has perdido tu combate, tienes que cumplir un mal rollo"
+            when Game::LOSEANDESCAPE
+                puts "\t ---> Has perdido tu combate, pero has escapado a tiempo"
+            when Game::LOSEANDDIE
+                puts "\t ---> Has perdido tu combate, y el monstruo te ha matado"
+            end 
+        end
+        
     	public
         def play
             game = Game::Napakalaki.instance
             
             puts "Introduce los nombres de los jugadores (separados por espacios)"
-            players = getString.chomp.split(" ")
+# Depuración
+            #players = getString.chomp.split(" ")
+# Depuración
             players = ["David","Nacho"]
             
-            #Como mucho se permiten 3 jugadores
+            # Como mucho se permiten 3 jugadores
             raise "El número de jugadores debe estar entre 1 y 3." if players.empty? || players.size > 3
             
             game.initGame(players)
-            #puts "---- Napakalaki ----\nLanzando los dados...\n\n"
-            #sleep 1
-            
-=begin
- Esquema de menú:
- 
- Repite:
- 
-    Pide jugador
-    Muestra opciones para dicho jugador:
-        Ver tesoros visibles
-        Ver tesoros invisibles
-        Descartar tesoro visible
-        Descartar tesoro invisible
-        Comprar niveles
-        Hacer tesoro visible
-    Lucha con monstruo
-    Siguiente turno
- 
- mientras jugador actual no haya ganado la partida
-=end
-            
+   
             game_over = false
             while !game_over
                 player = game.getCurrentPlayer
                 
-                seguir = false
-                while !seguir
-                    display(false)
+                fight = false
+                while !fight
+                    display(fight)
                     puts "¿Qué quieres hacer? \n"\
                         " [1] Ver inventario \n"\
                         " [2] Descartar tesoro equipado \n"\
@@ -163,47 +171,41 @@ module GameUI
                     when 1
                         inspectTreasures
                     when 2
-                        if player.getVisibleTreasures.any?
-                            discardTreasure(player.getVisibleTreasures, game.method(:discardVisibleTreasure))
-                        else
-                            puts "¡No tienes tesoros equipados!"
-                        end
+                        discardTreasure(player.getVisibleTreasures, game.method(:discardVisibleTreasure),:equipados)
                     when 3
-                        discardTreasure(player.getHiddenTreasures, game.method(:discardHiddenTreasure))
+                        discardTreasure(player.getHiddenTreasures, game.method(:discardHiddenTreasure),:ocultos)
                     when 4
                         game.buyLevels(treasureSelect(player.getVisibleTreasures,:equipados), 
-                                       treasureSelect(player.getHiddenTreasures,:ocultos))
+                                       treasureSelect(player.getHiddenTreasures,:ocultos)) or 
+                        puts "No puedes comprar tantos niveles"
                     when 5
-                        print "¿Qué tesoro oculto quieres equipar?"
-                        # canMake it?
-                        # ...
+                        makeVisible player.getHiddenTreasures
                     when 0
-                    	seguir = true
+                    	fight = true
                     else
                         puts "Opción #{option} inválida. Utiliza [0] para continuar jugando."
                     end
 
-                    if !seguir
+                    if !fight
                         print "(Intro para continuar) > "
                         gets
                     end
                 end
 
-                
-                #game.buyLevels()
-
                 #Comenzar lucha
-                display(true)
+                display(fight)
                     print " > "
                     gets
-                game.combat
-
-                result = nil
+                    
+                result = game.combat
+                printCombatResult result
+                sleep 3
                 
                 if !game.endOfGame(result)
+                    # ¿Qué debe hacer nextTurn si hay un mal rollo pendiente?
                     game.nextTurn
                 else
-                    puts "Ganador: #{name}"
+                    puts "¡¡¡¡ Ganador: #{game.getCurrentPlayer.getName} !!!!"
                     game_over = true
                 end
                 

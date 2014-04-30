@@ -78,35 +78,24 @@ module Game
             # || (nHiddenTreasures -= 1 if !nHiddenTreasures.zero?)
         end
 
-        def adjustToFitTreasureLists(vis, hid)
+        def adjustToFitTreasureLists(vis, hid)            
+            vis.map!(&:getType)
+            hid.map!(&:getType)
             lostvis = []
             losthid = []
-
-            if @specificVisibleTreasures.empty? && specificHiddenTreasures.empty?               
-                lostvis = vis[0 .. [@nVisibleTreasures == -1 ? vis.size : @nVisibleTreasures, vis.size].min - 1].map(&:getType) if nVisibleTreasures.nonzero?
-                losthid = vis[0 .. [@nHiddenTreasures == -1 ? vis.size : @nHiddenTreasures, hid.size].min - 1].map(&:getType) if nHiddenTreasures.nonzero?
-            else
-                vt = vis.map(&:getType)
-                ht = hid.map(&:getType)
-                lostvis = @specificVisibleTreasures.select { |e| lostvis.count(e) < vt.count(e) }
-                lostvis = @specificHiddenTreasures.select { |e| losthid.count(e) < ht.count(e) }
-
-                # specificVisibleTreasures.each{|e| 
-                #     if vt.member? e
-                #         lostvis << e
-                #         vt.delete_at vt.index(e)
-                #     end
-                # }
-                
-                # specificHiddenTreasures.each{|e| 
-                #     if ht.member? e
-                #         losthid << e
-                #         ht.delete_at ht.index(e)
-                #     end
-                # }
+            
+            if @specificVisibleTreasures.empty? && @specificHiddenTreasures.empty?
+                nvis = [@nVisibleTreasures == -1 ? vis.size : @nVisibleTreasures, vis.size].min - 1
+                nhid = [@nHiddenTreasures == -1 ? vis.size : @nHiddenTreasures, hid.size].min - 1
+                        
+                lostvis = vis[0 .. nvis] if @nVisibleTreasures.nonzero?
+                losthid = vis[0 .. nhid] if @nHiddenTreasures.nonzero?
+            else                
+                lostvis = @specificVisibleTreasures.select { |e| lostvis.count(e) < vis.count(e) }
+                lostvis = @specificHiddenTreasures.select { |e| losthid.count(e) < hid.count(e) }
             end
-
-            BadConsequence.newKinds(text, levels, lostvis, losthid)
+            
+            BadConsequence.newKinds(@text, @levels, lostvis, losthid)
         end
 
         # Convierte el mal rollo en una cadena

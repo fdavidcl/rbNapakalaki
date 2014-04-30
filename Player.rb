@@ -43,7 +43,7 @@ module Game
             @hiddenTreasures.clear
         end
         
-        def discardNecklaceVisible
+        def discardNecklaceIfVisible
             @visibleTreasures.each{|e| 
                 if e.getType == NECKLACE
                     CardDealer.instance.giveTreasureBack e
@@ -73,50 +73,61 @@ module Game
             end                
         end
         
-        def combat(m)
+        def combat(m)            
             if getCombatLevel > m.getLevel
                 prize = m.getPrize
                 applyPrize(prize)
-                result = level < 10 ? WIN : WINANDWINGAME
+                result = @level < 10 ? WIN : WINANDWINGAME
             elsif Dice.instance.nextNumber < 5
                 bad = m.getBadConsequence
                 if bad.kills 
                     die
                     result = LOSEANDDIE
-                else 
+                else
                     applyBadConsequence(bad)
                     result = LOSE
                 end
             else
                 result = LOSEANDESCAPE
             end
-            discardNecklaceVisible
+            discardNecklaceIfVisible
             
             result
         end
         
         def applyBadConsequence(bad)
             decrementLevels bad.getLevels
-            pendingBad = bad.adjustToFitTreasureLists(@visibleTreasures,@hiddenTreasures)
-            setPendingBadConsequence pendingBadConsequence
+            pendingBad = bad.adjustToFitTreasureLists(getVisibleTreasures,getHiddenTreasures)            
+            setPendingBadConsequence pendingBad
         end
         
         def makeTreasureVisible(t)
             can = canMakeTreasureVisible t 
-            @visibleTreasures << t if can
+            if can 
+                @visibleTreasures << t
+                discardHiddenTreasure t
+            end
             can
         end
         
         def canMakeTreasureVisible(t)
             # Número mágico, debería haber una cte para cambiar el máximo de tesoros equipados
-            vt = @visibleTreasures.collect{|e| e.getType}
-            vt.size < 4 &&
-            if t.getType == ONEHAND
-                !vt.include?(BOTHHANDS) && vt.count(t.getType) < 2
-            elsif t.getType == BOTHHANDS
-                !vt.include?(ONEHAND) && !vt.include?(t.getType)
-            else
-                vt.include?(t.getType)
+            vt = @visibleTreasures.map(&:getType)
+            
+            # Comprueba si t es miembro de hiddenTreasures, para que el método sea robusto
+            begin
+                raise "No dispones de #{t} en ocultos" if !@hiddenTreasures.member? t
+                    
+                vt.size < 4 &&
+                if t.getType == ONEHAND
+                    !vt.include?(BOTHHANDS) && vt.count(t.getType) < 2
+                elsif t.getType == BOTHHANDS
+                    !vt.include?(ONEHAND) && !vt.include?(t.getType)
+                else
+                    !vt.include?(t.getType)
+                end
+            rescue Exception => e
+                puts e.message
             end
         end
         
@@ -147,6 +158,8 @@ module Game
                 visible.map{|t| discardVisibleTreasure(t)}
                 hidden.map{|t| discardHiddenTreasure(t)}
             end
+            
+            canI
         end
         
         def getCombatLevel

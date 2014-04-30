@@ -6,8 +6,8 @@ module Game
         def initialize(name, gold, min, max, type)
             @name = name
             @goldCoins = gold
-            @minBonus = @minBonus
-            @maxBonus = @maxBonus
+            @minBonus = min
+            @maxBonus = max
             @type = type
         end
 
@@ -32,7 +32,7 @@ module Game
         end
 
         def to_s
-            "#{@type.upcase} \"#{@name}\" (= #{@goldCoins} oro)"
+            "#{@type.upcase} \"#{@name}\" (= #{@goldCoins} oro" +  (@type != NECKLACE ? ", +#{@minBonus}/+#{@maxBonus} bonus)" : ")")
         end
     end
 end
