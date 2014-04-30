@@ -30,6 +30,11 @@ module GameUI
             input
         end
 
+        def pause
+            print "(Intro para continuar) > "
+            gets
+        end
+
         def display(fight)
             game = Game::Napakalaki.instance
 
@@ -206,8 +211,7 @@ module GameUI
                     end
 
                     if !fight
-                        print "(Intro para continuar) > "
-                        gets
+                        pause
                     end
                 end
 
@@ -218,7 +222,7 @@ module GameUI
                     
                 result = game.combat
                 printCombatResult result
-                sleep 3
+                pause
                 
                 if !game.endOfGame(result)
                     # ¿Qué debe hacer nextTurn si hay un mal rollo pendiente?
