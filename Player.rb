@@ -97,7 +97,7 @@ module Game
         
         def applyBadConsequence(bad)
             decrementLevels bad.getLevels
-            pendingBad = bad.adjustToFitTreasureLists(getVisibleTreasures,getHiddenTreasures)            
+            pendingBad = bad.adjustToFitTreasureLists(@visibleTreasures,@hiddenTreasures)            
             setPendingBadConsequence pendingBad
         end
         

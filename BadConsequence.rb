@@ -79,8 +79,8 @@ module Game
         end
 
         def adjustToFitTreasureLists(vis, hid)            
-            vis.map!(&:getType)
-            hid.map!(&:getType)
+            vis = vis.clone.map!(&:getType)
+            hid = hid.clone.map!(&:getType)
             lostvis = []
             losthid = []
             
