@@ -150,7 +150,26 @@ module GameUI
             raise "El número de jugadores debe estar entre 1 y 3." if players.empty? || players.size > 3
             
             game.initGame(players)
-   
+
+=begin
+ Esquema de menú:
+ 
+ Secuencia de juego según el guion:
+    se lanzan los dados para conocer el primer jugador
+    para cada jugador:
+        (1er turno o muerto) lanza los dados para inicializar sus tesoros
+        se obtiene el monstruo del mazo
+            (nivel inferior) gana y se aplica el buen rollo
+            (nivel superior) lanza el dado
+                (sale 5/6) huye
+                (sale <=4) pierde, se aplica el mal rollo
+                    (muerte) pierde tesoros y queda con nivel 1
+                    (no muerte) baja niveles y descarta tesoros
+        (opt) descartar otros tesoros
+        (opt) equipar tesoros
+        (opt) comprar niveles
+=end
+
             game_over = false
             while !game_over
                 player = game.getCurrentPlayer
