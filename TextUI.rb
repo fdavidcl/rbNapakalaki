@@ -10,7 +10,7 @@ module GameUI
         private
         def getString
             print " > "
-            gets || ""
+            (gets || "").chomp
         end
 
         def getInt(min, max)
@@ -38,8 +38,8 @@ module GameUI
         def display(fight)
             game = Game::Napakalaki.instance
 
-            system("clear") || system("cls") # Borramos la pantalla
-            puts "---- Napakalaki ----"
+            print "\e[H\e[2J" # Secuencia de escape para borrar la pantalla
+            puts "\e[7m\e[1m       Napakalaki       \e[m"
             puts "Jugando: #{game.getCurrentPlayer.getName} (nivel #{game.getCurrentPlayer.getCombatLevel})"
             
             if fight
@@ -145,8 +145,8 @@ module GameUI
         def play
             game = Game::Napakalaki.instance
             
-            puts "Introduce los nombres de los jugadores (separados por espacios)"
 # Depuración
+            #puts "Introduce los nombres de los jugadores (separados por espacios)"
             #players = getString.chomp.split(" ")
 # Depuración
             players = ["David","Nacho"]
@@ -163,6 +163,7 @@ module GameUI
     se lanzan los dados para conocer el primer jugador
     para cada jugador:
         (1er turno o muerto) lanza los dados para inicializar sus tesoros
+        (opt) comprar niveles
         se obtiene el monstruo del mazo
             (nivel inferior) gana y se aplica el buen rollo
             (nivel superior) lanza el dado
@@ -172,7 +173,6 @@ module GameUI
                     (no muerte) baja niveles y descarta tesoros
         (opt) descartar otros tesoros
         (opt) equipar tesoros
-        (opt) comprar niveles
 =end
 
             game_over = false
