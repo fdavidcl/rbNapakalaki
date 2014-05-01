@@ -148,8 +148,8 @@ module Game
             if canI
                 incrementLevels(levels)
                 
-                visible.map{|t| discardVisibleTreasure(t)}
-                hidden.map{|t| discardHiddenTreasure(t)}
+                visible.each {|t| discardVisibleTreasure(t)}
+                hidden.each {|t| discardHiddenTreasure(t)}
             end
             
             canI
