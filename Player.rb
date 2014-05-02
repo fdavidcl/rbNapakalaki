@@ -131,8 +131,12 @@ module Game
             dieIfNoTreasures
         end
         
+        # Esto repite código ¿Podemos hacer una función auxiliar? --> preguntar
         def discardHiddenTreasure(t)
             @hiddenTreasures.delete_at @hiddenTreasures.index(t)
+            pendingBadConsequence.substractHiddenTreasure(t) if !validState
+            CardDealer.instance.giveTreasureBack(t)
+            dieIfNoTreasures
         end
         
         def buyLevels(v,h)

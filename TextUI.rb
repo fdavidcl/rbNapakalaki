@@ -131,6 +131,10 @@ module GameUI
             treasures.each_with_index { |t,i| puts "\t [#{i+1}] #{t}"}
         end
         
+        def validatePlayer(player)
+            # ¿?
+        end
+        
         def printCombatResult(result)
             puts "\t ---> " + 
                 case result
@@ -153,7 +157,7 @@ module GameUI
             
 # Depuración
             #puts "Introduce los nombres de los jugadores (separados por espacios)"
-            #players = getString.chomp.split(" ")
+            #players = getString.split(" ")
 # Depuración
             players = ["David","Nacho"]
             
@@ -245,7 +249,7 @@ module GameUI
                 
                 if !game.endOfGame(result)
                     # ¿Qué debe hacer nextTurn si hay un mal rollo pendiente?
-                    game.nextTurn 
+                    game.nextTurn #|| (validatePlayer player & game.nextTurn)
                 else
                     puts "¡¡¡¡ Ganador: #{game.getCurrentPlayer.getName} !!!!"
                     game_over = true
