@@ -11,6 +11,10 @@ class String
     def invert
         "\e[7m#{self}\e[m"
     end
+    
+    def red
+        "\e[31m#{self}\e[m"
+    end
 end
 
 module GameUI
@@ -257,5 +261,10 @@ module GameUI
         end
     end
     
-    TextUI.instance.play if __FILE__ == $0
+    begin
+        TextUI.instance.play if __FILE__ == $0
+    rescue Interrupt =>e
+        puts "\nEl juego se ha detenido".bold.red 
+    end
+        
 end
