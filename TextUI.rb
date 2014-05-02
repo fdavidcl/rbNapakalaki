@@ -3,19 +3,21 @@
 
 require_relative "Napakalaki"
 
+class String
+    def bold
+        "\e[1m#{self}\e[m"
+    end
+    
+    def invert
+        "\e[7m#{self}\e[m"
+    end
+end
+
 module GameUI
     class TextUI
         include Singleton
         
         private
-        def bold(texto)
-            "\e[1m#{texto}\e[m"
-        end
-
-        def invert(texto)
-           "\e[7m#{texto}\e[m" 
-        end
-
         def getString
             print " > "
             (gets || "").chomp
@@ -47,7 +49,7 @@ module GameUI
             game = Game::Napakalaki.instance
 
             print "\e[H\e[2J" # Secuencia de escape para borrar la pantalla
-            puts invert bold "       Napakalaki       "
+            puts "       Napakalaki       ".invert.bold
             puts "Jugando: #{game.getCurrentPlayer.getName} (nivel #{game.getCurrentPlayer.getCombatLevel})"
             
             if fight
@@ -92,7 +94,7 @@ module GameUI
             result = []
             
             if treasures.any?
-                puts bold "¿Qué tesoros #{type} quieres emplear?"
+                puts "¿Qué tesoros #{type} quieres emplear?".bold
                 index = 1
                 
                 while index > 0
@@ -100,14 +102,14 @@ module GameUI
                     list treasures
                     puts "\t [0] Terminar selección"
 
-                    index = getInt(0, treasures.length) - 1
-                    result << treasures.delete_at(index) if index > 0
+                    index = getInt(0, treasures.length)
+                    result << treasures.delete_at(index - 1) if index > 0
                 end
-                
-                result
             else
                 puts "¡No tienes tesoros #{type}!"
             end
+            
+            result
         end
         
         def makeVisible(treasures)
