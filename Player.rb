@@ -64,6 +64,16 @@ module Game
             @level + l < 10
         end
         
+        def discardTreasure(list,t,m)
+            if (i = list.index(t))
+                list.delete_at i
+                @pendingBadConsequence.method(m).call t if !validState
+                CardDealer.instance.giveTreasureBack(t)
+            end
+            
+            dieIfNoTreasures
+        end
+        
         public
         def applyPrize(p)
             incrementLevels(p.getLevels)
@@ -125,24 +135,14 @@ module Game
         end
         
         def discardVisibleTreasure(t)
-            @visibleTreasures.delete_at @visibleTreasures.index(t)
-            pendingBadConsequence.substractVisibleTreasure(t) if !validState
-            CardDealer.instance.giveTreasureBack(t)
-            dieIfNoTreasures
+            discardTreasure(@visibleTreasures,t,:substractVisibleTreasure)
         end
         
-        # Esto repite código ¿Podemos hacer una función auxiliar? --> preguntar
         def discardHiddenTreasure(t)
-            @hiddenTreasures.delete_at @hiddenTreasures.index(t)
-            pendingBadConsequence.substractHiddenTreasure(t) if !validState
-            CardDealer.instance.giveTreasureBack(t)
-            dieIfNoTreasures
+            discardTreasure(@hiddenTreasures,t,:substractHiddenTreasure)
         end
         
         def buyLevels(v,h)
-            # Los clone se podrían quitar por como funciona el 
-            # juego -> preguntar si podemos/debemos hacerlo
-            
             visible = v.clone
             hidden = h.clone
             

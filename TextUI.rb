@@ -186,12 +186,12 @@ module GameUI
 
     Nota: Usemos \t para listar opciones, tesoros, etc. El resto del texto puede aparecer sin indentación.
 =end
-
+            
+            fight = false
             game_over = false
+            
             while !game_over
                 player = game.getCurrentPlayer
-                
-                fight = false
 
                 # Pre-lucha: comprar niveles
                 #while !fight
@@ -214,47 +214,45 @@ module GameUI
                 printCombatResult result
                 pause
 
-                fight = false
-
                 # Post-lucha
-                while !fight
-                    display(fight)
-                    puts "¿Qué quieres hacer? \n"\
-                        " [1] Ver inventario \n"\
-                        " [2] Descartar tesoro equipado \n"\
-                        " [3] Descartar tesoro oculto \n"\
-                        " [4] Equipar un tesoro\n"\
-                        "*[0] Seguir jugando\n"
-                    option = getInt(0,4)
-
-                    case option
-                    when 1
-                        inspectTreasures
-                    when 2
-                        discardTreasure(player.getVisibleTreasures, game.method(:discardVisibleTreasure),:equipados)
-                    when 3
-                        discardTreasure(player.getHiddenTreasures, game.method(:discardHiddenTreasure),:ocultos)
-                    when 4
-                        makeVisible player.getHiddenTreasures
-                    when 0
-                    	fight = true
-                    else
-                        puts "Opción #{option} inválida. Utiliza [0] para continuar jugando."
-                    end
-
-                    if !fight
-                        pause
-                    end
-                end
-                
                 if !game.endOfGame(result)
-                    # ¿Qué debe hacer nextTurn si hay un mal rollo pendiente?
-                    game.nextTurn #|| (validatePlayer player & game.nextTurn)
+                    while fight
+                        display(!fight)
+                        puts "¿Qué quieres hacer? \n"\
+                            " [1] Ver inventario \n"\
+                            " [2] Descartar tesoro equipado \n"\
+                            " [3] Descartar tesoro oculto \n"\
+                            " [4] Equipar un tesoro\n"\
+                            "*[0] Seguir jugando\n"
+                        option = getInt(0,4)
+
+                        case option
+                        when 1
+                            inspectTreasures
+                        when 2
+                            discardTreasure(player.getVisibleTreasures, game.method(:discardVisibleTreasure),:equipados)
+                        when 3
+                            discardTreasure(player.getHiddenTreasures, game.method(:discardHiddenTreasure),:ocultos)
+                        when 4
+                            makeVisible player.getHiddenTreasures
+                        when 0
+                            fight = false
+                        else
+                            puts "Opción #{option} inválida. Utiliza [0] para continuar jugando."
+                        end
+
+                        if fight
+                            pause
+                        end
+                    end
+                    
+                    while !game.nextTurn
+                        # Estoy hasta la polla del puto mal rollo pendiente
+                    end
                 else
-                    puts "¡¡¡¡ Ganador: #{game.getCurrentPlayer.getName} !!!!"
+                    puts "¡¡¡¡ Ganador: #{game.getCurrentPlayer.getName} !!!!".bold
                     game_over = true
                 end
-                
             end
         end
     end

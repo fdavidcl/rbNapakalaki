@@ -21,7 +21,6 @@ module Game
 
         private
         def initPlayers(names)
-            #players debe ser no vacío, comprobar
             @players = names.collect { |n|
                 Player.new(n)
             }
