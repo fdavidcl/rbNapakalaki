@@ -48,6 +48,7 @@ module Game
                 if e.getType == NECKLACE
                     CardDealer.instance.giveTreasureBack e
                     @visibleTreasures.delete(e)
+                    break
                 end
             }
         end
@@ -126,9 +127,9 @@ module Game
             
             @hiddenTreasures.member? t && vt.size < 4 &&
             if t.getType == ONEHAND
-                !vt.include?(BOTHHANDS) && vt.count(t.getType) < 2
+                !vt.include?(BOTHHANDS) && vt.count(ONEHAND) < 2
             elsif t.getType == BOTHHANDS
-                !vt.include?(ONEHAND) && !vt.include?(t.getType)
+                !vt.include?(ONEHAND) && !vt.include?(BOTHANDS)
             else
                 !vt.include?(t.getType)
             end
@@ -160,7 +161,7 @@ module Game
         end
         
         def getCombatLevel
-            if @visibleTreasures.include?(NECKLACE)
+            if @visibleTreasures.map(&:getType).include?(NECKLACE)
                 @visibleTreasures.inject(@level){ |sum,x| sum += x.getMaxBonus }
             else
                 @visibleTreasures.inject(@level){ |sum,x| sum += x.getMinBonus }
@@ -181,8 +182,6 @@ module Game
                 limit = (number < 6 ? 2 : 3)
                 limit.times {@hiddenTreasures << CardDealer.instance.nextTreasure}
             end
-            # Provisional
-            true
         end
         
         def isDead
