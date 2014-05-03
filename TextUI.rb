@@ -22,6 +22,10 @@ module GameUI
         include Singleton
         
         private
+        def initialize
+            @game = Game::Napakalaki.instance
+        end
+        
         def getString
             print " > "
             (gets || "").chomp
@@ -50,8 +54,6 @@ module GameUI
         end
 
         def display(fight)
-            game = Game::Napakalaki.instance
-
             print "\e[H\e[2J" # Secuencia de escape para borrar la pantalla
             puts "       Napakalaki       ".invert.bold
             puts "Jugando: #{game.getCurrentPlayer.getName} (nivel #{game.getCurrentPlayer.getCombatLevel})"
@@ -66,7 +68,7 @@ module GameUI
         end
         
         def inspectTreasures
-            player = Game::Napakalaki.instance.getCurrentPlayer
+            player = game.getCurrentPlayer
             treasures = {
                 :equipados => player.getVisibleTreasures,
                 :ocultos => player.getHiddenTreasures
@@ -116,9 +118,7 @@ module GameUI
             result
         end
         
-        def makeVisible(treasures)
-            game = Game::Napakalaki.instance
-            
+        def makeVisible(treasures)           
             if treasures.empty?
                 puts "\t ¡No dispones de tesoros para equipar!"
             else
@@ -157,7 +157,6 @@ module GameUI
         
     	public
         def play
-            game = Game::Napakalaki.instance
             
 # Depuración
             #puts "Introduce los nombres de los jugadores (separados por espacios)"
@@ -259,6 +258,9 @@ module GameUI
                 end
             end
         end
+        
+        attr_reader:game
+        
     end
     
     begin

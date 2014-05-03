@@ -36,7 +36,16 @@ module Game
             obj.send(:initialize, text, false, levels, 0, 0, sVisible, sHidden)
             obj
         end
-
+        
+        private
+        # Función auxiliar
+        def substractTreasure(treasures,t)
+            if (i = treasures.index(t.getType))
+                treasures.delete_at i
+            end
+        end
+        
+        public
         # Informa de si el mal rollo está vacío
         def isEmpty
             @levels == 0 && !@death && @nVisibleTreasures == 0 && @nHiddenTreasures == 0 &&
@@ -67,15 +76,12 @@ module Game
             @specificVisibleTreasures
         end
         
-        # Se supone que los substract se llaman sobre un badConsequence sobre el que se ha hecho fit...
         def substractVisibleTreasure(t)
-            @specificVisibleTreasures.delete_at @specificVisibleTreasures.index(t.getType)
-            # || (nVisibleTreasures -= 1 if !nVisibleTreasures.zero?)
+            substractTreasure(@specificVisibleTreasures,t)
         end
 
         def substractHiddenTreasure(t)
-            @specificHiddenTreasures.delete_at @specificHiddenTreasures.index(t.getType)
-            # || (nHiddenTreasures -= 1 if !nHiddenTreasures.zero?)
+            substractTreasure(@specificHiddenTreasures,t)
         end
 
         def adjustToFitTreasureLists(vis, hid)            
