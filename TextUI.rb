@@ -103,10 +103,10 @@ module GameUI
                 puts "¿Qué tesoros #{type} quieres emplear?".bold
                 index = 1
                 
-                while index > 0
+                while index > 0 && treasures.any?
                     puts "Seleccionados hasta el momento: #{result}"
                     list treasures
-                    puts "\t [0] Terminar selección"
+                    puts "\t*[0] Terminar selección"
 
                     index = getInt(0, treasures.length)
                     result << treasures.delete_at(index - 1) if index > 0
@@ -122,12 +122,11 @@ module GameUI
             if treasures.empty?
                 puts "\t ¡No dispones de tesoros para equipar!"
             else
+                print "¿Qué tesoro quieres equipar?".bold
                 list treasures
-                print "\t Tesoro a equipar: "
                 i = getInt(1,treasures.size) - 1
                 
-                # ¿Para qué sirve canMakeTreasureVisible, si makeTreasureVisible ya devuelve true o false?
-                game.makeTreasureVisible treasures[i] or puts "\t No puedes hacer visible este tesoro"
+                game.makeTreasureVisible treasures[i] or puts "\t No puedes equipar este tesoro. Prueba a descartar algún tesoro visible antes."
             end
         end
         
@@ -164,38 +163,34 @@ module GameUI
             raise "El número de jugadores debe estar entre 1 y 3." if players.empty? || players.size > 3
             
             game.initGame(players)
-
-            fight = false
             game_over = false
             
             while !game_over
                 player = game.getCurrentPlayer
 
                 # Pre-lucha: comprar niveles
-                #while !fight
-                    display(fight)
-                    puts "Antes de luchar puedes comprar niveles."
-                    if game.buyLevels(treasureSelect(player.getVisibleTreasures,:equipados), 
-                                   treasureSelect(player.getHiddenTreasures,:ocultos))
-                        puts "Has comprado los niveles"
-                    else 
-                        puts "No puedes comprar tantos niveles"
-                    end
-                    fight = true || getInt(0, 0) == 0
-
-                #end
+                display false
+                puts "Antes de luchar puedes comprar niveles."
+                if game.buyLevels(treasureSelect(player.getVisibleTreasures,:equipados), 
+                               treasureSelect(player.getHiddenTreasures,:ocultos))
+                    puts "Has comprado los niveles"
+                else 
+                    puts "No puedes comprar tantos niveles"
+                end
 
                 # Comenzar lucha
-                display(fight)
+                display true
                     
                 result = game.combat
                 printCombatResult result
                 pause
 
+                nextTurn = false
+
                 # Post-lucha
                 if !game.endOfGame(result)
-                    while fight
-                        display(!fight)
+                    while !nextTurn
+                        display false
                         puts "¿Qué quieres hacer? \n"\
                             " [1] Ver inventario \n"\
                             " [2] Descartar tesoro equipado \n"\
@@ -214,18 +209,23 @@ module GameUI
                         when 4
                             makeVisible player.getHiddenTreasures
                         when 0
-                            fight = false
+                            nextTurn = true
                         else
                             puts "Opción #{option} inválida. Utiliza [0] para continuar jugando."
                         end
 
-                        if fight
-                            pause
+                        if nextTurn && !game.nextTurn
+                            nextTurn = false
+                            puts "Aún tienes un mal rollo pendiente."
+                            puts "Descarta los tesoros correspondientes para poder seguir jugando:".bold
+                            # Yo quiero hacer esto:
+                            # puts game.getCurrentPlayer.getPendingBadConsequence
+                            # pero no puedo
+
+                            puts game.getCurrentMonster.getBadConsequence
                         end
-                    end
-                    
-                    while !game.nextTurn
-                        # Estoy hasta la polla del puto mal rollo pendiente
+                        
+                        pause if !nextTurn
                     end
                 else
                     puts "¡¡¡¡ Ganador: #{game.getCurrentPlayer.getName} !!!!".bold
