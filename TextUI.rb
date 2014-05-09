@@ -3,25 +3,23 @@
 
 require_relative "Napakalaki"
 
-class String
-    def bold
-        "\e[1m#{self}\e[m"
-    end
-
-    def invert
-        "\e[7m#{self}\e[m"
-    end
-
-    def red
-        "\e[31m#{self}\e[m"
-    end
-end
-
 module GameUI
     class TextUI
         include Singleton
 
         private
+        def bold(msg)
+            "\e[1m#{msg}\e[m"
+        end
+
+        def invert(msg)
+            "\e[7m#{msg}\e[m"
+        end
+
+        def red(msg)
+            "\e[31m#{msg}\e[m"
+        end
+
         def initialize
             @game = Game::Napakalaki.instance
         end
@@ -55,7 +53,7 @@ module GameUI
 
         def display(fight)
             print "\e[H\e[2J" # Secuencia de escape para borrar la pantalla
-            puts "       Napakalaki       ".invert.bold
+            puts bold invert "       Napakalaki       "
             puts "Jugando: #{game.getCurrentPlayer.getName} (nivel #{game.getCurrentPlayer.getCombatLevel})"
 
             if fight
@@ -83,24 +81,11 @@ module GameUI
             }
         end
 
-        def discardTreasure(treasures,method,type)
-            if treasures.empty?
-                puts "¡No tienes tesoros #{type}!"
-            else
-                puts "\t Tesoros #{type}:"
-                list treasures
-                puts "\t Índice del tesoro a descartar:"
-                i = getInt(1, treasures.length) - 1
-
-                method.call treasures[i]
-            end
-        end
-
-        def treasureSelect(treasures,type)
+        def selectTreasures(treasures, type, &condition)
             result = []
 
             if treasures.any?
-                puts "¿Qué tesoros #{type} quieres emplear?".bold
+                puts bold "¿Qué tesoros #{type} quieres emplear?"
                 index = 1
 
                 while index > 0 && treasures.any?
@@ -109,7 +94,12 @@ module GameUI
                     puts "\t*[0] Terminar selección"
 
                     index = getInt(0, treasures.length)
-                    result << treasures.delete_at(index - 1) if index > 0
+
+                    if index > 0 && (condition.nil? || condition.call(treasures[index-1]))
+                        result << treasures.delete_at(index - 1)
+                    elsif index > 0
+                        puts red "No puedes utilizar este tesoro."
+                    end
                 end
             else
                 puts "¡No tienes tesoros #{type}!"
@@ -118,44 +108,27 @@ module GameUI
             result
         end
 
-        def makeVisible(treasures)
-            if treasures.empty?
-                puts "\t ¡No dispones de tesoros para equipar!"
-            else
-                puts "¿Qué tesoro quieres equipar?".bold
-                list treasures
-                i = getInt(1,treasures.size) - 1
-
-                if game.makeTreasureVisible treasures[i]
-                    puts "Has equipado el tesoro."
-                else
-                    puts "No puedes equipar este tesoro. Prueba a descartar algún tesoro visible antes."
-                end
-            end
-        end
-
         def list(treasures)
             treasures.each_with_index { |t,i| puts "\t [#{i+1}] #{t}"}
         end
 
         def printCombatResult(result)
-            puts "\t ---> " +
+            puts "Resultado: " +
                 case result
                 when Game::WINANDWINGAME
-                    "Has ganado el juego"
+                    bold "Has ganado el juego"
                 when Game::WIN
-                    "Has ganado tu combate"
+                    bold "Has ganado tu combate"
                 when Game::LOSE
-                    "Has perdido tu combate, tienes que cumplir un mal rollo"
+                    bold "Has perdido tu combate, tienes que cumplir un mal rollo"
                 when Game::LOSEANDESCAPE
-                    "Has perdido tu combate, pero has escapado a tiempo"
+                    bold "Has perdido tu combate, pero has escapado a tiempo"
                 when Game::LOSEANDDIE
-                    "Has perdido tu combate, y el monstruo te ha matado"
+                    bold "Has perdido tu combate, y el monstruo te ha matado"
                 end
         end
 =begin
 TODO:
- * HECHO! Resolver fallos con la muerte de jugadores
  * Comprobar la gestión de malos rollos (algo más para malos rollos de newCount?)
  * HECHO? Resolver fallos con el equipar tesoros (?)
 
@@ -183,8 +156,8 @@ TODO:
                 # Pre-lucha: comprar niveles
                 display false
                 puts "Antes de luchar puedes comprar niveles."
-                if game.buyLevels(treasureSelect(player.getVisibleTreasures,:equipados),
-                               treasureSelect(player.getHiddenTreasures,:ocultos))
+                if game.buyLevels(selectTreasures(player.getVisibleTreasures,:equipados),
+                               selectTreasures(player.getHiddenTreasures,:ocultos))
                     puts "Has comprado los niveles"
                 else
                     puts "No puedes comprar tantos niveles"
@@ -204,7 +177,7 @@ TODO:
                 if !game.endOfGame(result)
                     while !nextTurn
                         display false
-                        puts "¿Qué quieres hacer? \n".bold +
+                        puts (bold "¿Qué quieres hacer? \n") +
                             " [1] Ver inventario \n"\
                             " [2] Descartar tesoro equipado \n"\
                             " [3] Descartar tesoro oculto \n"\
@@ -219,21 +192,31 @@ TODO:
                         when 1
                             inspectTreasures
                         when 2
-                            discardTreasure(player.getVisibleTreasures, game.method(:discardVisibleTreasure),:equipados)
+                            # discardTreasure(player.getVisibleTreasures, game.method(:discardVisibleTreasure),:equipados)
+                            selectTreasures(player.getVisibleTreasures, :equipados) { |t|
+                                game.discardVisibleTreasure t
+                                true # Para añadir el tesoro a la lista de seleccionados
+                            }
                         when 3
-                            discardTreasure(player.getHiddenTreasures, game.method(:discardHiddenTreasure),:ocultos)
+                            # discardTreasure(player.getHiddenTreasures, game.method(:discardHiddenTreasure),:ocultos)
+                            selectTreasures(player.getVisibleTreasures, :equipados) { |t|
+                                game.discardHiddenTreasure t
+                                true # Para añadir el tesoro a la lista de seleccionados
+                            }
                         when 4
-                            makeVisible player.getHiddenTreasures
+                            if player.getHiddenTreasures.empty?
+                                puts "\t ¡No dispones de tesoros para equipar!"
+                            else
+                                selectTreasures(player.getHiddenTreasures, :ocultos) { |t|
+                                    game.makeTreasureVisible(t)
+                                }
+                            end
                         when 0
                             if game.nextTurnAllowed
                                 nextTurn = true
                             else
-                                # Depuración
-                                # puts game.getCurrentPlayer.getPendingBadConsequence
-                                # /Depuración
-
                                 puts "Mal rollo pendiente:\n\t#{game.getCurrentMonster.getBadConsequence}"
-                                puts "Descarta los tesoros correspondientes para poder seguir jugando".bold
+                                puts bold "Descarta los tesoros correspondientes para poder seguir jugando"
                             end
                         else
                             puts "Opción #{option} inválida. Utiliza [0] para continuar jugando."
@@ -244,7 +227,7 @@ TODO:
 
                     game.nextTurn
                 else
-                    puts "¡¡¡¡ Ganador: #{game.getCurrentPlayer.getName} !!!!".bold
+                    puts bold "¡¡¡¡ Ganador: #{game.getCurrentPlayer.getName} !!!!"
                     game_over = true
                 end
             end
@@ -257,7 +240,7 @@ TODO:
     begin
         TextUI.instance.play if __FILE__ == $0
     rescue Interrupt => e
-        puts "\nEl juego se ha detenido".bold.red
+        puts "\n\nEl juego se ha detenido"
     end
 
 end
