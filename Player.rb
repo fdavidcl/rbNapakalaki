@@ -22,29 +22,30 @@ module Game
         def bringToLife
             @dead = false
         end
-        
+
         def incrementLevels(l)
             @level = [@level+l,10].min
         end
-        
+
         def decrementLevels(l)
             @level = [@level-l, 1].max
         end
-        
+
         def setPendingBadConsequence(b)
             # ¿Necesario clone?
             @pendingBadConsequence = b
         end
-        
+
         def die
+            @dead = true
             @visibleTreasures.map{|t| CardDealer.instance.giveTreasureBack t}
             @visibleTreasures.clear
             @hiddenTreasures.map{|t| CardDealer.instance.giveTreasureBack t}
             @hiddenTreasures.clear
         end
-        
+
         def discardNecklaceIfVisible
-            @visibleTreasures.each { |e| 
+            @visibleTreasures.each { |e|
                 if e.getType == NECKLACE
                     CardDealer.instance.giveTreasureBack e
                     @visibleTreasures.delete(e)
@@ -52,46 +53,46 @@ module Game
                 end
             }
         end
-        
+
         def dieIfNoTreasures
             die if @visibleTreasures.empty? && @hiddenTreasures.empty?
         end
-        
+
         def computeGoldCoinsValue(t)
             t.inject(0){|sum,x| sum += x.getGoldCoins} / 1000
         end
-        
+
         def canIBuyLevels(l)
             @level + l < 10
         end
-        
+
         def discardTreasure(list,t,m)
             if (i = list.index(t))
                 list.delete_at i
                 @pendingBadConsequence.method(m).call t if !validState
                 CardDealer.instance.giveTreasureBack(t)
             end
-            
+
             dieIfNoTreasures
         end
-        
+
         public
         def applyPrize(p)
             incrementLevels(p.getLevels)
-            
+
             (1..[p.getTreasures,4-@hiddenTreasures.size].min).each do
                 @hiddenTreasures << CardDealer.instance.nextTreasure
             end
         end
-        
-        def combat(m)            
+
+        def combat(m)
             if getCombatLevel > m.getLevel
                 prize = m.getPrize
                 applyPrize(prize)
                 result = @level < 10 ? WIN : WINANDWINGAME
             elsif Dice.instance.nextNumber < 5
                 bad = m.getBadConsequence
-                if bad.kills 
+                if bad.kills
                     die
                     result = LOSEANDDIE
                 else
@@ -102,29 +103,29 @@ module Game
                 result = LOSEANDESCAPE
             end
             discardNecklaceIfVisible
-            
+
             result
         end
-        
+
         def applyBadConsequence(bad)
             decrementLevels bad.getLevels
             pendingBad = bad.adjustToFitTreasureLists(@visibleTreasures, @hiddenTreasures)
 
             setPendingBadConsequence pendingBad
         end
-        
+
         def makeTreasureVisible(t)
-            can = canMakeTreasureVisible t 
-            if can 
+            can = canMakeTreasureVisible t
+            if can
                 @visibleTreasures << t
                 discardHiddenTreasure t
             end
             can
         end
-        
+
         def canMakeTreasureVisible(t)
             vt = @visibleTreasures.map(&:getType)
-            
+
             @hiddenTreasures.member?(t) &&
                 if t.getType == ONEHAND
                     !vt.include?(BOTHHANDS) && vt.count(ONEHAND) < 2
@@ -134,32 +135,32 @@ module Game
                     !vt.include?(t.getType)
                 end
         end
-        
+
         def discardVisibleTreasure(t)
             discardTreasure(@visibleTreasures,t,:substractVisibleTreasure)
         end
-        
+
         def discardHiddenTreasure(t)
             discardTreasure(@hiddenTreasures,t,:substractHiddenTreasure)
         end
-        
+
         def buyLevels(v,h)
             visible = v.clone
             hidden = h.clone
-            
+
             levels = computeGoldCoinsValue(visible) + computeGoldCoinsValue(hidden)
             canI = canIBuyLevels(levels)
-            
+
             if canI
                 incrementLevels(levels)
-                
+
                 visible.each {|t| discardVisibleTreasure(t)}
                 hidden.each {|t| discardHiddenTreasure(t)}
             end
-            
+
             canI
         end
-        
+
         def getCombatLevel
             if @visibleTreasures.map(&:getType).include?(NECKLACE)
                 @visibleTreasures.inject(@level){ |sum,x| sum += x.getMaxBonus }
@@ -167,7 +168,7 @@ module Game
                 @visibleTreasures.inject(@level){ |sum,x| sum += x.getMinBonus }
             end
         end
-        
+
         def validState
             @pendingBadConsequence.nil? || @pendingBadConsequence.isEmpty
         end
@@ -177,18 +178,18 @@ module Game
             @pendingBadConsequence
         end
 # /Depuración
-        
+
         def initTreasures
             bringToLife
             number = Dice.instance.nextNumber
-            
+
             if number > 1
                 number < 6 ? 2 : 3
             else
                 1
             end.times {@hiddenTreasures << CardDealer.instance.nextTreasure}
         end
-        
+
         def isDead
             @dead
         end
@@ -196,15 +197,15 @@ module Game
         def getName
             @name
         end
-        
+
         def hasVisibleTreasures
             @visibleTreasures.any?
         end
-        
+
         def getVisibleTreasures
             @visibleTreasures.clone
         end
-        
+
         def getHiddenTreasures
             @hiddenTreasures.clone
         end
