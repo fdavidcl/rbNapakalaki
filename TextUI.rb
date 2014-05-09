@@ -8,6 +8,16 @@ module GameUI
         include Singleton
 
         private
+        def initialize
+            @game = Game::Napakalaki.instance
+        end
+
+        def game
+            @game
+        end
+
+        # Métodos de formato: Devuelven una string con el formato aplicado
+        # a la inicial
         def bold(msg)
             "\e[1m#{msg}\e[m"
         end
@@ -20,10 +30,7 @@ module GameUI
             "\e[31m#{msg}\e[m"
         end
 
-        def initialize
-            @game = Game::Napakalaki.instance
-        end
-
+        # Métodos de entrada: Reciben una entrada válida del tipo especificado
         def getString
             print " > "
             (gets || "").chomp
@@ -51,6 +58,7 @@ module GameUI
             gets
         end
 
+        # Mostrar estado del juego:
         def display(fight)
             print "\e[H\e[2J" # Secuencia de escape para borrar la pantalla
             puts bold invert "       Napakalaki       "
@@ -65,6 +73,11 @@ module GameUI
             end
         end
 
+        # Métodos de consulta y modificación de tesoros
+        def list(treasures)
+            treasures.each_with_index { |t,i| puts "\t [#{i+1}] #{t}"}
+        end
+
         def inspectTreasures
             player = game.getCurrentPlayer
             treasures = {
@@ -72,11 +85,12 @@ module GameUI
                 :ocultos => player.getHiddenTreasures
             }
 
-            treasures.each_key { |type|
+            treasures.each_key{ |type|
                 if treasures[type].empty?
                     puts "¡No tienes tesoros #{type}!"
                 else
-                    puts "Tienes estos tesoros #{type}:\n\t" + treasures[type]*"\n\t"
+                    puts "Tienes estos tesoros #{type}:\n"
+                    list treasures[type]
                 end
             }
         end
@@ -106,10 +120,6 @@ module GameUI
             end
 
             result
-        end
-
-        def list(treasures)
-            treasures.each_with_index { |t,i| puts "\t [#{i+1}] #{t}"}
         end
 
         def printCombatResult(result)
@@ -180,13 +190,13 @@ TODO:
                         puts (bold "¿Qué quieres hacer? \n") +
                             " [1] Ver inventario \n"\
                             " [2] Descartar tesoro equipado \n"\
-                            " [3] Descartar tesoro oculto \n"\
-                            " [4] Equipar un tesoro\n" +
-                                (game.nextTurnAllowed ?
-                                    "*[0] Seguir jugando\n" :
-                                    "*[0] Consultar mal rollo pendiente\n")
+                            " [3] Descartar tesoro oculto \n" +
+                            (game.nextTurnAllowed ?
+                                " [4] Equipar un tesoro\n"\
+                                "*[0] Seguir jugando\n" :
+                                "*[0] Consultar mal rollo pendiente\n")
 
-                        option = getInt(0,5)
+                        option = getInt(0, game.nextTurnAllowed ? 4 : 3)
 
                         case option
                         when 1
@@ -232,9 +242,6 @@ TODO:
                 end
             end
         end
-
-        attr_reader:game
-
     end
 
     begin
