@@ -44,7 +44,7 @@ module Game
         end
         
         def discardNecklaceIfVisible
-            @visibleTreasures.each{|e| 
+            @visibleTreasures.each { |e| 
                 if e.getType == NECKLACE
                     CardDealer.instance.giveTreasureBack e
                     @visibleTreasures.delete(e)
@@ -108,7 +108,8 @@ module Game
         
         def applyBadConsequence(bad)
             decrementLevels bad.getLevels
-            pendingBad = bad.adjustToFitTreasureLists(@visibleTreasures,@hiddenTreasures)            
+            pendingBad = bad.adjustToFitTreasureLists(@visibleTreasures, @hiddenTreasures)
+
             setPendingBadConsequence pendingBad
         end
         
@@ -122,17 +123,16 @@ module Game
         end
         
         def canMakeTreasureVisible(t)
-            # Número mágico, debería haber una cte para cambiar el máximo de tesoros equipados
             vt = @visibleTreasures.map(&:getType)
             
-            @hiddenTreasures.member? t && vt.size < 4 &&
-            if t.getType == ONEHAND
-                !vt.include?(BOTHHANDS) && vt.count(ONEHAND) < 2
-            elsif t.getType == BOTHHANDS
-                !vt.include?(ONEHAND) && !vt.include?(BOTHANDS)
-            else
-                !vt.include?(t.getType)
-            end
+            @hiddenTreasures.member?(t) &&
+                if t.getType == ONEHAND
+                    !vt.include?(BOTHHANDS) && vt.count(ONEHAND) < 2
+                elsif t.getType == BOTHHANDS
+                    !vt.include?(ONEHAND) && !vt.include?(BOTHHANDS)
+                else
+                    !vt.include?(t.getType)
+                end
         end
         
         def discardVisibleTreasure(t)
@@ -171,17 +171,22 @@ module Game
         def validState
             @pendingBadConsequence.nil? || @pendingBadConsequence.isEmpty
         end
+
+# Por ahora esto está aquí para depuración, ya veremos si se queda
+        def getPendingBadConsequence
+            @pendingBadConsequence
+        end
+# /Depuración
         
         def initTreasures
             bringToLife
             number = Dice.instance.nextNumber
             
-            if number == 1
-                @hiddenTreasures << CardDealer.instance.nextTreasure
+            if number > 1
+                number < 6 ? 2 : 3
             else
-                limit = (number < 6 ? 2 : 3)
-                limit.times {@hiddenTreasures << CardDealer.instance.nextTreasure}
-            end
+                1
+            end.times {@hiddenTreasures << CardDealer.instance.nextTreasure}
         end
         
         def isDead

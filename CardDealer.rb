@@ -117,9 +117,9 @@ module Game
                 "Menudo susto te llevas. Pierdes 2 niveles y 5 tesoros visibles",
                 2,5,0), Prize.new(1,1))
             
-            @unusedMonsters << Monster.new("Bicéfalo",20, BadConsequence.newCount(
+            @unusedMonsters << Monster.new("Bicéfalo",20, BadConsequence.newKinds(
                 "Te faltan manos para tanta cabeza. Pierdes 3 niveles y tus tesoros "\
-                "visibles de las manos",3, -1,0), Prize.new(1,1))
+                "visibles de las manos",3, [ONEHAND, ONEHAND, BOTHHANDS],[]), Prize.new(1,1))
         end
 
         def shuffleTreasures

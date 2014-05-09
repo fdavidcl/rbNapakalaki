@@ -92,16 +92,16 @@ module Game
             
             if @specificVisibleTreasures.empty? && @specificHiddenTreasures.empty?
                 nvis = [@nVisibleTreasures == -1 ? vis.size : @nVisibleTreasures, vis.size].min - 1
-                nhid = [@nHiddenTreasures == -1 ? vis.size : @nHiddenTreasures, hid.size].min - 1
+                nhid = [@nHiddenTreasures == -1 ? hid.size : @nHiddenTreasures, hid.size].min - 1
                         
                 lostvis = vis[0 .. nvis] if @nVisibleTreasures.nonzero?
-                losthid = vis[0 .. nhid] if @nHiddenTreasures.nonzero?
+                losthid = hid[0 .. nhid] if @nHiddenTreasures.nonzero?
             else                
                 lostvis = @specificVisibleTreasures.select { |e| lostvis.count(e) < vis.count(e) }
-                lostvis = @specificHiddenTreasures.select { |e| losthid.count(e) < hid.count(e) }
+                losthid = @specificHiddenTreasures.select { |e| losthid.count(e) < hid.count(e) }
             end
             
-            BadConsequence.newKinds(@text, @levels, lostvis, losthid)
+            BadConsequence.newKinds(@text, 0, lostvis, losthid)
         end
 
         # Convierte el mal rollo en una cadena

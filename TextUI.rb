@@ -89,7 +89,7 @@ module GameUI
             else
                 puts "\t Tesoros #{type}:"
                 list treasures
-                print "\t Índice del tesoro a descartar: "
+                puts "\t Índice del tesoro a descartar:"
                 i = getInt(1, treasures.length) - 1
             
                 method.call treasures[i]
@@ -122,11 +122,15 @@ module GameUI
             if treasures.empty?
                 puts "\t ¡No dispones de tesoros para equipar!"
             else
-                print "¿Qué tesoro quieres equipar?".bold
+                puts "¿Qué tesoro quieres equipar?".bold
                 list treasures
                 i = getInt(1,treasures.size) - 1
                 
-                game.makeTreasureVisible treasures[i] or puts "\t No puedes equipar este tesoro. Prueba a descartar algún tesoro visible antes."
+                if game.makeTreasureVisible treasures[i] 
+                    puts "Has equipado el tesoro."
+                else
+                    puts "No puedes equipar este tesoro. Prueba a descartar algún tesoro visible antes."
+                end
             end
         end
         
@@ -149,7 +153,15 @@ module GameUI
                     "Has perdido tu combate, y el monstruo te ha matado"
                 end
         end
-        
+=begin
+TODO:
+ * Resolver fallos con la muerte de jugadores
+ * Comprobar la gestión de malos rollos (algo más para malos rollos de newCount?)
+ * Resolver fallos con el equipar tesoros (?)    
+
+=end
+
+
     	public
         def play
             
@@ -185,19 +197,22 @@ module GameUI
                 printCombatResult result
                 pause
 
-                nextTurn = false
+                nextTurn = game.getCurrentPlayer.isDead
 
                 # Post-lucha
                 if !game.endOfGame(result)
                     while !nextTurn
                         display false
-                        puts "¿Qué quieres hacer? \n"\
+                        puts "¿Qué quieres hacer? \n".bold +
                             " [1] Ver inventario \n"\
                             " [2] Descartar tesoro equipado \n"\
                             " [3] Descartar tesoro oculto \n"\
-                            " [4] Equipar un tesoro\n"\
-                            "*[0] Seguir jugando\n"
-                        option = getInt(0,4)
+                            " [4] Equipar un tesoro\n" +
+                                (game.nextTurnAllowed ?
+                                    "*[0] Seguir jugando\n" :
+                                    "*[0] Consultar mal rollo pendiente\n")
+
+                        option = getInt(0,5)
 
                         case option
                         when 1
@@ -209,24 +224,24 @@ module GameUI
                         when 4
                             makeVisible player.getHiddenTreasures
                         when 0
-                            nextTurn = true
+                            if game.nextTurnAllowed
+                                nextTurn = true
+                            else
+                                # Depuración
+                                 puts game.getCurrentPlayer.getPendingBadConsequence
+                                # /Depuración
+
+                                puts "Mal rollo pendiente:\n #{game.getCurrentMonster.getBadConsequence}"
+                                puts "Descarta los tesoros correspondientes para poder seguir jugando".bold
+                            end
                         else
                             puts "Opción #{option} inválida. Utiliza [0] para continuar jugando."
-                        end
-
-                        if nextTurn && !game.nextTurn
-                            nextTurn = false
-                            puts "Aún tienes un mal rollo pendiente."
-                            puts "Descarta los tesoros correspondientes para poder seguir jugando:".bold
-                            # Yo quiero hacer esto:
-                            # puts game.getCurrentPlayer.getPendingBadConsequence
-                            # pero no puedo
-
-                            puts game.getCurrentMonster.getBadConsequence
                         end
                         
                         pause if !nextTurn
                     end
+
+                    game.nextTurn
                 else
                     puts "¡¡¡¡ Ganador: #{game.getCurrentPlayer.getName} !!!!".bold
                     game_over = true
@@ -240,8 +255,8 @@ module GameUI
     
     begin
         TextUI.instance.play if __FILE__ == $0
-    rescue Interrupt =>e
-        puts "\nEl juego se ha detenido".bold.red 
+    rescue Interrupt => e
+        puts "\nEl juego se ha detenido".bold.red
     end
-        
+
 end
