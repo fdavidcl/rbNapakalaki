@@ -122,20 +122,20 @@ module GameUI
             result
         end
 
-        def printCombatResult(result)
-            puts "Resultado: " +
-                case result
-                when Game::WINANDWINGAME
-                    bold "Has ganado el juego"
-                when Game::WIN
-                    bold "Has ganado tu combate"
-                when Game::LOSE
-                    bold "Has perdido tu combate, tienes que cumplir un mal rollo"
-                when Game::LOSEANDESCAPE
-                    bold "Has perdido tu combate, pero has escapado a tiempo"
-                when Game::LOSEANDDIE
-                    bold "Has perdido tu combate, y el monstruo te ha matado"
-                end
+        # Método de consulta de resultados de combate
+        def combatResult(result)
+            case result
+            when Game::WINANDWINGAME
+                "Has ganado el juego"
+            when Game::WIN
+                "Has ganado tu combate"
+            when Game::LOSE
+                "Has perdido tu combate, tienes que cumplir un mal rollo"
+            when Game::LOSEANDESCAPE
+                "Has perdido tu combate, pero has escapado a tiempo"
+            when Game::LOSEANDDIE
+                "Has perdido tu combate, y el monstruo te ha matado"
+            end
         end
 =begin
 TODO:
@@ -177,7 +177,7 @@ TODO:
                 display true
 
                 result = game.combat
-                printCombatResult result
+                puts "Resultado: " + bold(combatResult(result))
                 pause
 
                 # Saltamos al próximo jugador si el actual ha muerto
