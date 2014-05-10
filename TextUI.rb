@@ -62,11 +62,12 @@ module GameUI
         def display(fight)
             print "\e[H\e[2J" # Secuencia de escape para borrar la pantalla
             puts bold invert "       Napakalaki       "
-            puts "Jugando: #{game.getCurrentPlayer.getName} (nivel #{game.getCurrentPlayer.getCombatLevel})"
+            puts "Jugando: #{game.getCurrentPlayer.getName} (nivel "\
+                "#{game.getCurrentPlayer.getCombatLevel})"
 
             if fight
-                puts "Luchando contra " + (game.getCurrentMonster ?
-                                           "#{game.getCurrentMonster.getName} (nivel #{game.getCurrentMonster.getLevel})" : "Nadie")
+                puts "Luchando contra #{game.getCurrentMonster.getName}"\
+                    " (nivel #{game.getCurrentMonster.getLevel})"
 
                 puts "Si vences obtendrás: [#{game.getCurrentMonster.getPrize}]"
                 puts "Si pierdes: [#{game.getCurrentMonster.getBadConsequence}]"
