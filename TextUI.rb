@@ -49,7 +49,7 @@ module GameUI
             gets
         end
 
-        # Mostrar estado del juego:
+        # Mostrar estado del juego
         def display(fight)
             print "\e[H\e[2J" # Secuencia de escape para borrar la pantalla
             puts bold invert "       Napakalaki       "
@@ -140,6 +140,8 @@ TODO:
 
 
     	public
+
+        # Método de juego: Muestra menús e interactúa con el jugador
         def play
 
 # Depuración
