@@ -43,7 +43,7 @@ module GameUI
             end until input >= min && input <= max
             input
         end
-        
+
         def pause
             print "(Intro para continuar) > "
             gets
@@ -160,11 +160,10 @@ TODO:
                 # Pre-lucha: comprar niveles
                 display false
                 puts "Antes de luchar puedes comprar niveles."
-                if game.buyLevels(selectTreasures(player.getVisibleTreasures,:equipados),
+                if !game.buyLevels(selectTreasures(player.getVisibleTreasures,:equipados),
                                selectTreasures(player.getHiddenTreasures,:ocultos))
-                    puts "Has comprado los niveles"
-                else
                     puts "No puedes comprar tantos niveles"
+                    pause
                 end
 
                 # Comenzar lucha
