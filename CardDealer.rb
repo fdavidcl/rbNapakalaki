@@ -55,68 +55,68 @@ module Game
         def initMonsterCardDeck
             @unusedMonsters << Monster.new("3 Byakhees de bonanza",8, BadConsequence.newKinds(
                 "Pierdes tu armadura visible y otra oculta",0,[ARMOR],[ARMOR]), Prize.new(2,1))
-            
-            @unusedMonsters << Monster.new("Chibithulhu",2, 
+
+            @unusedMonsters << Monster.new("Chibithulhu",2,
                 BadConsequence.newKinds("Embobados con el lindo primigenio te descartas "\
                 "de tu casco visible", 0, [HELMET], []), Prize.new(1,1))
-                        
+
             @unusedMonsters << Monster.new("El sopor de Dunwich",2, BadConsequence.newKinds(
                 "El primordial bostezo contagioso. Pierdes el calzado visible",0,
                 [SHOE],[]), Prize.new(1,1))
-            
+
             @unusedMonsters << Monster.new("Ángeles de la noche ibicenca",14, BadConsequence.newKinds(
                 "Te atrapan para llevarte de fiesta y te dejan caer en mitad del vuelo. "\
                 "Descarta 1 mano visible y 1 mano oculta", 0, [ONEHAND],[ONEHAND]), Prize.new(4,1))
-            
+
             @unusedMonsters << Monster.new("El gorrón en el umbral",10, BadConsequence.newCount(
                 "Pierdes todos tus tesoros visibles",0, -1,0), Prize.new(3,1))
-            
+
             @unusedMonsters << Monster.new("H.P. Munchcraft",6, BadConsequence.newKinds(
                 "Pierdes la armadura visible",0,[ARMOR],[]), Prize.new(2,1))
-            
+
             @unusedMonsters << Monster.new("Bichgooth",2, BadConsequence.newKinds(
                 "Sientes bichos bajo la ropa. Descarta la armadura visible",0,[ARMOR],[]),
                 Prize.new(1,1))
-            
+
             @unusedMonsters << Monster.new("El rey de rosa",13, BadConsequence.newCount(
                 "Pierdes 5 niveles y 3 tesoros visibles",5,3,0), Prize.new(4,2))
-            
+
             @unusedMonsters << Monster.new("La que redacta en las sombras",3, BadConsequence.newCount(
                 "Toses los pulmones y pierdes 2 niveles",2,0,0), Prize.new(1,1))
-            
+
             @unusedMonsters << Monster.new("Los hondos verdes",7, BadConsequence.newDeathly(
                 "Estos monstruos resultan bastante superficiales y te aburren mortalmente. Estás muerto"),
                 Prize.new(2,1))
-            
+
             @unusedMonsters << Monster.new("Semillas Cthulhu",4, BadConsequence.newCount(
                 "Pierdes 2 niveles y 2 tesoros ocultos",2,0,2), Prize.new(2,1))
-            
+
             @unusedMonsters << Monster.new("Dameargo",1, BadConsequence.newKinds(
-                "Te intentas escaquear. Pierdes una mano visible",0,[ONEHAND],[]), 
+                "Te intentas escaquear. Pierdes una mano visible",0,[ONEHAND],[]),
                 Prize.new(2,1))
-            
+
             @unusedMonsters << Monster.new("Pollipólipo volante",3, BadConsequence.newCount(
                 "Da mucho asquito. Pierdes 3 niveles",3,0,0), Prize.new(1,1))
-            
+
             @unusedMonsters << Monster.new("Yskhtihyssg-Goth",12, BadConsequence.newDeathly(
                 "No le hace gracia que pronuncien mal su nombre. Estás muerto"),
                 Prize.new(3,1))
-            
+
             @unusedMonsters << Monster.new("Familia Feliz",1, BadConsequence.newDeathly(
                 "La familia te atrapa. Estás muerto"), Prize.new(4,1))
-            
+
             @unusedMonsters << Monster.new("Roboggoth",8, BadConsequence.newKinds(
                 "La quinta directiva primaria te obliga a perder 2 niveles y un tesoro, 2 manos visible",
                 0,[BOTHHANDS],[]), Prize.new(2,1))
-            
+
             @unusedMonsters << Monster.new("El espia ciego",4, BadConsequence.newKinds(
-                "Te asusta en la noche. Pierdes un casco visible",0,[HELMET],[]), 
+                "Te asusta en la noche. Pierdes un casco visible",0,[HELMET],[]),
                 Prize.new(1,1))
-            
+
             @unusedMonsters << Monster.new("El lenguas",20, BadConsequence.newCount(
                 "Menudo susto te llevas. Pierdes 2 niveles y 5 tesoros visibles",
                 2,5,0), Prize.new(1,1))
-            
+
             @unusedMonsters << Monster.new("Bicéfalo",20, BadConsequence.newKinds(
                 "Te faltan manos para tanta cabeza. Pierdes 3 niveles y tus tesoros "\
                 "visibles de las manos",3, [ONEHAND, ONEHAND, BOTHHANDS],[]), Prize.new(1,1))
@@ -134,16 +134,12 @@ module Game
         def nextTreasure
             result = @unusedTreasures.shift
             @unusedTreasures, @usedTreasures = @usedTreasures, @unusedTreasures if @unusedTreasures.empty?
-            # unusedTreasures = usedTreasures.slice!(0..usedTreasures.size-1) and shuffleTreasures if unusedTreasures.empty?
             result
         end
 
         def nextMonster
             result = @unusedMonsters.shift
             @unusedMonsters, @usedMonsters = @usedMonsters, @unusedMonsters if @unusedMonsters.empty?
-            # unusedTreasures = usedT
-            
-            #@unusedMonsters = @usedMonsters.slice!(0..@usedMonsters.size-1) and shuffleMonsters if @unusedMonsters.empty?
             result
         end
 
