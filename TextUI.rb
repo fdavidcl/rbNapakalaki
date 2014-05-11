@@ -159,7 +159,7 @@ module GameUI
             while !gameOver
                 player = game.getCurrentPlayer
 
-                # Pre-lucha: comprar niveles
+                # Pre-lucha: El jugador puede comprar niveles
                 display false
                 puts "Antes de luchar puedes comprar niveles."
                 if !game.buyLevels(selectTreasures(player.getVisibleTreasures,:equipados),
@@ -175,9 +175,9 @@ module GameUI
                 puts "Resultado: " + bold(combatResult(result))
                 pause
 
+                # Post-lucha
                 nextTurn = false
 
-                # Post-lucha
                 if !game.endOfGame(result)
                     while !nextTurn
                         display false
@@ -240,7 +240,7 @@ module GameUI
 
                     game.nextTurn
                 else
-                    puts bold "¡¡¡¡ Ganador: #{game.getCurrentPlayer.getName} !!!!"
+                    puts bold "¡¡¡¡ Ganador: #{player.getName} !!!!"
                     gameOver = true
                 end
             end
