@@ -173,12 +173,6 @@ module Game
             @pendingBadConsequence.nil? || @pendingBadConsequence.isEmpty
         end
 
-# Por ahora esto está aquí para depuración, ya veremos si se queda
-        def getPendingBadConsequence
-            @pendingBadConsequence
-        end
-# /Depuración
-
         def initTreasures
             bringToLife
             number = Dice.instance.nextNumber
