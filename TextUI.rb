@@ -43,16 +43,7 @@ module GameUI
             end until input >= min && input <= max
             input
         end
-
-        def getChar(allowed)
-            allowed.map!(&:upcase)
-            begin
-                print "(#{allowed*'/'}) > "
-                input = gets.upcase[0]
-            end until allowed.member?(input)
-            input
-        end
-
+        
         def pause
             print "(Intro para continuar) > "
             gets
@@ -140,30 +131,21 @@ module GameUI
                 "Has perdido tu combate, y el monstruo te ha matado"
             end
         end
-=begin
-TODO:
- * Comprobar la gestión de malos rollos (algo más para malos rollos de newCount?)
- * HECHO? Resolver fallos con el equipar tesoros (?)
-
-=end
 
 
     	public
         def play
-
-# Depuración
-            #puts "Introduce los nombres de los jugadores (separados por espacios)"
-            #players = getString.split(" ")
-# Depuración
+            puts "Introduce los nombres de los jugadores (separados por espacios)"
+            players = getString.split(" ")
             players = ["David","Nacho"]
 
             # Como mucho se permiten 3 jugadores
             raise "El número de jugadores debe estar entre 1 y 3." if players.empty? || players.size > 3
 
             game.initGame(players)
-            game_over = false
+            gameOver = false
 
-            while !game_over
+            while !gameOver
                 player = game.getCurrentPlayer
 
                 # Pre-lucha: comprar niveles
@@ -202,34 +184,32 @@ TODO:
                         option = getInt(0, game.nextTurnAllowed ? 4 : 3)
 
                         case option
-                        when 1
+                        when 1 # Consulta de tesoros
                             inspectTreasures
-                        when 2
-                            # discardTreasure(player.getVisibleTreasures, game.method(:discardVisibleTreasure),:equipados)
+                        when 2 # Descarte de tesoros equipados
                             selectTreasures(player.getVisibleTreasures, :equipados) { |t|
                                 game.discardVisibleTreasure t
                                 true # Para añadir el tesoro a la lista de seleccionados
                             }
                         when 3
-                            # discardTreasure(player.getHiddenTreasures, game.method(:discardHiddenTreasure),:ocultos)
                             selectTreasures(player.getHiddenTreasures, :equipados) { |t|
                                 game.discardHiddenTreasure t
-                                true # Para añadir el tesoro a la lista de seleccionados
+                                true
                             }
-                        when 4
+                        when 4 # Equipar un tesoro
                             if player.getHiddenTreasures.empty?
-                                puts "\t ¡No dispones de tesoros para equipar!"
+                                puts "\t¡No dispones de tesoros para equipar!"
                             else
                                 selectTreasures(player.getHiddenTreasures, :ocultos) { |t|
                                     game.makeTreasureVisible(t)
                                 }
                             end
-                        when 0
+                        when 0 # Acción de continuar (si no hay mal rollo pendiente)
                             if game.nextTurnAllowed
                                 nextTurn = true
                             else
                                 puts "Mal rollo pendiente:\n\t#{game.getCurrentMonster.getBadConsequence}"
-                                puts bold "Descarta los tesoros correspondientes para poder seguir jugando"
+                                puts bold "Descarta los tesoros correspondientes para poder seguir jugando."
                             end
                         else
                             puts "Opción #{option} inválida. Utiliza [0] para continuar jugando."
@@ -241,7 +221,7 @@ TODO:
                     game.nextTurn
                 else
                     puts bold "¡¡¡¡ Ganador: #{game.getCurrentPlayer.getName} !!!!"
-                    game_over = true
+                    gameOver = true
                 end
             end
         end

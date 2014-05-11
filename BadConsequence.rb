@@ -91,11 +91,11 @@ module Game
             losthid = []
 
             if @specificVisibleTreasures.empty? && @specificHiddenTreasures.empty?
-                nvis = [@nVisibleTreasures == -1 ? vis.size : @nVisibleTreasures, vis.size].min - 1
-                nhid = [@nHiddenTreasures == -1 ? hid.size : @nHiddenTreasures, hid.size].min - 1
+                vlimit = (@nVisibleTreasures == -1 ? vis.size : [@nVisibleTreasures, vis.size].min) - 1
+                hlimit = (@nHiddenTreasures == -1 ? hid.size : [@nHiddenTreasures, hid.size].min) - 1
 
-                lostvis = vis[0 .. nvis] if @nVisibleTreasures.nonzero?
-                losthid = hid[0 .. nhid] if @nHiddenTreasures.nonzero?
+                lostvis = vis[0 .. vlimit] if @nVisibleTreasures.nonzero?
+                losthid = hid[0 .. hlimit] if @nHiddenTreasures.nonzero?
             else
                 lostvis = @specificVisibleTreasures.select { |e| lostvis.count(e) < vis.count(e) }
                 losthid = @specificHiddenTreasures.select { |e| losthid.count(e) < hid.count(e) }
