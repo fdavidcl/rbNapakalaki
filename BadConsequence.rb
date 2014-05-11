@@ -36,7 +36,7 @@ module Game
             obj.send(:initialize, text, false, levels, 0, 0, sVisible, sHidden)
             obj
         end
-        
+
         private
         # Función auxiliar
         def substractTreasure(treasures,t)
@@ -44,7 +44,7 @@ module Game
                 treasures.delete_at i
             end
         end
-        
+
         public
         # Informa de si el mal rollo está vacío
         def isEmpty
@@ -59,23 +59,23 @@ module Game
         def getLevels
             @levels
         end
-        
+
         def getNVisibleTreasures
             @nVisibleTreasures
         end
-        
+
         def getNHiddenTreasures
             @nHiddenTreasures
         end
-        
+
         def getSpecificHiddenTreasures
             @specificHiddenTreasures
         end
-        
+
         def getSpecificVisibleTreasures
             @specificVisibleTreasures
         end
-        
+
         def substractVisibleTreasure(t)
             substractTreasure(@specificVisibleTreasures,t)
         end
@@ -84,40 +84,40 @@ module Game
             substractTreasure(@specificHiddenTreasures,t)
         end
 
-        def adjustToFitTreasureLists(vis, hid)            
+        def adjustToFitTreasureLists(vis, hid)
             vis = vis.map(&:getType)
             hid = hid.map(&:getType)
             lostvis = []
             losthid = []
-            
+
             if @specificVisibleTreasures.empty? && @specificHiddenTreasures.empty?
                 nvis = [@nVisibleTreasures == -1 ? vis.size : @nVisibleTreasures, vis.size].min - 1
                 nhid = [@nHiddenTreasures == -1 ? hid.size : @nHiddenTreasures, hid.size].min - 1
-                        
+
                 lostvis = vis[0 .. nvis] if @nVisibleTreasures.nonzero?
                 losthid = hid[0 .. nhid] if @nHiddenTreasures.nonzero?
-            else                
+            else
                 lostvis = @specificVisibleTreasures.select { |e| lostvis.count(e) < vis.count(e) }
                 losthid = @specificHiddenTreasures.select { |e| losthid.count(e) < hid.count(e) }
             end
-            
+
             BadConsequence.newKinds(@text, 0, lostvis, losthid)
         end
 
         # Convierte el mal rollo en una cadena
         def to_s
             result = @text + "; "
-            result += 
+            result +=
                 if kills
                     "Muerte"
                 else
-                    visibles = 
+                    visibles =
                         if @specificVisibleTreasures.any?
                             @specificVisibleTreasures * ", "  # []*", " es un atajo para [].join(", ")
                         else
                             @nVisibleTreasures < 0 ? "Todos" : @nVisibleTreasures.to_s
                         end
-                    ocultos = 
+                    ocultos =
                         if @specificHiddenTreasures.any?
                             @specificHiddenTreasures * ", "
                         else

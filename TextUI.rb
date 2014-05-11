@@ -110,10 +110,12 @@ module GameUI
 
                     index = getInt(0, treasures.length)
 
-                    if index > 0 && (condition.nil? || condition.call(treasures[index-1]))
-                        result << treasures.delete_at(index - 1)
-                    elsif index > 0
-                        puts red "No puedes utilizar este tesoro."
+                    if index > 0
+                        if (condition.nil? || condition.call(treasures[index-1]))
+                            result << treasures.delete_at(index - 1)
+                        else
+                            puts red "No puedes utilizar este tesoro."
+                        end
                     end
                 end
             else

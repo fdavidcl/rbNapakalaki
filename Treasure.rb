@@ -14,25 +14,25 @@ module Game
         def getName
             @name
         end
-        
+
         def getGoldCoins
             @goldCoins
         end
-        
+
         def getMinBonus
             @minBonus
         end
-        
+
         def getMaxBonus
             @maxBonus
         end
-        
+
         def getType
             @type
         end
 
         def to_s
-            "#{@type.upcase} \"#{@name}\" (= #{@goldCoins} oro" +  (@type != NECKLACE ? ", +#{@minBonus}/+#{@maxBonus} bonus)" : ")")
+            "#{@type.upcase} \"#{@name}\" (#{@goldCoins} oro" +  (@type != NECKLACE ? ", +#{@minBonus}/+#{@maxBonus} bonus)" : ")")
         end
     end
 end
