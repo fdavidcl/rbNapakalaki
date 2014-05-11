@@ -137,10 +137,20 @@ module GameUI
 
         # Método de juego: Muestra menús e interactúa con el jugador
         def play
-            puts "Introduce los nombres de los jugadores (separados por espacios)"
-            players = getString.split(" ")
+            puts "Introduce los nombres de los jugadores"
+            players = []
+            read = true
 
             # Como mucho se permiten 3 jugadores
+            while read && players.length < 3
+                name = getString
+                if name != ""
+                    players << name
+                else
+                    read = false
+                end
+            end
+
             raise "El número de jugadores debe estar entre 1 y 3." if players.empty? || players.size > 3
 
             game.initGame(players)
