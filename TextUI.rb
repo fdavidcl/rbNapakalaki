@@ -165,57 +165,64 @@ module GameUI
                 puts "Resultado: " + bold(combatResult(result))
                 pause
 
-                # Saltamos al próximo jugador si el actual ha muerto
-                nextTurn = game.getCurrentPlayer.isDead
+                nextTurn = false
 
                 # Post-lucha
                 if !game.endOfGame(result)
                     while !nextTurn
                         display false
-                        puts (bold "¿Qué quieres hacer? \n") +
-                            " [1] Ver inventario \n"\
-                            " [2] Descartar tesoro equipado \n"\
-                            " [3] Descartar tesoro oculto \n" +
-                            (game.nextTurnAllowed ?
-                                " [4] Equipar un tesoro\n"\
-                                "*[0] Seguir jugando\n" :
-                                "*[0] Consultar mal rollo pendiente\n")
-
-                        option = getInt(0, game.nextTurnAllowed ? 4 : 3)
-
-                        case option
-                        when 1 # Consulta de tesoros
-                            inspectTreasures
-                        when 2 # Descarte de tesoros equipados
-                            selectTreasures(player.getVisibleTreasures, :equipados) { |t|
-                                game.discardVisibleTreasure t
-                                true # Para añadir el tesoro a la lista de seleccionados
-                            }
-                        when 3
-                            selectTreasures(player.getHiddenTreasures, :equipados) { |t|
-                                game.discardHiddenTreasure t
-                                true
-                            }
-                        when 4 # Equipar un tesoro
-                            if player.getHiddenTreasures.empty?
-                                puts "\t¡No dispones de tesoros para equipar!"
-                            else
-                                selectTreasures(player.getHiddenTreasures, :ocultos) { |t|
-                                    game.makeTreasureVisible(t)
-                                }
-                            end
-                        when 0 # Acción de continuar (si no hay mal rollo pendiente)
-                            if game.nextTurnAllowed
-                                nextTurn = true
-                            else
-                                puts "Mal rollo pendiente:\n\t#{game.getCurrentMonster.getBadConsequence}"
-                                puts bold "Descarta los tesoros correspondientes para poder seguir jugando."
-                            end
+                        
+                        if player.isDead
+                            puts (bold "¡Has muerto!") + " Revivirás en tu próximo turno "\
+                                "con nuevos tesoros"
+                            nextTurn = true
+                            pause
                         else
-                            puts "Opción #{option} inválida. Utiliza [0] para continuar jugando."
-                        end
+                            puts (bold "¿Qué quieres hacer? \n") +
+                                " [1] Ver inventario \n"\
+                                " [2] Descartar tesoro equipado \n"\
+                                " [3] Descartar tesoro oculto \n" +
+                                (game.nextTurnAllowed ?
+                                    " [4] Equipar un tesoro\n"\
+                                    "*[0] Seguir jugando\n" :
+                                    "*[0] Consultar mal rollo pendiente\n")
 
-                        pause if !nextTurn
+                            option = getInt(0, game.nextTurnAllowed ? 4 : 3)
+
+                            case option
+                            when 1 # Consulta de tesoros
+                                inspectTreasures
+                            when 2 # Descarte de tesoros equipados
+                                selectTreasures(player.getVisibleTreasures, :equipados) { |t|
+                                    game.discardVisibleTreasure t
+                                    true # Para añadir el tesoro a la lista de seleccionados
+                                }
+                            when 3
+                                selectTreasures(player.getHiddenTreasures, :equipados) { |t|
+                                    game.discardHiddenTreasure t
+                                    true
+                                }
+                            when 4 # Equipar un tesoro
+                                if player.getHiddenTreasures.empty?
+                                    puts "\t¡No dispones de tesoros para equipar!"
+                                else
+                                    selectTreasures(player.getHiddenTreasures, :ocultos) { |t|
+                                        game.makeTreasureVisible(t)
+                                    }
+                                end
+                            when 0 # Acción de continuar (si no hay mal rollo pendiente)
+                                if game.nextTurnAllowed
+                                    nextTurn = true
+                                else
+                                    puts "Mal rollo pendiente:\n\t#{game.getCurrentMonster.getBadConsequence}"
+                                    puts bold "Descarta los tesoros correspondientes para poder seguir jugando."
+                                end
+                            else
+                                puts "Opción #{option} inválida. Utiliza [0] para continuar jugando."
+                            end
+
+                            pause if !nextTurn
+                        end
                     end
 
                     game.nextTurn
