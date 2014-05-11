@@ -37,6 +37,7 @@ module Game
         end
 
         def die
+            @level = 1
             @dead = true
             @visibleTreasures.map{|t| CardDealer.instance.giveTreasureBack t}
             @visibleTreasures.clear
