@@ -137,7 +137,6 @@ module GameUI
         def play
             puts "Introduce los nombres de los jugadores (separados por espacios)"
             players = getString.split(" ")
-            players = ["David","Nacho"]
 
             # Como mucho se permiten 3 jugadores
             raise "El número de jugadores debe estar entre 1 y 3." if players.empty? || players.size > 3
