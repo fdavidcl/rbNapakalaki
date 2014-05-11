@@ -131,24 +131,14 @@ module GameUI
                 "Has perdido tu combate, y el monstruo te ha matado"
             end
         end
-=begin
-TODO:
- * Comprobar la gestión de malos rollos (algo más para malos rollos de newCount?)
- * HECHO? Resolver fallos con el equipar tesoros (?)
-
-=end
 
 
     	public
 
         # Método de juego: Muestra menús e interactúa con el jugador
         def play
-
-# Depuración
-            #puts "Introduce los nombres de los jugadores (separados por espacios)"
-            #players = getString.split(" ")
-# Depuración
-            players = ["David","Nacho"]
+            puts "Introduce los nombres de los jugadores (separados por espacios)"
+            players = getString.split(" ")
 
             # Como mucho se permiten 3 jugadores
             raise "El número de jugadores debe estar entre 1 y 3." if players.empty? || players.size > 3
@@ -201,8 +191,8 @@ TODO:
                                 game.discardVisibleTreasure t
                                 true # Para añadir el tesoro a la lista de seleccionados
                             }
-                        when 3 # Descarte de tesoros ocultos
-                            selectTreasures(player.getVisibleTreasures, :equipados) { |t|
+                        when 3
+                            selectTreasures(player.getHiddenTreasures, :equipados) { |t|
                                 game.discardHiddenTreasure t
                                 true
                             }
