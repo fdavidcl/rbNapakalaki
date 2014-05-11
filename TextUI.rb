@@ -171,13 +171,16 @@ module GameUI
                 if !game.endOfGame(result)
                     while !nextTurn
                         display false
-                        
+
+                        # El jugador podría haber muerto tras descartarse tesoros
+                        # o bien como resultado del combate
                         if player.isDead
                             puts (bold "¡Has muerto!") + " Revivirás en tu próximo turno "\
                                 "con nuevos tesoros"
                             nextTurn = true
                             pause
                         else
+                            # Mostramos un menú
                             puts (bold "¿Qué quieres hacer? \n") +
                                 " [1] Ver inventario \n"\
                                 " [2] Descartar tesoro equipado \n"\
