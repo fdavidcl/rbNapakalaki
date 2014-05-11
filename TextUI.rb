@@ -212,7 +212,7 @@ TODO:
                             }
                         when 3
                             # discardTreasure(player.getHiddenTreasures, game.method(:discardHiddenTreasure),:ocultos)
-                            selectTreasures(player.getVisibleTreasures, :equipados) { |t|
+                            selectTreasures(player.getHiddenTreasures, :equipados) { |t|
                                 game.discardHiddenTreasure t
                                 true # Para añadir el tesoro a la lista de seleccionados
                             }
