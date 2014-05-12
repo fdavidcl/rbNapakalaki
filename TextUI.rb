@@ -134,7 +134,7 @@ module GameUI
 
     	public
         
-        # Permite probar AdjustToFitTreasures en varios casos
+        # Permite probar AdjustToFitTreasureLists en varios casos
 =begin
         def testAdjust
             b = Game::BadConsequence.newKinds(
