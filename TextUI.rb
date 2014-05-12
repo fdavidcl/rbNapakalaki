@@ -4,6 +4,7 @@
 require_relative "Napakalaki"
 
 module GameUI
+    # Clase que proporciona la interfaz de usuario para el juego
     class TextUI
         include Singleton
 
@@ -133,7 +134,7 @@ module GameUI
         end
 
     	public
-        
+
         # Permite probar AdjustToFitTreasureLists en varios casos
 =begin
         def testAdjust
@@ -144,31 +145,31 @@ module GameUI
                 Game::Treasure.new("mano",0,0,0,Game::ONEHAND)]
             hid = [Game::Treasure.new("mano",0,0,0,Game::ONEHAND)]
             puts b
-            
+
             puts "Ajustando a... \nVisibles: #{vis} \nOcultos:#{hid}"
             # Debe haber sólo un onehand en visibles
             puts b.adjustToFitTreasureLists(vis,hid)
-            
+
             hid << Game::Treasure.new("casco",0,0,0,Game::HELMET)
             hid << Game::Treasure.new("armadura",0,0,0,Game::ARMOR)
-            
+
             puts "Ajustando a... \nVisibles: #{vis} \nOcultos:#{hid}"
             # El mal rollo quita menos tesoros visibles de los que tiene el jugador
             puts b.adjustToFitTreasureLists(vis,hid)
-            
+
             hid = []
             puts "Ajustando a... \nVisibles: #{vis} \nOcultos:#{hid}"
             # El mal rollo no debe quitar tesoros visibles
             puts b.adjustToFitTreasureLists(vis,hid)
-            
+
             vis = [Game::Treasure.new("dos manos",0,0,0,Game::BOTHHANDS)]
             hid = [Game::Treasure.new("dos manos",0,0,0,Game::BOTHHANDS)]
             puts "Ajustando a... \nVisibles: #{vis} \nOcultos:#{hid}"
             # El mal rollo debe quedar vacío
             puts b.adjustToFitTreasureLists(vis,hid)
         end
-=end        
-        
+=end
+
         # Método de juego: Muestra menús e interactúa con el jugador
         def play
             puts "Introduce los nombres de los jugadores"

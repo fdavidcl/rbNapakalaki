@@ -8,6 +8,7 @@ require_relative "CardDealer"
 require_relative "CombatResult"
 
 module Game
+    # Clase que representa a un jugador
     class Player
         def initialize(name)
             @dead = true

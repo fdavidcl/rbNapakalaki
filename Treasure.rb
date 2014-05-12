@@ -2,6 +2,7 @@
 #encoding: utf-8
 
 module Game
+    # Clase que representa un tesoro
     class Treasure
         def initialize(name, gold, min, max, type)
             @name = name

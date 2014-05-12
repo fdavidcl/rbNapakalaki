@@ -5,6 +5,7 @@ require "singleton"
 require_relative "Treasure"
 
 module Game
+    # Clase que representa los mazos de cartas
     class CardDealer
         include Singleton
 
