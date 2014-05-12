@@ -151,7 +151,7 @@ module GameUI
                 end
             end
 
-            raise "El número de jugadores debe estar entre 1 y 3." if players.empty? || players.size > 3
+            raise "El número de jugadores debe estar entre 1 y 3." if players.empty?
 
             game.initGame(players)
             gameOver = false
@@ -247,7 +247,17 @@ module GameUI
         end
     end
 
-    begin
+    begin       
+        b = Game::BadConsequence.newKinds(
+            "Prueba Adjust v1", 0, [Game::ONEHAND,Game::ONEHAND,Game::ARMOR,Game::HELMET],
+            [Game::ONEHAND,Game::ONEHAND])
+        vis = [Game::Treasure.new("casco",0,0,0,Game::HELMET),
+            Game::Treasure.new("mano",0,0,0,Game::ONEHAND)]
+        hid = [Game::Treasure.new("mano",0,0,0,Game::ONEHAND)]
+        puts b
+        puts "Ajustando a... \n#{vis} \n #{hid}"
+        puts b.adjustToFitTreasureLists(vis,hid)
+        
         TextUI.instance.play if __FILE__ == $0
     rescue Interrupt => e
         puts "\n\nEl juego se ha detenido"

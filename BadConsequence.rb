@@ -97,8 +97,8 @@ module Game
                 lostvis = vis[0 .. vlimit] if @nVisibleTreasures.nonzero?
                 losthid = hid[0 .. hlimit] if @nHiddenTreasures.nonzero?
             else
-                lostvis = @specificVisibleTreasures.select { |e| lostvis.count(e) < vis.count(e) }
-                losthid = @specificHiddenTreasures.select { |e| losthid.count(e) < hid.count(e) }
+                @specificVisibleTreasures.each { |e| lostvis << e if lostvis.count(e) < vis.count(e) }
+                @specificHiddenTreasures.each { |e| losthid << e if losthid.count(e) < hid.count(e) }
             end
 
             BadConsequence.newKinds(@text, 0, lostvis, losthid)
