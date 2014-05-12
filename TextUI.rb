@@ -132,9 +132,43 @@ module GameUI
             end
         end
 
-
     	public
-
+        
+        # Permite probar AdjustToFitTreasures en varios casos
+=begin
+        def testAdjust
+            b = Game::BadConsequence.newKinds(
+                "Prueba Adjust v1", 0, [Game::ONEHAND,Game::ONEHAND,Game::ARMOR,Game::HELMET],
+                [Game::ONEHAND,Game::ONEHAND])
+            vis = [Game::Treasure.new("casco",0,0,0,Game::HELMET),
+                Game::Treasure.new("mano",0,0,0,Game::ONEHAND)]
+            hid = [Game::Treasure.new("mano",0,0,0,Game::ONEHAND)]
+            puts b
+            
+            puts "Ajustando a... \nVisibles: #{vis} \nOcultos:#{hid}"
+            # Debe haber sólo un onehand en visibles
+            puts b.adjustToFitTreasureLists(vis,hid)
+            
+            hid << Game::Treasure.new("casco",0,0,0,Game::HELMET)
+            hid << Game::Treasure.new("armadura",0,0,0,Game::ARMOR)
+            
+            puts "Ajustando a... \nVisibles: #{vis} \nOcultos:#{hid}"
+            # El mal rollo quita menos tesoros visibles de los que tiene el jugador
+            puts b.adjustToFitTreasureLists(vis,hid)
+            
+            hid = []
+            puts "Ajustando a... \nVisibles: #{vis} \nOcultos:#{hid}"
+            # El mal rollo no debe quitar tesoros visibles
+            puts b.adjustToFitTreasureLists(vis,hid)
+            
+            vis = [Game::Treasure.new("dos manos",0,0,0,Game::BOTHHANDS)]
+            hid = [Game::Treasure.new("dos manos",0,0,0,Game::BOTHHANDS)]
+            puts "Ajustando a... \nVisibles: #{vis} \nOcultos:#{hid}"
+            # El mal rollo debe quedar vacío
+            puts b.adjustToFitTreasureLists(vis,hid)
+        end
+=end        
+        
         # Método de juego: Muestra menús e interactúa con el jugador
         def play
             puts "Introduce los nombres de los jugadores"
@@ -247,17 +281,7 @@ module GameUI
         end
     end
 
-    begin       
-        b = Game::BadConsequence.newKinds(
-            "Prueba Adjust v1", 0, [Game::ONEHAND,Game::ONEHAND,Game::ARMOR,Game::HELMET],
-            [Game::ONEHAND,Game::ONEHAND])
-        vis = [Game::Treasure.new("casco",0,0,0,Game::HELMET),
-            Game::Treasure.new("mano",0,0,0,Game::ONEHAND)]
-        hid = [Game::Treasure.new("mano",0,0,0,Game::ONEHAND)]
-        puts b
-        puts "Ajustando a... \n#{vis} \n #{hid}"
-        puts b.adjustToFitTreasureLists(vis,hid)
-        
+    begin
         TextUI.instance.play if __FILE__ == $0
     rescue Interrupt => e
         puts "\n\nEl juego se ha detenido"
