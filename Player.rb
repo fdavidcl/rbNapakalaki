@@ -82,7 +82,7 @@ module Game
         def applyPrize(p)
             incrementLevels(p.getLevels)
 
-            (1..[p.getTreasures,4-@hiddenTreasures.size].min).each do
+            [p.getTreasures,4-@hiddenTreasures.size].min.times do
                 @hiddenTreasures << CardDealer.instance.nextTreasure
             end
         end
