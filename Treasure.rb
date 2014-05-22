@@ -4,6 +4,8 @@
 module Game
     # Clase que representa un tesoro
     class Treasure
+        include "Card"
+        
         def initialize(name, gold, min, max, type)
             @name = name
             @goldCoins = gold

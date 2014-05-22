@@ -37,6 +37,13 @@ module Game
         def combat
             result = @currentPlayer.combat(@currentMonster)
             CardDealer.instance.giveMonsterBack(@currentMonster)
+            
+            if(result == LOSEANDCONVERT)
+                @players[@currentPlayerIndex] = CultistPlayer.new(
+                    @currentPlayer, CardDealer.instance.nextCultist)
+                @currentPlayer = @players[@currentPlayerIndex]
+            end
+                
             result
         end
 

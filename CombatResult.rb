@@ -8,4 +8,5 @@ module Game
     LOSE = :lose
     LOSEANDESCAPE = :escape
     LOSEANDDIE = :die
+    LOSEANDCONVERT = :convert
 end
