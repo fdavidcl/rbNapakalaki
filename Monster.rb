@@ -1,12 +1,13 @@
 #!/usr/bin/env ruby
 #encoding: utf-8
 
+require_relative "Card"
 require_relative "Prize"
 
 module Game
     # Clase que representa un monstruo del juego
     class Monster
-        include Card
+        include Game::Card
 
         def initialize(name, level, bad, prize, levelChangeAgainstCultistPlayer = 0)
             @name = name

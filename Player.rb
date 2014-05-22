@@ -106,25 +106,25 @@ module Game
         end
 
         def combat(m)
-            if getCombatLevel > getOpponentLevel m
-                prize = m.getPrize
-                applyPrize(prize)
-                result = @level < 10 ? WIN : WINANDWINGAME
-            elsif Dice.instance.nextNumber < 5
-                bad = m.getBadConsequence
-                if bad.kills
-                    die
-                    result = LOSEANDDIE
-                else
-                    applyBadConsequence(bad)
-                    result = (shouldConvert ? LOSEANDCONVERT : LOSE)
-                end
-            else
-                result = LOSEANDESCAPE
-            end
             discardNecklaceIfVisible
-
-            result
+            
+            return
+                if getCombatLevel > getOpponentLevel(m)
+                    prize = m.getPrize
+                    applyPrize(prize)
+                    @level < 10 ? WIN : WINANDWINGAME
+                elsif Dice.instance.nextNumber < 5
+                    bad = m.getBadConsequence
+                    if bad.kills
+                        die
+                        LOSEANDDIE
+                    else
+                        applyBadConsequence(bad)
+                        shouldConvert ? LOSEANDCONVERT : LOSE
+                    end
+                else
+                    LOSEANDESCAPE
+                end
         end
 
         def applyBadConsequence(bad)
@@ -219,15 +219,15 @@ module Game
         def getVisibleTreasures
             @visibleTreasures.clone
         end
-        
+
         def getHiddenTreasures
             @hiddenTreasures.clone
         end
-        
+
         def shouldConvert
             Dice.instance.nextNumber == 6
         end
-        
+
         def getOpponentLevel(m)
             m.getBasicValue
         end

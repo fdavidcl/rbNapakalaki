@@ -122,11 +122,11 @@ module Game
             @unusedMonsters << Monster.new("Bicéfalo",20, BadConsequence.newKinds(
                 "Te faltan manos para tanta cabeza. Pierdes 3 niveles y tus tesoros "\
                 "visibles de las manos",3, [ONEHAND, ONEHAND, BOTHHANDS],[]), Prize.new(1,1))
-            
+
 
             # Sectarios
             @unusedMonsters << Monster.new("El mal indecible impronunciable",10, BadConsequence.newKinds(
-                "Pierdes 1 mano visible",0,[ONEHAND],[]), Prize.new (3,1),-2)
+                "Pierdes 1 mano visible",0,[ONEHAND],[]), Prize.new(3,1),-2)
             @unusedMonsters << Monster.new("Testigos Oculares", 6, BadConsequence.newKinds(
                 "Pierdes tus tesoros visibles. Jajaja",0,-1,0), Prize.new(2,1),2)
             @unusedMonsters << Monster.new("El gran cthulhu", 20, BadConsequence.newKinds(
@@ -143,7 +143,7 @@ module Game
             @unusedMonsters << Monster.new("Lolitagooth", 2, BadConsequence.newKinds(
                 "Pintalabios negro. Pierdes 2 niveles",2,0,0), Prize.new(1,1),3)
         end
-        
+
         def initCultistCardDeck()
             @unusedCultists << Cultist.new("Sectario", 1)
             @unusedCultists << Cultist.new("Sectario", 2)
@@ -152,7 +152,7 @@ module Game
             @unusedCultists << Cultist.new("Sectario", 1)
             @unusedCultists << Cultist.new("Sectario", 1)
         end
-        
+
         def shuffleTreasures
             @unusedTreasures.shuffle!
         end
@@ -160,7 +160,7 @@ module Game
         def shuffleMonsters
             @unusedMonsters.shuffle!
         end
-        
+
         def shuffleCultists
             @unusedCultists.shuffle!
         end
@@ -177,11 +177,11 @@ module Game
             @unusedMonsters, @usedMonsters = @usedMonsters, @unusedMonsters if @unusedMonsters.empty?
             result
         end
-        
+
         def nextCultist
             @unusedCultists.shift
         end
-        
+
         def giveTreasureBack(t)
             @usedTreasures << t
         end
