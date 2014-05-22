@@ -3,10 +3,10 @@
 
 module Card
     def getBasicValue
-        raise new NotImplementedError
+        raise NotImplementedError
     end
     
     def getSpecialValue
-        raise new NotImplementedError
+        raise NotImplementedError
     end
 end
