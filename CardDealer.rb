@@ -3,6 +3,7 @@
 
 require "singleton"
 require_relative "Treasure"
+require_relative "Monster"
 require_relative "Cultist"
 
 module Game

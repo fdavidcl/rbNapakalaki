@@ -2,6 +2,7 @@
 #encoding: utf-8
 
 require_relative "Player"
+require_relative "Cultist"
 
 module Game
     # Clase que representa a un jugador sectario

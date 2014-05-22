@@ -124,8 +124,6 @@ module Game
             else
                 LOSEANDESCAPE
             end
-
-            LOSEANDCONVERT
         end
 
         def applyBadConsequence(bad)
