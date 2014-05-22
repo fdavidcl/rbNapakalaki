@@ -121,6 +121,26 @@ module Game
             @unusedMonsters << Monster.new("Bicéfalo",20, BadConsequence.newKinds(
                 "Te faltan manos para tanta cabeza. Pierdes 3 niveles y tus tesoros "\
                 "visibles de las manos",3, [ONEHAND, ONEHAND, BOTHHANDS],[]), Prize.new(1,1))
+            
+
+            # Sectarios
+            @unusedMonsters << Monster.new("El mal indecible impronunciable",10, BadConsequence.newKinds(
+                "Pierdes 1 mano visible",0,[ONEHAND],[]), Prize.new (3,1),-2)
+            @unusedMonsters << Monster.new("Testigos Oculares", 6, BadConsequence.newKinds(
+                "Pierdes tus tesoros visibles. Jajaja",0,-1,0), Prize.new(2,1),2)
+            @unusedMonsters << Monster.new("El gran cthulhu", 20, BadConsequence.newKinds(
+                "Hoy no es tu día de suerte. Mueres",true), Prize.new(2,5),4)
+            @unusedMonsters << Monster.new("Serpiente Político", 8, BadConsequence.newKinds(
+                "Tu gobierno te recorta 2 niveles",2,0,0), Prize.new(2,1),-2)
+            @unusedMonsters << Monster.new("Felpuggoth",2, BadConsequence.newKinds(
+                "Pierdes tu casco y tu armadura visible. Pierdes tus manos ocultas.",
+                0, [HELMET,ARMOR],
+                [ONEHAND,ONEHAND,ONEHAND,ONEHAND,BOTHHANDS,BOTHHANDS,BOTHHANDS,BOTHHANDS]),
+                Prize.new(1,1),5)
+            @unusedMonsters << Monster.new("Shoggoth", 16, BadConsequence.newKinds(
+                "Pierdes 2 niveles",2,0,0), Prize.new(4,2),-4)
+            @unusedMonsters << Monster.new("Lolitagooth", 2, BadConsequence.newKinds(
+                "Pintalabios negro. Pierdes 2 niveles",2,0,0), Prize.new(1,1),3)
         end
 
         def shuffleTreasures
