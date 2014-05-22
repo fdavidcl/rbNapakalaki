@@ -130,6 +130,8 @@ module GameUI
                 "Has perdido tu combate, pero has escapado a tiempo"
             when Game::LOSEANDDIE
                 "Has perdido tu combate, y el monstruo te ha matado"
+            when Game::LOSEANDCONVERT
+                "Has perdido tu combate, y te has convertido en sectario"
             end
         end
 
