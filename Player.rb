@@ -20,6 +20,15 @@ module Game
         end
 
         private
+        def copy(otro)
+            @dead = otro.isDead
+            @name = otro.getName
+            @level = otro.getLevel
+            @hiddenTreasures = otro.getHiddenTreasures
+            @visibleTreasures = otro.getVisibleTreasures
+            @pendingBadConsequence = otro.getPendingBadConsequence
+        end
+
         def bringToLife
             @dead = false
         end
@@ -60,10 +69,6 @@ module Game
             die if @visibleTreasures.empty? && @hiddenTreasures.empty?
         end
 
-        def computeGoldCoinsValue(t)
-            t.inject(0){|sum,x| sum += x.getGoldCoins} / 1000
-        end
-
         def canIBuyLevels(l)
             @level + l < 10
         end
@@ -78,7 +83,20 @@ module Game
             dieIfNoTreasures
         end
 
+        protected
+        def getLevel
+            @level
+        end
+
+        def getPendingBadConsequence
+            @pendingBadConsequence
+        end
+
         public
+        def computeGoldCoinsValue(t)
+            t.inject(0){|sum,x| sum += x.getGoldCoins} / 1000
+        end
+
         def applyPrize(p)
             incrementLevels(p.getLevels)
 
