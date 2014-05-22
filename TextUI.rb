@@ -59,7 +59,7 @@ module GameUI
 
             if fight
                 puts "Luchando contra #{game.getCurrentMonster.getName}"\
-                    " (nivel #{game.getCurrentMonster.getLevel})"
+                    " (nivel #{game.getCurrentPlayer.getOpponentLevel(game.getCurrentMonster)})"
 
                 puts "Si vences obtendrás: [#{game.getCurrentMonster.getPrize}]"
                 puts "Si pierdes: [#{game.getCurrentMonster.getBadConsequence}]"

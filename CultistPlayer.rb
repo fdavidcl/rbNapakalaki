@@ -19,7 +19,7 @@ module Game
         end
 
         def getCombatLevel
-            super + myCultistCard.getSpecialValue
+            super + @myCultistCard.getSpecialValue
         end
 
         def shouldConvert

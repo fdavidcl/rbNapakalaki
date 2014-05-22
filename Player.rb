@@ -107,24 +107,25 @@ module Game
 
         def combat(m)
             discardNecklaceIfVisible
-            
-            return
-                if getCombatLevel > getOpponentLevel(m)
-                    prize = m.getPrize
-                    applyPrize(prize)
-                    @level < 10 ? WIN : WINANDWINGAME
-                elsif Dice.instance.nextNumber < 5
-                    bad = m.getBadConsequence
-                    if bad.kills
-                        die
-                        LOSEANDDIE
-                    else
-                        applyBadConsequence(bad)
-                        shouldConvert ? LOSEANDCONVERT : LOSE
-                    end
+
+            if getCombatLevel > getOpponentLevel(m)
+                prize = m.getPrize
+                applyPrize(prize)
+                @level < 10 ? WIN : WINANDWINGAME
+            elsif Dice.instance.nextNumber < 5
+                bad = m.getBadConsequence
+                if bad.kills
+                    die
+                    LOSEANDDIE
                 else
-                    LOSEANDESCAPE
+                    applyBadConsequence(bad)
+                    shouldConvert ? LOSEANDCONVERT : LOSE
                 end
+            else
+                LOSEANDESCAPE
+            end
+
+            LOSEANDCONVERT
         end
 
         def applyBadConsequence(bad)

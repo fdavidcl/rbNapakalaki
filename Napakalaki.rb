@@ -4,6 +4,7 @@
 require "singleton"
 require_relative "Monster"
 require_relative "Player"
+require_relative "CultistPlayer"
 require_relative "CombatResult"
 require_relative "CardDealer"
 
@@ -37,13 +38,13 @@ module Game
         def combat
             result = @currentPlayer.combat(@currentMonster)
             CardDealer.instance.giveMonsterBack(@currentMonster)
-            
+
             if(result == LOSEANDCONVERT)
                 @players[@currentPlayerIndex] = CultistPlayer.new(
                     @currentPlayer, CardDealer.instance.nextCultist)
                 @currentPlayer = @players[@currentPlayerIndex]
             end
-                
+
             result
         end
 
@@ -75,11 +76,11 @@ module Game
         def getCurrentPlayer
             @currentPlayer
         end
-        
+
         def getCurrentMonster
             @currentMonster
         end
-        
+
         def canMakeTreasureVisible(t)
             @currentPlayer.canMakeTreasureVisible
         end
@@ -94,13 +95,13 @@ module Game
 
         def nextTurn
             stateOK = nextTurnAllowed
-            
+
             if stateOK
                 @currentMonster = CardDealer.instance.nextMonster
                 @currentPlayer = nextPlayer
                 @currentPlayer.initTreasures if @currentPlayer.isDead
             end
-            
+
             stateOK
         end
 
@@ -113,4 +114,3 @@ module Game
         end
     end
 end
-
