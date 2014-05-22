@@ -6,11 +6,12 @@ require_relative "Prize"
 module Game
     # Clase que representa un monstruo del juego
     class Monster
-        def initialize(name, level, bad, prize)
+        def initialize(name, level, bad, prize, levelChangeAgainstCultistPlayer = 0)
             @name = name
             @level = level
             @badConsequence = bad
             @prize = prize
+            @levelChangeAgainstCultistPlayer = levelChangeAgainstCultistPlayer
         end
 
         def getName
@@ -27,6 +28,14 @@ module Game
 
         def getPrize
             @prize
+        end
+        
+        def getBasicValue
+            getLevel
+        end
+        
+        def getSpecialValue
+            getLevel + @levelChangeAgainstCultistPlayer
         end
 
         # Da una cadena con la información del monstruo

@@ -14,6 +14,7 @@ module Game
             @usedMonsters = []
             @unusedTreasures = []
             @usedTreasures = []
+            @unusedCultists = []
         end
 
         private
@@ -142,13 +143,26 @@ module Game
             @unusedMonsters << Monster.new("Lolitagooth", 2, BadConsequence.newKinds(
                 "Pintalabios negro. Pierdes 2 niveles",2,0,0), Prize.new(1,1),3)
         end
-
+        
+        def initCultistCardDeck()
+            @unusedCultists << Cultist.new("Sectario", 1)
+            @unusedCultists << Cultist.new("Sectario", 2)
+            @unusedCultists << Cultist.new("Sectario", 1)
+            @unusedCultists << Cultist.new("Sectario", 2)
+            @unusedCultists << Cultist.new("Sectario", 1)
+            @unusedCultists << Cultist.new("Sectario", 1)
+        end
+        
         def shuffleTreasures
             @unusedTreasures.shuffle!
         end
 
         def shuffleMonsters
             @unusedMonsters.shuffle!
+        end
+        
+        def shuffleCultists
+            @unusedCultists.shuffle!
         end
 
         public
@@ -163,7 +177,11 @@ module Game
             @unusedMonsters, @usedMonsters = @usedMonsters, @unusedMonsters if @unusedMonsters.empty?
             result
         end
-
+        
+        def nextCultist
+            @unusedCultists.shift
+        end
+        
         def giveTreasureBack(t)
             @usedTreasures << t
         end
@@ -177,6 +195,8 @@ module Game
             shuffleMonsters
             initTreasureCardDeck
             shuffleTreasures
+            initCultistCardDeck
+            shuffleCultists
         end
     end
 end
