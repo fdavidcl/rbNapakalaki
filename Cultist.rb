@@ -6,8 +6,6 @@ require_relative "Card"
 module Game
     # Clase que representa una carta de sectario
     class Cultist
-        include Game::Card
-
         def initialize(name, gainedLevels)
             @name = name
             @gainedLevels = gainedLevels
@@ -20,5 +18,7 @@ module Game
         def getSpecialValue
             getBasicValue * CultistPlayer.getTotalCultistPlayers
         end
+
+        include Card
     end
 end

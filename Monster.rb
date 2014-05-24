@@ -7,8 +7,6 @@ require_relative "Prize"
 module Game
     # Clase que representa un monstruo del juego
     class Monster
-        include Game::Card
-
         def initialize(name, level, bad, prize, levelChangeAgainstCultistPlayer = 0)
             @name = name
             @level = level
@@ -20,7 +18,7 @@ module Game
         def getName
             @name
         end
-
+        
         def getLevel
             @level
         end
@@ -45,5 +43,7 @@ module Game
         def to_s
             "Nombre: #{@name}, Nivel: #{@level}\n\tBuen rollo: #{@prize}\n\tMal rollo: #{@badConsequence}"
         end
+
+        include Card
     end
 end

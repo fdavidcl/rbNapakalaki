@@ -6,8 +6,6 @@ require_relative "Card"
 module Game
     # Clase que representa un tesoro
     class Treasure
-        include Card
-
         def initialize(name, gold, min, max, type)
             @name = name
             @goldCoins = gold
@@ -32,6 +30,14 @@ module Game
             @maxBonus
         end
 
+        def getBasicValue
+            getMinBonus
+        end
+
+        def getSpecialValue
+            getMaxBonus
+        end
+
         def getType
             @type
         end
@@ -39,5 +45,7 @@ module Game
         def to_s
             "#{@type.upcase} \"#{@name}\" (#{@goldCoins} oro" +  (@type != NECKLACE ? ", +#{@minBonus}/+#{@maxBonus} bonus)" : ")")
         end
+
+        include Card
     end
 end

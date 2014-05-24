@@ -182,9 +182,9 @@ module Game
 
         def getCombatLevel
             if @visibleTreasures.map(&:getType).include?(NECKLACE)
-                @visibleTreasures.inject(@level){ |sum,x| sum += x.getMaxBonus }
+                @visibleTreasures.inject(@level){ |sum,x| sum += x.getBasicValue }
             else
-                @visibleTreasures.inject(@level){ |sum,x| sum += x.getMinBonus }
+                @visibleTreasures.inject(@level){ |sum,x| sum += x.getSpecialValue }
             end
         end
 
