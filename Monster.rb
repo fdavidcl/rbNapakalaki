@@ -1,7 +1,6 @@
 #!/usr/bin/env ruby
 #encoding: utf-8
 
-require_relative "Card"
 require_relative "Prize"
 
 module Game
@@ -18,7 +17,7 @@ module Game
         def getName
             @name
         end
-        
+
         def getLevel
             @level
         end
@@ -43,7 +42,5 @@ module Game
         def to_s
             "Nombre: #{@name}, Nivel: #{@level}\n\tBuen rollo: #{@prize}\n\tMal rollo: #{@badConsequence}"
         end
-
-        include Card
     end
 end

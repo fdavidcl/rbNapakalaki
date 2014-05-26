@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 #encoding: utf-8
 
-require_relative "Card"
-
 module Game
     # Clase que representa un tesoro
     class Treasure
@@ -45,7 +43,5 @@ module Game
         def to_s
             "#{@type.upcase} \"#{@name}\" (#{@goldCoins} oro" +  (@type != NECKLACE ? ", +#{@minBonus}/+#{@maxBonus} bonus)" : ")")
         end
-
-        include Card
     end
 end

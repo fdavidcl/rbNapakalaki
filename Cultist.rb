@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 #encoding: utf-8
 
-require_relative "Card"
-
 module Game
     # Clase que representa una carta de sectario
     class Cultist
@@ -18,7 +16,5 @@ module Game
         def getSpecialValue
             getBasicValue * CultistPlayer.getTotalCultistPlayers
         end
-
-        include Card
     end
 end
